@@ -60,7 +60,6 @@ func (c *ContextImpl) SetGlobalFields(
 
 func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
 	fmt.Println("RenderPages")
-	fmt.Println(len(c.pages))
 	fcs := []fs.FileContainer{}
 	for _, p := range c.pages {
 
@@ -69,12 +68,11 @@ func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
 		}
 		doc := p.GetDoc()
 		html := doc.Render()
+		path := targetDir + p.PathFromDocRoot()
 
 		fc := fs.NewFileContainer()
-		path := targetDir + p.FsPath()
-		fmt.Println(path)
 		fc.SetPath(path)
-		fc.SetFilename(p.FsFilename())
+		fc.SetFilename(p.Filename())
 		fc.SetDataAsString(html)
 		fcs = append(fcs, fc)
 	}

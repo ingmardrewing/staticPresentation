@@ -141,7 +141,7 @@ func NewFBComponent() *FBComponent {
 func (fbc *FBComponent) VisitPage(p staticIntf.Page) {
 	m := []*htmlDoc.Node{
 		htmlDoc.NewNode("meta", "", "property", "og:title", "content", p.Title()),
-		htmlDoc.NewNode("meta", "", "property", "og:url", "content", p.FsPath()),
+		htmlDoc.NewNode("meta", "", "property", "og:url", "content", p.PathFromDocRoot()+p.Filename()),
 		htmlDoc.NewNode("meta", "", "property", "og:image", "content", p.ImageUrl()),
 		htmlDoc.NewNode("meta", "", "property", "og:description", "content", p.Description()),
 		htmlDoc.NewNode("meta", "", "property", "og:site_name", "content", fbc.abstractComponent.context.GetSiteName()),
@@ -257,7 +257,8 @@ func (b *BlogNaviComponent) addPrevious(p staticIntf.Page, n *htmlDoc.Node) {
 	} else {
 		elems := b.abstractComponent.context.GetElements()
 		pv := elems[inx-1]
-		a := htmlDoc.NewNode("a", "< previous posts", "href", pv.FsPath(), "rel", "prev", "class", "blognavicomponent__previous")
+		fmt.Println("PathFromDocRoot + Filename", pv.PathFromDocRoot()+pv.Filename())
+		a := htmlDoc.NewNode("a", "< previous posts", "href", pv.PathFromDocRoot()+pv.Filename(), "rel", "prev", "class", "blognavicomponent__previous")
 		n.AddChild(a)
 	}
 }
@@ -270,13 +271,14 @@ func (b *BlogNaviComponent) addNext(p staticIntf.Page, n *htmlDoc.Node) {
 	} else {
 		elems := b.abstractComponent.context.GetElements()
 		nx := elems[inx+1]
-		a := htmlDoc.NewNode("a", "next posts >", "href", nx.FsPath(), "rel", "next", "class", "blognavicomponent__next")
+		a := htmlDoc.NewNode("a", "next posts >", "href", nx.PathFromDocRoot()+nx.Filename(), "rel", "next", "class", "blognavicomponent__next")
 		n.AddChild(a)
 	}
 }
 
 func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "", "class", "blognavicomponent__nav")
+	fmt.Println("page index", b.getIndexOfPage(p))
 	b.addPrevious(p, nav)
 	b.addNext(p, nav)
 	d := htmlDoc.NewNode("div", "", "class", "blognavicomponent")
@@ -295,7 +297,9 @@ func (b *BlogNaviComponent) VisitPage(p staticIntf.Page) {
 
 func (b *BlogNaviComponent) getIndexOfPage(p staticIntf.Page) int {
 	for i, l := range b.abstractComponent.context.GetElements() {
-		if l.FsPath() == p.FsPath() {
+		lurl := l.PathFromDocRoot() + l.Filename()
+		purl := p.PathFromDocRoot() + p.Filename()
+		if lurl == purl {
 			return i
 		}
 	}
@@ -380,15 +384,14 @@ type MainNaviComponent struct {
 func (nv *MainNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "mainnavi")
-	url := p.FsPath()
 	for _, l := range nv.abstractComponent.context.GetMainNavigationLocations() {
-		if url == l.FsPath() {
+		if p.Url() == l.Url() {
 			span := htmlDoc.NewNode("span", l.Title(),
 				"class", "mainnavi__navelement--current")
 			nav.AddChild(span)
 		} else {
 			a := htmlDoc.NewNode("a", l.Title(),
-				"href", l.FsPath(),
+				"href", l.Url(),
 				"class", "mainnavi__navelement")
 			nav.AddChild(a)
 		}
@@ -453,15 +456,15 @@ type FooterNaviComponent struct {
 func (f *FooterNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "footernavi")
-	url := p.FsPath()
 	for _, l := range f.abstractComponent.context.GetFooterNavigationLocations() {
-		if url == l.FsPath() {
+		fmt.Println("p.url", p.Url(), "l.url", l.Url())
+		if p.Url() == l.Url() {
 			span := htmlDoc.NewNode("span", l.Title(),
 				"class", "footernavi__navelement--current")
 			nav.AddChild(span)
 		} else {
 			a := htmlDoc.NewNode("a", l.Title(),
-				"href", l.FsPath(),
+				"href", l.Url(),
 				"class", "footernavi__navelement")
 			nav.AddChild(a)
 		}
@@ -544,7 +547,7 @@ var disqus_config = function () {
 	s.setAttribute('data-timestamp', +new Date());
 	(d.head || d.body).appendChild(s);
 })();
-`, p.Title(), p.Domain()+p.FsPath(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
+`, p.Title(), p.Domain()+p.PathFromDocRoot()+p.Filename(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
 	n := htmlDoc.NewNode("div", " ", "id", "disqus_thread", "class", "disqus")
 	wn := dc.wrap(n)
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
