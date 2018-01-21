@@ -257,7 +257,6 @@ func (b *BlogNaviComponent) addPrevious(p staticIntf.Page, n *htmlDoc.Node) {
 	} else {
 		elems := b.abstractComponent.context.GetElements()
 		pv := elems[inx-1]
-		fmt.Println("PathFromDocRoot + Filename", pv.PathFromDocRoot()+pv.Filename())
 		a := htmlDoc.NewNode("a", "< previous posts", "href", pv.PathFromDocRoot()+pv.Filename(), "rel", "prev", "class", "blognavicomponent__previous")
 		n.AddChild(a)
 	}
@@ -278,7 +277,6 @@ func (b *BlogNaviComponent) addNext(p staticIntf.Page, n *htmlDoc.Node) {
 
 func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "", "class", "blognavicomponent__nav")
-	fmt.Println("page index", b.getIndexOfPage(p))
 	b.addPrevious(p, nav)
 	b.addNext(p, nav)
 	d := htmlDoc.NewNode("div", "", "class", "blognavicomponent")
@@ -457,7 +455,6 @@ func (f *FooterNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "footernavi")
 	for _, l := range f.abstractComponent.context.GetFooterNavigationLocations() {
-		fmt.Println("p.url", p.Url(), "l.url", l.Url())
 		if p.Url() == l.Url() {
 			span := htmlDoc.NewNode("span", l.Title(),
 				"class", "footernavi__navelement--current")

@@ -59,7 +59,6 @@ func (c *ContextImpl) SetGlobalFields(
 }
 
 func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
-	fmt.Println("RenderPages")
 	fcs := []fs.FileContainer{}
 	for _, p := range c.pages {
 
