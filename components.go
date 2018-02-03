@@ -90,21 +90,14 @@ type GeneralMetaComponent struct {
 
 func (g *GeneralMetaComponent) VisitPage(p staticIntf.Page) {
 	m := []*htmlDoc.Node{
-		htmlDoc.NewNode("meta", "", "viewport", "width=device-width, initial-scale=1.0"),
-		htmlDoc.NewNode("meta", "", "http-equiv", "imagetoolbar", "content", "no"),
-		htmlDoc.NewNode("meta", "", "robots", "index,follow"),
-		htmlDoc.NewNode("meta", "", "author", "Ingmar Drewing"),
-		htmlDoc.NewNode("meta", "", "publisher", "Ingmar Drewing"),
-		htmlDoc.NewNode("meta", "", "keywords", "storytelling, illustration, drawing, web comic, comic, cartoon, caricatures"),
-		htmlDoc.NewNode("meta", "", "DC.subject", "storytelling, illustration, drawing, web comic, comic, cartoon, caricatures"),
-		htmlDoc.NewNode("meta", "", "page-topic", "art"),
-		htmlDoc.NewNode("meta", "", "http-equiv", "Language", "content", "en"),
-		htmlDoc.NewNode("meta", "", "http-equiv", "Content-Language", "content", "en"),
-		htmlDoc.NewNode("meta", "", "http-equiv", "cache-control", "content", "Private"),
-		htmlDoc.NewNode("meta", "", "http-equiv", "pragma", "content", "Private"),
-		htmlDoc.NewNode("meta", "", "http-equiv", "expires", "content", "0"),
-		htmlDoc.NewNode("meta", "", "charset", "UTF-8"),
-		htmlDoc.NewNode("meta", "", "http-equiv", "content-type", "content", "text/html;charset=UTF-8")}
+		htmlDoc.NewNode("meta", "", "name", "viewport", "content", "width=device-width, initial-scale=1.0"),
+		htmlDoc.NewNode("meta", "", "name", "robots", "content", "index,follow"),
+		htmlDoc.NewNode("meta", "", "name", "author", "content", "Ingmar Drewing"),
+		htmlDoc.NewNode("meta", "", "name", "publisher", "content", "Ingmar Drewing"),
+		htmlDoc.NewNode("meta", "", "name", "keywords", "content", "storytelling, illustration, drawing, web comic, comic, cartoon, caricatures"),
+		htmlDoc.NewNode("meta", "", "name", "DC.subject", "content", "storytelling, illustration, drawing, web comic, comic, cartoon, caricatures"),
+		htmlDoc.NewNode("meta", "", "name", "page-topic", "content", "art"),
+		htmlDoc.NewNode("meta", "", "charset", "UTF-8")}
 	p.AddHeaderNodes(m)
 }
 
@@ -533,7 +526,7 @@ func (dc *DisqusComponent) GetJs() string {
 func (dc *DisqusComponent) VisitPage(p staticIntf.Page) {
 	dc.configuredJs = fmt.Sprintf(`var disqus_config = function () { this.page.title= "%s"; this.page.url = '%s'; this.page.identifier =  '%s'; }; (function() { var d = document, s = d.createElement('script'); s.src = 'https://%s.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();`, p.Title(), p.Domain()+p.PathFromDocRoot()+p.Filename(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
 	n := htmlDoc.NewNode("div", " ", "id", "disqus_thread", "class", "disqus")
-	js := htmlDoc.NewNode("script", dc.configuredJs, "language", "javascript", "type", "text/javascript")
+	js := htmlDoc.NewNode("script", dc.configuredJs)
 	wn := dc.wrap(n)
 	p.AddBodyNodes([]*htmlDoc.Node{wn, js})
 }

@@ -66,6 +66,8 @@ func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
 			p.AcceptVisitor(comp)
 		}
 		doc := p.GetDoc()
+		doc.AddRootAttr("itemscope")
+		doc.AddRootAttr("lang", "en")
 		html := doc.Render()
 		path := targetDir + p.PathFromDocRoot()
 
