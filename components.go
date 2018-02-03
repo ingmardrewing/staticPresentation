@@ -531,23 +531,11 @@ func (dc *DisqusComponent) GetJs() string {
 }
 
 func (dc *DisqusComponent) VisitPage(p staticIntf.Page) {
-	dc.configuredJs = fmt.Sprintf(
-		`
-var disqus_config = function () {
-	this.page.title= "%s";
-	this.page.url = '%s';
-	this.page.identifier =  '%s';
-};
-(function() {
-	var d = document, s = d.createElement('script');
-	s.src = 'https://%s.disqus.com/embed.js';
-	s.setAttribute('data-timestamp', +new Date());
-	(d.head || d.body).appendChild(s);
-})();
-`, p.Title(), p.Domain()+p.PathFromDocRoot()+p.Filename(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
+	dc.configuredJs = fmt.Sprintf(`var disqus_config = function () { this.page.title= "%s"; this.page.url = '%s'; this.page.identifier =  '%s'; }; (function() { var d = document, s = d.createElement('script'); s.src = 'https://%s.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();`, p.Title(), p.Domain()+p.PathFromDocRoot()+p.Filename(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
 	n := htmlDoc.NewNode("div", " ", "id", "disqus_thread", "class", "disqus")
+	js := htmlDoc.NewNode("script", dc.configuredJs, "language", "javascript", "type", "text/javascript")
 	wn := dc.wrap(n)
-	p.AddBodyNodes([]*htmlDoc.Node{wn})
+	p.AddBodyNodes([]*htmlDoc.Node{wn, js})
 }
 
 /* main  header component */
@@ -710,10 +698,7 @@ func NewCopyRightComponent() *CopyRightComponent {
 }
 
 func (crc *CopyRightComponent) VisitPage(p staticIntf.Page) {
-	n := htmlDoc.NewNode("div", `
-	<a rel="license" class="copyright__cc" href="https://creativecommons.org/licenses/by-nc-nd/3.0/"></a>
-	<p class="copyright__license">&copy; 2017 by Ingmar Drewing </p><p class="copyright__license">Except where otherwise noted, content on this site is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/">Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (CC BY-NC-ND 3.0) license</a>.</p><p class="copyright__license">Soweit nicht anders explizit ausgewiesen, stehen die Inhalte auf dieser Website unter der <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/">Creative Commons Namensnennung-NichtKommerziell-KeineBearbeitung (CC BY-NC-ND 3.0)</a> Lizenz. Unless otherwise noted the author of the content on this page is <a href="https://plus.google.com/113943655600557711368?rel=author">Ingmar Drewing</a></p>
-	`, "class", "copyright")
+	n := htmlDoc.NewNode("div", `<a rel="license" class="copyright__cc" href="https://creativecommons.org/licenses/by-nc-nd/3.0/"></a><p class="copyright__license">&copy; 2017 by Ingmar Drewing </p><p class="copyright__license">Except where otherwise noted, content on this site is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/">Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (CC BY-NC-ND 3.0) license</a>.</p><p class="copyright__license">Soweit nicht anders explizit ausgewiesen, stehen die Inhalte auf dieser Website unter der <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/">Creative Commons Namensnennung-NichtKommerziell-KeineBearbeitung (CC BY-NC-ND 3.0)</a> Lizenz. Unless otherwise noted the author of the content on this page is <a href="https://plus.google.com/113943655600557711368?rel=author">Ingmar Drewing</a></p>`, "class", "copyright")
 	wn := crc.wrap(n)
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
