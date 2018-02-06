@@ -73,7 +73,7 @@ func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
 
 		fc := fs.NewFileContainer()
 		fc.SetPath(path)
-		fc.SetFilename(p.Filename())
+		fc.SetFilename(p.HtmlFilename())
 		fc.SetDataAsString(html)
 		fcs = append(fcs, fc)
 	}

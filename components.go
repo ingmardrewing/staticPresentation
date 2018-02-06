@@ -134,7 +134,7 @@ func NewFBComponent() *FBComponent {
 func (fbc *FBComponent) VisitPage(p staticIntf.Page) {
 	m := []*htmlDoc.Node{
 		htmlDoc.NewNode("meta", "", "property", "og:title", "content", p.Title()),
-		htmlDoc.NewNode("meta", "", "property", "og:url", "content", p.PathFromDocRoot()+p.Filename()),
+		htmlDoc.NewNode("meta", "", "property", "og:url", "content", p.PathFromDocRoot()+p.HtmlFilename()),
 		htmlDoc.NewNode("meta", "", "property", "og:image", "content", p.ImageUrl()),
 		htmlDoc.NewNode("meta", "", "property", "og:description", "content", p.Description()),
 		htmlDoc.NewNode("meta", "", "property", "og:site_name", "content", fbc.abstractComponent.context.GetSiteName()),
@@ -250,7 +250,7 @@ func (b *BlogNaviComponent) addPrevious(p staticIntf.Page, n *htmlDoc.Node) {
 	} else {
 		elems := b.abstractComponent.context.GetElements()
 		pv := elems[inx-1]
-		a := htmlDoc.NewNode("a", "< previous posts", "href", pv.PathFromDocRoot()+pv.Filename(), "rel", "prev", "class", "blognavicomponent__previous")
+		a := htmlDoc.NewNode("a", "< previous posts", "href", pv.PathFromDocRoot()+pv.HtmlFilename(), "rel", "prev", "class", "blognavicomponent__previous")
 		n.AddChild(a)
 	}
 }
@@ -263,7 +263,7 @@ func (b *BlogNaviComponent) addNext(p staticIntf.Page, n *htmlDoc.Node) {
 	} else {
 		elems := b.abstractComponent.context.GetElements()
 		nx := elems[inx+1]
-		a := htmlDoc.NewNode("a", "next posts >", "href", nx.PathFromDocRoot()+nx.Filename(), "rel", "next", "class", "blognavicomponent__next")
+		a := htmlDoc.NewNode("a", "next posts >", "href", nx.PathFromDocRoot()+nx.HtmlFilename(), "rel", "next", "class", "blognavicomponent__next")
 		n.AddChild(a)
 	}
 }
@@ -288,8 +288,8 @@ func (b *BlogNaviComponent) VisitPage(p staticIntf.Page) {
 
 func (b *BlogNaviComponent) getIndexOfPage(p staticIntf.Page) int {
 	for i, l := range b.abstractComponent.context.GetElements() {
-		lurl := l.PathFromDocRoot() + l.Filename()
-		purl := p.PathFromDocRoot() + p.Filename()
+		lurl := l.PathFromDocRoot() + l.HtmlFilename()
+		purl := p.PathFromDocRoot() + p.HtmlFilename()
 		if lurl == purl {
 			return i
 		}
@@ -524,7 +524,7 @@ func (dc *DisqusComponent) GetJs() string {
 }
 
 func (dc *DisqusComponent) VisitPage(p staticIntf.Page) {
-	dc.configuredJs = fmt.Sprintf(`var disqus_config = function () { this.page.title= "%s"; this.page.url = '%s'; this.page.identifier =  '%s'; }; (function() { var d = document, s = d.createElement('script'); s.src = 'https://%s.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();`, p.Title(), p.Domain()+p.PathFromDocRoot()+p.Filename(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
+	dc.configuredJs = fmt.Sprintf(`var disqus_config = function () { this.page.title= "%s"; this.page.url = '%s'; this.page.identifier =  '%s'; }; (function() { var d = document, s = d.createElement('script'); s.src = 'https://%s.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();`, p.Title(), p.Domain()+p.PathFromDocRoot()+p.HtmlFilename(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
 	n := htmlDoc.NewNode("div", " ", "id", "disqus_thread", "class", "disqus")
 	js := htmlDoc.NewNode("script", dc.configuredJs)
 	wn := dc.wrap(n)
