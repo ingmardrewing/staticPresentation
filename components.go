@@ -603,9 +603,9 @@ func NewStartPageComponent() *StartPageComponent {
 }
 
 func (cc *StartPageComponent) VisitPage(p staticIntf.Page) {
-	c1 := htmlDoc.NewNode("div", "", "class", "home__portfolio")
-	c2 := htmlDoc.NewNode("div", "", "class", "home__devabode")
-	c3 := htmlDoc.NewNode("div", "", "class", "home__blog")
+	c1 := htmlDoc.NewNode("div", "portfoliocontent", "class", "home__portfolio")
+	c2 := htmlDoc.NewNode("div", "devabode", "class", "home__devabode")
+	c3 := htmlDoc.NewNode("div", "blog", "class", "home__blog")
 
 	n := htmlDoc.NewNode("main", "", "class", "maincontent")
 	n.AddChild(c1)
