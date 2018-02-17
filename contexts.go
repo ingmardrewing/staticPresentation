@@ -74,6 +74,9 @@ func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
 		fc := fs.NewFileContainer()
 		fc.SetPath(path)
 		fc.SetFilename(p.HtmlFilename())
+
+		fmt.Println(path, p.HtmlFilename())
+
 		fc.SetDataAsString(html)
 		fcs = append(fcs, fc)
 	}
@@ -218,6 +221,31 @@ func newContext(mainnavi, footernavi []staticIntf.Location, contentComponents []
 	fillContextWithComponents(c, contentComponents...)
 
 	fillContextWithComponents(c,
+		NewMainHeaderComponent(),
+		NewMainNaviComponent(),
+		NewCopyRightComponent(),
+		NewFooterNaviComponent())
+
+	return c
+}
+
+/* Pages Context */
+
+func NewNarrativeContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {
+
+	c := new(ContextImpl)
+	c.mainNavigationLocations = mainnavi
+	c.footerNavigationLocations = footernavi
+
+	fillContextWithComponents(c,
+		NewGeneralMetaComponent(),
+		NewFaviconComponent(),
+		NewGlobalCssComponent(),
+		NewGoogleComponent(),
+		NewTwitterComponent(),
+		NewFBComponent(),
+		NewCssLinkComponent(),
+		NewNarrativeComponent(),
 		NewMainHeaderComponent(),
 		NewMainNaviComponent(),
 		NewCopyRightComponent(),

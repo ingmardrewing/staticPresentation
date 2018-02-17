@@ -593,6 +593,29 @@ func (mhc *MainHeaderComponent) GetCss() string {
 }
 
 /* start page component */
+type NarrativeComponent struct {
+	abstractComponent
+	wrapper
+}
+
+func NewNarrativeComponent() *NarrativeComponent {
+	return new(NarrativeComponent)
+}
+
+func (cc *NarrativeComponent) VisitPage(p staticIntf.Page) {
+	img := htmlDoc.NewNode("img", "", "src", p.ImageUrl(), "width", "800")
+	wn := cc.wrap(img)
+	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (cc *NarrativeComponent) GetJs() string { return "" }
+
+func (cc *NarrativeComponent) GetCss() string {
+	return `
+`
+}
+
+/* start page component */
 type StartPageComponent struct {
 	abstractComponent
 	wrapper
