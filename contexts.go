@@ -245,7 +245,9 @@ func NewNarrativeContext(mainnavi, footernavi []staticIntf.Location) staticIntf.
 		NewTwitterComponent(),
 		NewFBComponent(),
 		NewCssLinkComponent(),
+		NewTitleComponent(),
 		NewNarrativeComponent(),
+		NewDisqusComponent()}
 		NewMainHeaderComponent(),
 		NewMainNaviComponent(),
 		NewCopyRightComponent(),
@@ -270,6 +272,7 @@ func NewPagesContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Cont
 		NewTwitterComponent(),
 		NewFBComponent(),
 		NewCssLinkComponent(),
+		NewTitleComponent(),
 		NewStartPageComponent(),
 		NewMainHeaderComponent(),
 		NewMainNaviComponent(),

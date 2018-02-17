@@ -603,8 +603,13 @@ func NewNarrativeComponent() *NarrativeComponent {
 }
 
 func (cc *NarrativeComponent) VisitPage(p staticIntf.Page) {
+	h1 := htmlDoc.NewNode("h1", p.Title(), "class", "maincontent__h1")
 	img := htmlDoc.NewNode("img", "", "src", p.ImageUrl(), "width", "800")
-	wn := cc.wrap(img)
+	n := htmlDoc.NewNode("main", "", "class", "maincontent")
+	n.AddChild(h1)
+	n.AddChild(img)
+
+	wn := cc.wrap(n)
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
