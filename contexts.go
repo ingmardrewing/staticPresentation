@@ -226,6 +226,31 @@ func newContext(mainnavi, footernavi []staticIntf.Location, contentComponents []
 	return c
 }
 
+/* Pages Context */
+
+func NewPagesContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {
+
+	c := new(ContextImpl)
+	c.mainNavigationLocations = mainnavi
+	c.footerNavigationLocations = footernavi
+
+	fillContextWithComponents(c,
+		NewGeneralMetaComponent(),
+		NewFaviconComponent(),
+		NewGlobalCssComponent(),
+		NewGoogleComponent(),
+		NewTwitterComponent(),
+		NewFBComponent(),
+		NewCssLinkComponent(),
+		NewStartPageComponent(),
+		NewMainHeaderComponent(),
+		NewMainNaviComponent(),
+		NewCopyRightComponent(),
+		NewFooterNaviComponent())
+
+	return c
+}
+
 /* Blog Context */
 
 func NewBlogContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {

@@ -592,6 +592,37 @@ func (mhc *MainHeaderComponent) GetCss() string {
 `
 }
 
+/* start page component */
+type StartPageComponent struct {
+	abstractComponent
+	wrapper
+}
+
+func NewStartPageComponent() *StartPageComponent {
+	return new(StartPageComponent)
+}
+
+func (cc *StartPageComponent) VisitPage(p staticIntf.Page) {
+	c1 := htmlDoc.NewNode("div", "", "class", "home__portfolio")
+	c2 := htmlDoc.NewNode("div", "", "class", "home__devabode")
+	c3 := htmlDoc.NewNode("div", "", "class", "home__blog")
+
+	n := htmlDoc.NewNode("main", "", "class", "maincontent")
+	n.AddChild(c1)
+	n.AddChild(c2)
+	n.AddChild(c3)
+
+	wn := cc.wrap(n)
+	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (cc *StartPageComponent) GetJs() string { return "" }
+
+func (cc *StartPageComponent) GetCss() string {
+	return `
+`
+}
+
 /* content component */
 type ContentComponent struct {
 	abstractComponent
@@ -621,7 +652,17 @@ func (cc *ContentComponent) GetCss() string {
 	return `
 .maincontent{
 	padding-top: 126px;
+	padding-bottom: 50px;
 	text-align: left;
+	line-height: 20px;
+}
+.maincontent li,
+.maincontent p {
+	line-height: 30px;
+}
+.maincontent h1,
+.maincontent h2 {
+	text-transform: uppercase;
 }
 .maincontent__h1,
 .maincontent__h2 {
@@ -633,6 +674,7 @@ func (cc *ContentComponent) GetCss() string {
 .maincontent__h2 {
 	font-size: 18px;
 	line-height: 20px;
+	text-transform: uppercase;
 }
 .maincontent__h2 {
 	color: grey;
