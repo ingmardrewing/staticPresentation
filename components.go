@@ -360,6 +360,60 @@ a.blognavientry__tile {
 `
 }
 
+/* NarrativeNaviComponent */
+func NewNarrativeNaviComponent() *MainNaviComponent {
+	nc := new(MainNaviComponent)
+	return nc
+}
+
+type NarrativeNaviComponent struct {
+	abstractComponent
+	wrapper
+	cssClass string
+}
+
+func (nv *NarrativeNaviComponent) VisitPage(p staticIntf.Page) {
+	//firstPage := ""
+}
+
+func (mhc *NarrativeNaviComponent) GetJs() string {
+	return ""
+}
+
+func (mhc *NarrativeNaviComponent) GetCss() string { return ` ` }
+
+/* NarrativeHeaderComponent */
+func NewNarrativeHeaderComponent() *MainNaviComponent {
+	nc := new(MainNaviComponent)
+	return nc
+}
+
+type NarrativeHeaderComponent struct {
+	abstractComponent
+	wrapper
+	cssClass string
+}
+
+func (nv *NarrativeHeaderComponent) VisitPage(p staticIntf.Page) {
+	a1 := htmlDoc.NewNode("a", "<!-- Devabo.de-->", "href", "https://devabo.de")
+	a2 := htmlDoc.NewNode("a", "", "href", "https://devabo.de/2013/08/01/a-step-in-the-dark/")
+	h1 := htmlDoc.NewNode("h1", p.Title(), "class", "maincontent__h1")
+
+	n := htmlDoc.NewNode("header", "")
+	n.AddChild(a1)
+	n.AddChild(a2)
+	n.AddChild(h1)
+
+	wn := nv.wrap(n, "header__wrapper")
+	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (mhc *NarrativeHeaderComponent) GetJs() string {
+	return ""
+}
+
+func (mhc *NarrativeHeaderComponent) GetCss() string { return ` ` }
+
 /* MainNaviComponent */
 func NewMainNaviComponent() *MainNaviComponent {
 	nc := new(MainNaviComponent)
@@ -603,10 +657,8 @@ func NewNarrativeComponent() *NarrativeComponent {
 }
 
 func (cc *NarrativeComponent) VisitPage(p staticIntf.Page) {
-	h1 := htmlDoc.NewNode("h1", p.Title(), "class", "maincontent__h1")
 	img := htmlDoc.NewNode("img", "", "src", p.ImageUrl(), "width", "800")
 	n := htmlDoc.NewNode("main", "", "class", "maincontent")
-	n.AddChild(h1)
 	n.AddChild(img)
 
 	wn := cc.wrap(n)
