@@ -461,8 +461,8 @@ func (mhc *NarrativeNaviComponent) GetJs() string {
 func (mhc *NarrativeNaviComponent) GetCss() string { return ` ` }
 
 /* NarrativeHeaderComponent */
-func NewNarrativeHeaderComponent() *MainNaviComponent {
-	nc := new(MainNaviComponent)
+func NewNarrativeHeaderComponent() *NarrativeHeaderComponent {
+	nc := new(NarrativeHeaderComponent)
 	return nc
 }
 
