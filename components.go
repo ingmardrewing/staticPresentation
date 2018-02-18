@@ -403,12 +403,12 @@ type NarrativeNaviComponent struct {
 }
 
 func (nv *NarrativeNaviComponent) VisitPage(p staticIntf.Page) {
-	firstNode := nv.first()
+	firstNode := nv.first(p)
 	prevNode := nv.previous(p)
 	nextNode := nv.next(p)
-	lastNode := nv.last()
+	lastNode := nv.last(p)
 
-	nav := htmlDoc.NewNode("nav", "")
+	nav := htmlDoc.NewNode("nav", "", "class", "narrativenavigation")
 	nav.AddChild(firstNode)
 	nav.AddChild(prevNode)
 	nav.AddChild(nextNode)
@@ -418,47 +418,67 @@ func (nv *NarrativeNaviComponent) VisitPage(p staticIntf.Page) {
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
-func (nv *NarrativeNaviComponent) first() *htmlDoc.Node {
+func (nv *NarrativeNaviComponent) first(p staticIntf.Page) *htmlDoc.Node {
 	fPage := nv.getFirstPage()
-	if fPage == nil {
-		return htmlDoc.NewNode("span", "<< first page", "class", "blognavicomponent__previous")
+	if fPage == nil || fPage.Id() == p.Id() {
+		return htmlDoc.NewNode("span", "&lt;&lt; first page", "class", "narrativenavigation__first narrativenavigation__item narrativenavigation__placeholder")
 	}
 	href := path.Join(fPage.PathFromDocRoot(), fPage.HtmlFilename())
-	return htmlDoc.NewNode("a", "<< first page", "href", href, "rel", "first", "class", "blognavicomponent__previous")
+	return htmlDoc.NewNode("a", "&lt;&lt; first page", "href", href, "rel", "first", "class", "narrativenavigation__first narrativenavigation__item")
 }
 
-func (nv *NarrativeNaviComponent) last() *htmlDoc.Node {
+func (nv *NarrativeNaviComponent) last(p staticIntf.Page) *htmlDoc.Node {
 	lPage := nv.getLastPage()
-	if lPage == nil {
-		return htmlDoc.NewNode("span", "last page >>", "class", "blognavicomponent__previous")
+	if lPage == nil || lPage.Id() == p.Id() {
+		return htmlDoc.NewNode("span", "last page &gt;&gt;", "class", "narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder")
 	}
 	href := path.Join(lPage.PathFromDocRoot(), lPage.HtmlFilename())
-	return htmlDoc.NewNode("a", "last page >>", "href", href, "rel", "last", "class", "blognavicomponent__previous")
+	return htmlDoc.NewNode("a", "last page &gt;&gt;", "href", href, "rel", "last", "class", "narrativenavigation__last narrativenavigation__item")
 }
 
 func (nv *NarrativeNaviComponent) previous(p staticIntf.Page) *htmlDoc.Node {
 	pageB := nv.getPageBefore(p)
 	if pageB == nil {
-		return htmlDoc.NewNode("span", "< previous page", "class", "blognavicomponent__previous")
+		return htmlDoc.NewNode("span", "&lt; previous page", "class", "narrativenavigation__previous narrativenavigation__item narrativenavigation__placeholder")
 	}
 	href := path.Join(pageB.PathFromDocRoot(), pageB.HtmlFilename())
-	return htmlDoc.NewNode("a", "< previous page", "href", href, "rel", "prev", "class", "blognavicomponent__previous")
+	return htmlDoc.NewNode("a", "&lt; previous page", "href", href, "rel", "prev", "class", "narrativenavigation__previous narrativenavigation__item")
 }
 
 func (nv *NarrativeNaviComponent) next(p staticIntf.Page) *htmlDoc.Node {
 	pageA := nv.getPageAfter(p)
 	if pageA == nil {
-		return htmlDoc.NewNode("span", "next page >", "class", "blognavicomponent__next")
+		return htmlDoc.NewNode("span", "next page &gt;", "class", "narrativenavigation__next narrativenavigation__item narrativenavigation__placeholder")
 	}
 	href := path.Join(pageA.PathFromDocRoot(), pageA.HtmlFilename())
-	return htmlDoc.NewNode("a", "next page >", "href", href, "rel", "next", "class", "blognavicomponent__next")
+	return htmlDoc.NewNode("a", "next page &gt;", "href", href, "rel", "next", "class", "narrativenavigation__next narrativenavigation__item")
 }
 
 func (mhc *NarrativeNaviComponent) GetJs() string {
 	return ""
 }
 
-func (mhc *NarrativeNaviComponent) GetCss() string { return ` ` }
+func (mhc *NarrativeNaviComponent) GetCss() string {
+	return `
+.narrativenavigation{
+	text-align: right;
+	margin-bottom: 50px;
+}
+.narrativenavigation__item {
+	font-family: Arial Black, Arial, Helvetica, sans-serif;
+	color: grey;
+	text-transform: uppercase;
+	font-weight: 900;
+	font-size: 16px;
+}
+.narrativenavigation__item.narrativenavigation__placeholder {
+	color: lightgrey;
+}
+.narrativenavigation__item + .narrativenavigation__item {
+	margin-left: 10px;
+}
+`
+}
 
 /* NarrativeHeaderComponent */
 func NewNarrativeHeaderComponent() *NarrativeHeaderComponent {
@@ -473,8 +493,8 @@ type NarrativeHeaderComponent struct {
 }
 
 func (nv *NarrativeHeaderComponent) VisitPage(p staticIntf.Page) {
-	a1 := htmlDoc.NewNode("a", "<!-- Devabo.de-->", "href", "https://devabo.de")
-	a2 := htmlDoc.NewNode("a", "", "href", "https://devabo.de/2013/08/01/a-step-in-the-dark/")
+	a1 := htmlDoc.NewNode("a", "<!-- Devabo.de-->", "href", "https://devabo.de", "class", "home")
+	a2 := htmlDoc.NewNode("a", "New Reader? Start here!", "href", "https://devabo.de/2013/08/01/a-step-in-the-dark/", "class", "orange")
 	h1 := htmlDoc.NewNode("h1", p.Title(), "class", "maincontent__h1")
 
 	n := htmlDoc.NewNode("header", "")
@@ -490,7 +510,40 @@ func (mhc *NarrativeHeaderComponent) GetJs() string {
 	return ""
 }
 
-func (mhc *NarrativeHeaderComponent) GetCss() string { return ` ` }
+func (mhc *NarrativeHeaderComponent) GetCss() string {
+	return `header .home {
+    display: block;
+    line-height: 80px;
+    height: 30px;
+    width: 800px;
+    text-align: left;
+    color: rgb(0, 0, 0);
+    margin-bottom: 0px;
+    margin-top: 0px;
+    background: url(https://devabo.de/imgs/header_devabo_de.png) 0px 0px no-repeat transparent;
+}
+
+header .orange {
+    display: block;
+    height: 2.2em;
+    background-color: rgb(255, 136, 0);
+    color: rgb(255, 255, 255);
+    line-height: 1em;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 24px;
+    font-family: "Arial Black";
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding: 0.5em;
+    text-decoration: underline;
+}
+
+header {
+	text-align: left;
+}
+`
+}
 
 /* MainNaviComponent */
 func NewMainNaviComponent() *MainNaviComponent {
@@ -644,8 +697,8 @@ func NewDisqusComponent() *DisqusComponent {
 
 func (dc *DisqusComponent) GetCss() string {
 	return `
-.diqus,
-.diqus p {
+.disqus,
+.disqus p {
 	font-family: Arial, Helvetica, sans-serif;
 }
 `
@@ -736,7 +789,7 @@ func NewNarrativeComponent() *NarrativeComponent {
 
 func (cc *NarrativeComponent) VisitPage(p staticIntf.Page) {
 	img := htmlDoc.NewNode("img", "", "src", p.ImageUrl(), "width", "800")
-	n := htmlDoc.NewNode("main", "", "class", "maincontent")
+	n := htmlDoc.NewNode("main", "", "class", "mainnarrativecontent")
 	n.AddChild(img)
 
 	wn := cc.wrap(n)

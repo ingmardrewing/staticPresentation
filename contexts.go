@@ -2,6 +2,7 @@ package staticPresentation
 
 import (
 	"fmt"
+	"math/rand"
 
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
@@ -124,7 +125,14 @@ func (c *ContextImpl) GetFooterNavigationLocations() []staticIntf.Location {
 }
 
 func (c *ContextImpl) GetCssUrl() string {
-	return c.cssUrl
+	letterBytes := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	n := 10
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	pseudoParam := string(b)
+	return c.cssUrl + "?" + pseudoParam
 }
 
 func (c *ContextImpl) GetTwitterPage() string {
