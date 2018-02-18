@@ -414,7 +414,7 @@ func (nv *NarrativeNaviComponent) VisitPage(p staticIntf.Page) {
 	nav.AddChild(nextNode)
 	nav.AddChild(lastNode)
 
-	wn := nv.wrap(nav, "header__wrapper")
+	wn := nv.wrap(nav, "narrativenavi__wrapper")
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
