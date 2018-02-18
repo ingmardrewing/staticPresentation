@@ -257,7 +257,9 @@ func NewNarrativeContext(mainnavi, footernavi []staticIntf.Location) staticIntf.
 		NewNarrativeHeaderComponent(),
 		NewNarrativeComponent(),
 		NewNarrativeNaviComponent(),
-		NewDisqusComponent())
+		NewDisqusComponent(),
+		NewNarrativeCopyRightComponent(),
+		NewFooterNaviComponent())
 
 	return c
 }
