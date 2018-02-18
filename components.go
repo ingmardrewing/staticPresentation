@@ -26,6 +26,51 @@ func (ac *abstractComponent) GetJs() string {
 	return ""
 }
 
+func (b *abstractComponent) getIndexOfPage(p staticIntf.Page) int {
+	for i, l := range b.context.GetElements() {
+		lurl := l.PathFromDocRoot() + l.HtmlFilename()
+		purl := p.PathFromDocRoot() + p.HtmlFilename()
+		if lurl == purl {
+			return i
+		}
+	}
+	return -1
+}
+
+func (b *abstractComponent) getFirstPage() staticIntf.Page {
+	pages := b.context.GetElements()
+	if len(pages) > 0 {
+		return pages[0]
+	}
+	return nil
+}
+
+func (b *abstractComponent) getLastPage() staticIntf.Page {
+	pages := b.context.GetElements()
+	if len(pages) > 0 {
+		return pages[len(pages)-1]
+	}
+	return nil
+}
+
+func (b *abstractComponent) getPageBefore(p staticIntf.Page) staticIntf.Page {
+	index := b.getIndexOfPage(p)
+	pages := b.context.GetElements()
+	if index > 0 {
+		return pages[index-1]
+	}
+	return nil
+}
+
+func (b *abstractComponent) getPageAfter(p staticIntf.Page) staticIntf.Page {
+	index := b.getIndexOfPage(p)
+	pages := b.context.GetElements()
+	if index+1 < len(pages) {
+		return pages[index+1]
+	}
+	return nil
+}
+
 /* wrapper */
 type wrapper struct{}
 
@@ -243,27 +288,23 @@ func NewBlogNaviContextComponent() *BlogNaviComponent {
 }
 
 func (b *BlogNaviComponent) addPrevious(p staticIntf.Page, n *htmlDoc.Node) {
-	inx := b.getIndexOfPage(p)
-	if inx == 0 {
+	pageBefore := b.getPageBefore(p)
+	if pageBefore == nil {
 		span := htmlDoc.NewNode("span", "< previous posts", "class", "blognavicomponent__previous")
 		n.AddChild(span)
 	} else {
-		elems := b.abstractComponent.context.GetElements()
-		pv := elems[inx-1]
-		a := htmlDoc.NewNode("a", "< previous posts", "href", pv.PathFromDocRoot()+pv.HtmlFilename(), "rel", "prev", "class", "blognavicomponent__previous")
+		a := htmlDoc.NewNode("a", "< previous posts", "href", pageBefore.PathFromDocRoot()+pageBefore.HtmlFilename(), "rel", "prev", "class", "blognavicomponent__previous")
 		n.AddChild(a)
 	}
 }
 
 func (b *BlogNaviComponent) addNext(p staticIntf.Page, n *htmlDoc.Node) {
-	inx := b.getIndexOfPage(p)
-	if inx == len(b.abstractComponent.context.GetElements())-1 {
+	pageAfter := b.getPageAfter(p)
+	if pageAfter == nil {
 		span := htmlDoc.NewNode("span", "next posts >", "class", "blognavicomponent__next")
 		n.AddChild(span)
 	} else {
-		elems := b.abstractComponent.context.GetElements()
-		nx := elems[inx+1]
-		a := htmlDoc.NewNode("a", "next posts >", "href", nx.PathFromDocRoot()+nx.HtmlFilename(), "rel", "next", "class", "blognavicomponent__next")
+		a := htmlDoc.NewNode("a", "next posts >", "href", pageAfter.PathFromDocRoot()+pageAfter.HtmlFilename(), "rel", "next", "class", "blognavicomponent__next")
 		n.AddChild(a)
 	}
 }
@@ -284,17 +325,6 @@ func (b *BlogNaviComponent) VisitPage(p staticIntf.Page) {
 		return
 	}
 	b.addBodyNodes(p)
-}
-
-func (b *BlogNaviComponent) getIndexOfPage(p staticIntf.Page) int {
-	for i, l := range b.abstractComponent.context.GetElements() {
-		lurl := l.PathFromDocRoot() + l.HtmlFilename()
-		purl := p.PathFromDocRoot() + p.HtmlFilename()
-		if lurl == purl {
-			return i
-		}
-	}
-	return -1
 }
 
 func (b *BlogNaviComponent) GetCss() string {
@@ -373,7 +403,51 @@ type NarrativeNaviComponent struct {
 }
 
 func (nv *NarrativeNaviComponent) VisitPage(p staticIntf.Page) {
-	//firstPage := ""
+	firstNode := nv.first()
+	prevNode := nv.previous(p)
+	nextNode := nv.next(p)
+	lastNode := nv.last()
+
+	nav := htmlDoc.NewNode("nav", "")
+	nav.AddChild(firstNode)
+	nav.AddChild(prevNode)
+	nav.AddChild(nextNode)
+	nav.AddChild(lastNode)
+
+	wn := nv.wrap(nav, "header__wrapper")
+	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (nv *NarrativeNaviComponent) first() *htmlDoc.Node {
+	firstPage := nv.getFirstPage()
+	if firstPage == nil {
+		return htmlDoc.NewNode("span", "<< first page", "class", "blognavicomponent__previous")
+	}
+	return htmlDoc.NewNode("a", "<< first posts", "href", firstPage.PathFromDocRoot()+firstPage.HtmlFilename(), "rel", "first", "class", "blognavicomponent__previous")
+}
+
+func (nv *NarrativeNaviComponent) last() *htmlDoc.Node {
+	lastPage := nv.getLastPage()
+	if lastPage == nil {
+		return htmlDoc.NewNode("span", "last page >>", "class", "blognavicomponent__previous")
+	}
+	return htmlDoc.NewNode("a", "last posts >>", "href", lastPage.PathFromDocRoot()+lastPage.HtmlFilename(), "rel", "last", "class", "blognavicomponent__previous")
+}
+
+func (nv *NarrativeNaviComponent) previous(p staticIntf.Page) *htmlDoc.Node {
+	pageBefore := nv.getPageBefore(p)
+	if pageBefore == nil {
+		return htmlDoc.NewNode("span", "< previous posts", "class", "blognavicomponent__previous")
+	}
+	return htmlDoc.NewNode("a", "< previous posts", "href", pageBefore.PathFromDocRoot()+pageBefore.HtmlFilename(), "rel", "prev", "class", "blognavicomponent__previous")
+}
+
+func (nv *NarrativeNaviComponent) next(p staticIntf.Page) *htmlDoc.Node {
+	pageAfter := nv.getPageAfter(p)
+	if pageAfter == nil {
+		return htmlDoc.NewNode("span", "next posts >", "class", "blognavicomponent__next")
+	}
+	return htmlDoc.NewNode("a", "next posts >", "href", pageAfter.PathFromDocRoot()+pageAfter.HtmlFilename(), "rel", "next", "class", "blognavicomponent__next")
 }
 
 func (mhc *NarrativeNaviComponent) GetJs() string {
