@@ -287,32 +287,31 @@ func NewBlogNaviContextComponent() *BlogNaviComponent {
 	return bnc
 }
 
-func (b *BlogNaviComponent) addPrevious(p staticIntf.Page, n *htmlDoc.Node) {
+func (b *BlogNaviComponent) addPrevious(p staticIntf.Page) *htmlDoc.Node {
 	pageBefore := b.getPageBefore(p)
 	if pageBefore == nil {
-		span := htmlDoc.NewNode("span", "< previous posts", "class", "blognavicomponent__previous")
-		n.AddChild(span)
-	} else {
-		a := htmlDoc.NewNode("a", "< previous posts", "href", pageBefore.PathFromDocRoot()+pageBefore.HtmlFilename(), "rel", "prev", "class", "blognavicomponent__previous")
-		n.AddChild(a)
+		return htmlDoc.NewNode("span", "< previous posts", "class", "blognavicomponent__previous")
 	}
+	return htmlDoc.NewNode("a", "< previous posts", "href", pageBefore.PathFromDocRoot()+pageBefore.HtmlFilename(), "rel", "prev", "class", "blognavicomponent__previous")
 }
 
-func (b *BlogNaviComponent) addNext(p staticIntf.Page, n *htmlDoc.Node) {
+func (b *BlogNaviComponent) addNext(p staticIntf.Page) *htmlDoc.Node {
 	pageAfter := b.getPageAfter(p)
 	if pageAfter == nil {
-		span := htmlDoc.NewNode("span", "next posts >", "class", "blognavicomponent__next")
-		n.AddChild(span)
-	} else {
-		a := htmlDoc.NewNode("a", "next posts >", "href", pageAfter.PathFromDocRoot()+pageAfter.HtmlFilename(), "rel", "next", "class", "blognavicomponent__next")
-		n.AddChild(a)
+		return htmlDoc.NewNode("span", "next posts >", "class", "blognavicomponent__next")
 	}
+	return htmlDoc.NewNode("a", "next posts >", "href", pageAfter.PathFromDocRoot()+pageAfter.HtmlFilename(), "rel", "next", "class", "blognavicomponent__next")
 }
 
 func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "", "class", "blognavicomponent__nav")
-	b.addPrevious(p, nav)
-	b.addNext(p, nav)
+
+	prev := b.addPrevious(p)
+	nav.AddChild(prev)
+
+	next := b.addNext(p)
+	nav.AddChild(next)
+
 	d := htmlDoc.NewNode("div", "", "class", "blognavicomponent")
 	d.AddChild(htmlDoc.NewNode("div", p.Content()))
 	d.AddChild(nav)
