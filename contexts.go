@@ -29,6 +29,7 @@ type ContextImpl struct {
 	homeUrl                   string
 	disqusShortname           string
 	fsSetOff                  string
+	addRss                    bool
 	mainNavigationLocations   []staticIntf.Location
 	footerNavigationLocations []staticIntf.Location
 	pages                     []staticIntf.Page
@@ -48,6 +49,7 @@ func (c *ContextImpl) SetGlobalFields(
 	rssUrl,
 	home,
 	disqusShortname string) {
+
 	c.twitterHandle = twitterHandle
 	c.contentSection = topic
 	c.tags = tags
@@ -79,12 +81,15 @@ func (c *ContextImpl) getSingleRssEntry(p staticIntf.Page) string {
 	</media:content>
   </item>
 `
-	url := path.Join(p.Domain(), p.Url())
-	return fmt.Sprintf(rssItem, p.Title(), url, p.PublishedTime(), p.Content(), p.Url(), p.Description(), p.ImageUrl(), p.ImageUrl(), p.ImageUrl(), p.Title(), p.ImageUrl())
+	return fmt.Sprintf(rssItem, p.Title(), p.Url(), p.PublishedTime(), p.Content(), p.Url(), p.Description(), p.ImageUrl(), p.ImageUrl(), p.ImageUrl(), p.Title())
 
 }
 
-func (c *ContextImpl) CreateRss() string {
+func (c *ContextImpl) AddRss() {
+	c.addRss = true
+}
+
+func (c *ContextImpl) rss() string {
 
 	last10 := c.getLastPages(10)
 	rss := []string{}
@@ -126,7 +131,8 @@ func (c *ContextImpl) CreateRss() string {
 </rss>
 `
 	domain := last10[0].Domain()
-	return fmt.Sprintf(rssTemplate, domain, domain, domain, domain, domain, "rss.xml", last10[len(last10)-1].PublishedTime(), itemsRss)
+	date := last10[len(last10)-1].PublishedTime()
+	return fmt.Sprintf(rssTemplate, domain, domain, domain, domain, domain, "rss.xml", date, itemsRss)
 }
 
 func (c *ContextImpl) getLastPages(nr int) []staticIntf.Page {
@@ -153,9 +159,15 @@ func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
 		fc.SetPath(path)
 		fc.SetFilename(p.HtmlFilename())
 
-		fmt.Println(path, p.HtmlFilename())
-
 		fc.SetDataAsString(html)
+		fcs = append(fcs, fc)
+	}
+	if c.addRss && len(c.pages) > 0 {
+		path := path.Join(targetDir, c.FsSetOff())
+		fc := fs.NewFileContainer()
+		fc.SetPath(path)
+		fc.SetFilename("rss.xml")
+		fc.SetDataAsString(c.rss())
 		fcs = append(fcs, fc)
 	}
 	return fcs
