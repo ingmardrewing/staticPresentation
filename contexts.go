@@ -3,6 +3,8 @@ package staticPresentation
 import (
 	"fmt"
 	"math/rand"
+	"path"
+	"strings"
 
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
@@ -26,6 +28,7 @@ type ContextImpl struct {
 	rssUrl                    string
 	homeUrl                   string
 	disqusShortname           string
+	fsSetOff                  string
 	mainNavigationLocations   []staticIntf.Location
 	footerNavigationLocations []staticIntf.Location
 	pages                     []staticIntf.Page
@@ -59,6 +62,80 @@ func (c *ContextImpl) SetGlobalFields(
 	c.disqusShortname = disqusShortname
 }
 
+func (c *ContextImpl) getSingleRssEntry(p staticIntf.Page) string {
+	rssItem := `  <item>
+	<title>%s</title>
+	<link>%s</link>
+	<pubDate>%s</pubDate>
+	<dc:creator><![CDATA[Ingmar Drewing]]></dc:creator>
+	<guid>%s/index.html</guid>
+	<description><![CDATA[%s]]></description>
+	<content:encoded><![CDATA[%s]]></content:encoded>
+
+	<media:thumbnail url="%s" />
+	<media:content url="%s" medium="image">
+	  <media:title type="html">%s</media:title>
+	  <media:thumbnail url="%s" />
+	</media:content>
+  </item>
+`
+	url := path.Join(p.Domain(), p.Url())
+	return fmt.Sprintf(rssItem, p.Title(), url, p.PublishedTime(), p.Content(), p.Url(), p.Description(), p.ImageUrl(), p.ImageUrl(), p.ImageUrl(), p.Title(), p.ImageUrl())
+
+}
+
+func (c *ContextImpl) CreateRss() string {
+
+	last10 := c.getLastPages(10)
+	rss := []string{}
+	for _, p := range last10 {
+		rss = append(rss, c.getSingleRssEntry(p))
+	}
+	itemsRss := strings.Join(rss, "\n")
+
+	rssTemplate := `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	xmlns:media="http://search.yahoo.com/mrss/"
+	>
+
+<channel>
+	<title>%s</title>
+    <image>
+      <url>https://%s/favicon-32x32.png</url>
+      <title>%s</title>
+      <link>https://%s</link>
+      <width>32</width>
+      <height>32</height>
+      <description>A science-fiction webcomic about the lives of software developers in the far, funny and dystopian future</description>
+    </image>
+	<atom:link href="https://%s/%s" rel="self" type="application/rss+xml" />
+	<link>https://%s</link>
+	<description>%s</description>
+	<lastBuildDate>%s</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>weekly</sy:updatePeriod>
+	<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>https://github.com/ingmardrewing/static</generator>
+%s
+	</channel>
+</rss>
+`
+	domain := last10[0].Domain()
+	return fmt.Sprintf(rssTemplate, domain, domain, domain, domain, domain, "rss.xml", last10[len(last10)-1].PublishedTime(), itemsRss)
+}
+
+func (c *ContextImpl) getLastPages(nr int) []staticIntf.Page {
+	if len(c.pages) > nr {
+		return c.pages[len(c.pages)-nr:]
+	}
+	return c.pages
+}
+
 func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
 	fcs := []fs.FileContainer{}
 	for _, p := range c.pages {
@@ -70,7 +147,7 @@ func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
 		doc.AddRootAttr("itemscope")
 		doc.AddRootAttr("lang", "en")
 		html := doc.Render()
-		path := targetDir + p.PathFromDocRoot()
+		path := path.Join(targetDir, c.FsSetOff(), p.PathFromDocRoot())
 
 		fc := fs.NewFileContainer()
 		fc.SetPath(path)
@@ -82,6 +159,10 @@ func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
 		fcs = append(fcs, fc)
 	}
 	return fcs
+}
+
+func (c *ContextImpl) FsSetOff() string {
+	return c.fsSetOff
 }
 
 func (c *ContextImpl) SetElements(pages []staticIntf.Page) {
@@ -244,6 +325,7 @@ func NewNarrativeContext(mainnavi, footernavi []staticIntf.Location) staticIntf.
 	c := new(ContextImpl)
 	c.mainNavigationLocations = mainnavi
 	c.footerNavigationLocations = footernavi
+	c.fsSetOff = "devabo.de/"
 
 	fillContextWithComponents(c,
 		NewGeneralMetaComponent(),
