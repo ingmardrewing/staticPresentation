@@ -2,6 +2,7 @@ package staticPresentation
 
 import (
 	"fmt"
+	"path"
 	"strings"
 
 	"github.com/ingmardrewing/htmlDoc"
@@ -24,6 +25,51 @@ func (ac *abstractComponent) GetCss() string {
 
 func (ac *abstractComponent) GetJs() string {
 	return ""
+}
+
+func (b *abstractComponent) getIndexOfPage(p staticIntf.Page) int {
+	for i, l := range b.context.GetElements() {
+		lurl := l.PathFromDocRoot() + l.HtmlFilename()
+		purl := p.PathFromDocRoot() + p.HtmlFilename()
+		if lurl == purl {
+			return i
+		}
+	}
+	return -1
+}
+
+func (b *abstractComponent) getFirstPage() staticIntf.Page {
+	pages := b.context.GetElements()
+	if len(pages) > 0 {
+		return pages[0]
+	}
+	return nil
+}
+
+func (b *abstractComponent) getLastPage() staticIntf.Page {
+	pages := b.context.GetElements()
+	if len(pages) > 0 {
+		return pages[len(pages)-1]
+	}
+	return nil
+}
+
+func (b *abstractComponent) getPageBefore(p staticIntf.Page) staticIntf.Page {
+	index := b.getIndexOfPage(p)
+	pages := b.context.GetElements()
+	if index > 0 {
+		return pages[index-1]
+	}
+	return nil
+}
+
+func (b *abstractComponent) getPageAfter(p staticIntf.Page) staticIntf.Page {
+	index := b.getIndexOfPage(p)
+	pages := b.context.GetElements()
+	if index+1 < len(pages) {
+		return pages[index+1]
+	}
+	return nil
 }
 
 /* wrapper */
@@ -134,7 +180,7 @@ func NewFBComponent() *FBComponent {
 func (fbc *FBComponent) VisitPage(p staticIntf.Page) {
 	m := []*htmlDoc.Node{
 		htmlDoc.NewNode("meta", "", "property", "og:title", "content", p.Title()),
-		htmlDoc.NewNode("meta", "", "property", "og:url", "content", p.PathFromDocRoot()+p.Filename()),
+		htmlDoc.NewNode("meta", "", "property", "og:url", "content", p.PathFromDocRoot()+p.HtmlFilename()),
 		htmlDoc.NewNode("meta", "", "property", "og:image", "content", p.ImageUrl()),
 		htmlDoc.NewNode("meta", "", "property", "og:description", "content", p.Description()),
 		htmlDoc.NewNode("meta", "", "property", "og:site_name", "content", fbc.abstractComponent.context.GetSiteName()),
@@ -242,36 +288,31 @@ func NewBlogNaviContextComponent() *BlogNaviComponent {
 	return bnc
 }
 
-func (b *BlogNaviComponent) addPrevious(p staticIntf.Page, n *htmlDoc.Node) {
-	inx := b.getIndexOfPage(p)
-	if inx == 0 {
-		span := htmlDoc.NewNode("span", "< previous posts", "class", "blognavicomponent__previous")
-		n.AddChild(span)
-	} else {
-		elems := b.abstractComponent.context.GetElements()
-		pv := elems[inx-1]
-		a := htmlDoc.NewNode("a", "< previous posts", "href", pv.PathFromDocRoot()+pv.Filename(), "rel", "prev", "class", "blognavicomponent__previous")
-		n.AddChild(a)
+func (b *BlogNaviComponent) addPrevious(p staticIntf.Page) *htmlDoc.Node {
+	pageBefore := b.getPageBefore(p)
+	if pageBefore == nil {
+		return htmlDoc.NewNode("span", "< previous posts", "class", "blognavicomponent__previous")
 	}
+	return htmlDoc.NewNode("a", "< previous posts", "href", pageBefore.PathFromDocRoot()+pageBefore.HtmlFilename(), "rel", "prev", "class", "blognavicomponent__previous")
 }
 
-func (b *BlogNaviComponent) addNext(p staticIntf.Page, n *htmlDoc.Node) {
-	inx := b.getIndexOfPage(p)
-	if inx == len(b.abstractComponent.context.GetElements())-1 {
-		span := htmlDoc.NewNode("span", "next posts >", "class", "blognavicomponent__next")
-		n.AddChild(span)
-	} else {
-		elems := b.abstractComponent.context.GetElements()
-		nx := elems[inx+1]
-		a := htmlDoc.NewNode("a", "next posts >", "href", nx.PathFromDocRoot()+nx.Filename(), "rel", "next", "class", "blognavicomponent__next")
-		n.AddChild(a)
+func (b *BlogNaviComponent) addNext(p staticIntf.Page) *htmlDoc.Node {
+	pageAfter := b.getPageAfter(p)
+	if pageAfter == nil {
+		return htmlDoc.NewNode("span", "next posts >", "class", "blognavicomponent__next")
 	}
+	return htmlDoc.NewNode("a", "next posts >", "href", pageAfter.PathFromDocRoot()+pageAfter.HtmlFilename(), "rel", "next", "class", "blognavicomponent__next")
 }
 
 func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "", "class", "blognavicomponent__nav")
-	b.addPrevious(p, nav)
-	b.addNext(p, nav)
+
+	prev := b.addPrevious(p)
+	nav.AddChild(prev)
+
+	next := b.addNext(p)
+	nav.AddChild(next)
+
 	d := htmlDoc.NewNode("div", "", "class", "blognavicomponent")
 	d.AddChild(htmlDoc.NewNode("div", p.Content()))
 	d.AddChild(nav)
@@ -284,17 +325,6 @@ func (b *BlogNaviComponent) VisitPage(p staticIntf.Page) {
 		return
 	}
 	b.addBodyNodes(p)
-}
-
-func (b *BlogNaviComponent) getIndexOfPage(p staticIntf.Page) int {
-	for i, l := range b.abstractComponent.context.GetElements() {
-		lurl := l.PathFromDocRoot() + l.Filename()
-		purl := p.PathFromDocRoot() + p.Filename()
-		if lurl == purl {
-			return i
-		}
-	}
-	return -1
 }
 
 func (b *BlogNaviComponent) GetCss() string {
@@ -356,6 +386,161 @@ a.blognavientry__tile {
 }
 .blognavientry__tile:hover h2 {
 	color: grey;
+}
+`
+}
+
+/* NarrativeNaviComponent */
+func NewNarrativeNaviComponent() *NarrativeNaviComponent {
+	nc := new(NarrativeNaviComponent)
+	return nc
+}
+
+type NarrativeNaviComponent struct {
+	abstractComponent
+	wrapper
+	cssClass string
+}
+
+func (nv *NarrativeNaviComponent) VisitPage(p staticIntf.Page) {
+	firstNode := nv.first(p)
+	prevNode := nv.previous(p)
+	nextNode := nv.next(p)
+	lastNode := nv.last(p)
+
+	nav := htmlDoc.NewNode("nav", "", "class", "narrativenavigation")
+	nav.AddChild(firstNode)
+	nav.AddChild(prevNode)
+	nav.AddChild(nextNode)
+	nav.AddChild(lastNode)
+
+	wn := nv.wrap(nav, "narrativenavi__wrapper")
+	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (nv *NarrativeNaviComponent) first(p staticIntf.Page) *htmlDoc.Node {
+	fPage := nv.getFirstPage()
+	if fPage == nil || fPage.Id() == p.Id() {
+		return htmlDoc.NewNode("span", "&lt;&lt; first page", "class", "narrativenavigation__first narrativenavigation__item narrativenavigation__placeholder")
+	}
+	href := path.Join(fPage.PathFromDocRoot(), fPage.HtmlFilename())
+	return htmlDoc.NewNode("a", "&lt;&lt; first page", "href", href, "rel", "first", "class", "narrativenavigation__first narrativenavigation__item")
+}
+
+func (nv *NarrativeNaviComponent) last(p staticIntf.Page) *htmlDoc.Node {
+	lPage := nv.getLastPage()
+	if lPage == nil || lPage.Id() == p.Id() {
+		return htmlDoc.NewNode("span", "last page &gt;&gt;", "class", "narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder")
+	}
+	href := path.Join(lPage.PathFromDocRoot(), lPage.HtmlFilename())
+	return htmlDoc.NewNode("a", "last page &gt;&gt;", "href", href, "rel", "last", "class", "narrativenavigation__last narrativenavigation__item")
+}
+
+func (nv *NarrativeNaviComponent) previous(p staticIntf.Page) *htmlDoc.Node {
+	pageB := nv.getPageBefore(p)
+	if pageB == nil {
+		return htmlDoc.NewNode("span", "&lt; previous page", "class", "narrativenavigation__previous narrativenavigation__item narrativenavigation__placeholder")
+	}
+	href := path.Join(pageB.PathFromDocRoot(), pageB.HtmlFilename())
+	return htmlDoc.NewNode("a", "&lt; previous page", "href", href, "rel", "prev", "class", "narrativenavigation__previous narrativenavigation__item")
+}
+
+func (nv *NarrativeNaviComponent) next(p staticIntf.Page) *htmlDoc.Node {
+	pageA := nv.getPageAfter(p)
+	if pageA == nil {
+		return htmlDoc.NewNode("span", "next page &gt;", "class", "narrativenavigation__next narrativenavigation__item narrativenavigation__placeholder")
+	}
+	href := path.Join(pageA.PathFromDocRoot(), pageA.HtmlFilename())
+	return htmlDoc.NewNode("a", "next page &gt;", "href", href, "rel", "next", "class", "narrativenavigation__next narrativenavigation__item")
+}
+
+func (mhc *NarrativeNaviComponent) GetJs() string {
+	return ""
+}
+
+func (mhc *NarrativeNaviComponent) GetCss() string {
+	return `
+.narrativenavigation{
+	text-align: right;
+	margin-bottom: 50px;
+}
+.narrativenavigation__item {
+	font-family: Arial Black, Arial, Helvetica, sans-serif;
+	color: grey;
+	text-transform: uppercase;
+	font-weight: 900;
+	font-size: 16px;
+}
+.narrativenavigation__item.narrativenavigation__placeholder {
+	color: lightgrey;
+}
+.narrativenavigation__item + .narrativenavigation__item {
+	margin-left: 10px;
+}
+`
+}
+
+/* NarrativeHeaderComponent */
+func NewNarrativeHeaderComponent() *NarrativeHeaderComponent {
+	nc := new(NarrativeHeaderComponent)
+	return nc
+}
+
+type NarrativeHeaderComponent struct {
+	abstractComponent
+	wrapper
+	cssClass string
+}
+
+func (nv *NarrativeHeaderComponent) VisitPage(p staticIntf.Page) {
+	a1 := htmlDoc.NewNode("a", "<!-- Devabo.de-->", "href", "https://devabo.de", "class", "home")
+	a2 := htmlDoc.NewNode("a", "New Reader? Start here!", "href", "https://devabo.de/2013/08/01/a-step-in-the-dark/", "class", "orange")
+	h1 := htmlDoc.NewNode("h1", p.Title(), "class", "maincontent__h1")
+
+	n := htmlDoc.NewNode("header", "")
+	n.AddChild(a1)
+	n.AddChild(a2)
+	n.AddChild(h1)
+
+	wn := nv.wrap(n, "header__wrapper")
+	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (mhc *NarrativeHeaderComponent) GetJs() string {
+	return ""
+}
+
+func (mhc *NarrativeHeaderComponent) GetCss() string {
+	return `header .home {
+    display: block;
+    line-height: 80px;
+    height: 30px;
+    width: 800px;
+    text-align: left;
+    color: rgb(0, 0, 0);
+    margin-bottom: 0px;
+    margin-top: 0px;
+    background: url(https://devabo.de/imgs/header_devabo_de.png) 0px 0px no-repeat transparent;
+}
+
+header .orange {
+    display: block;
+    height: 2.2em;
+    background-color: rgb(255, 136, 0);
+    color: rgb(255, 255, 255);
+    line-height: 1em;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 24px;
+    font-family: "Arial Black";
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding: 0.5em;
+    text-decoration: underline;
+}
+
+header {
+	text-align: left;
 }
 `
 }
@@ -512,8 +697,8 @@ func NewDisqusComponent() *DisqusComponent {
 
 func (dc *DisqusComponent) GetCss() string {
 	return `
-.diqus,
-.diqus p {
+.disqus,
+.disqus p {
 	font-family: Arial, Helvetica, sans-serif;
 }
 `
@@ -524,7 +709,7 @@ func (dc *DisqusComponent) GetJs() string {
 }
 
 func (dc *DisqusComponent) VisitPage(p staticIntf.Page) {
-	dc.configuredJs = fmt.Sprintf(`var disqus_config = function () { this.page.title= "%s"; this.page.url = '%s'; this.page.identifier =  '%s'; }; (function() { var d = document, s = d.createElement('script'); s.src = 'https://%s.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();`, p.Title(), p.Domain()+p.PathFromDocRoot()+p.Filename(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
+	dc.configuredJs = fmt.Sprintf(`var disqus_config = function () { this.page.title= "%s"; this.page.url = '%s'; this.page.identifier =  '%s'; }; (function() { var d = document, s = d.createElement('script'); s.src = 'https://%s.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();`, p.Title(), p.Domain()+p.PathFromDocRoot()+p.HtmlFilename(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
 	n := htmlDoc.NewNode("div", " ", "id", "disqus_thread", "class", "disqus")
 	js := htmlDoc.NewNode("script", dc.configuredJs)
 	wn := dc.wrap(n)
@@ -592,6 +777,63 @@ func (mhc *MainHeaderComponent) GetCss() string {
 `
 }
 
+/* start page component */
+type NarrativeComponent struct {
+	abstractComponent
+	wrapper
+}
+
+func NewNarrativeComponent() *NarrativeComponent {
+	return new(NarrativeComponent)
+}
+
+func (cc *NarrativeComponent) VisitPage(p staticIntf.Page) {
+	img := htmlDoc.NewNode("img", "", "src", p.ImageUrl(), "width", "800")
+	n := htmlDoc.NewNode("main", "", "class", "mainnarrativecontent")
+	n.AddChild(img)
+
+	wn := cc.wrap(n)
+	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (cc *NarrativeComponent) GetJs() string { return "" }
+
+func (cc *NarrativeComponent) GetCss() string {
+	return `
+`
+}
+
+/* start page component */
+type StartPageComponent struct {
+	abstractComponent
+	wrapper
+}
+
+func NewStartPageComponent() *StartPageComponent {
+	return new(StartPageComponent)
+}
+
+func (cc *StartPageComponent) VisitPage(p staticIntf.Page) {
+	c1 := htmlDoc.NewNode("div", "portfoliocontent", "class", "home__portfolio")
+	c2 := htmlDoc.NewNode("div", "devabode", "class", "home__devabode")
+	c3 := htmlDoc.NewNode("div", "blog", "class", "home__blog")
+
+	n := htmlDoc.NewNode("main", "", "class", "maincontent")
+	n.AddChild(c1)
+	n.AddChild(c2)
+	n.AddChild(c3)
+
+	wn := cc.wrap(n)
+	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (cc *StartPageComponent) GetJs() string { return "" }
+
+func (cc *StartPageComponent) GetCss() string {
+	return `
+`
+}
+
 /* content component */
 type ContentComponent struct {
 	abstractComponent
@@ -621,7 +863,17 @@ func (cc *ContentComponent) GetCss() string {
 	return `
 .maincontent{
 	padding-top: 126px;
+	padding-bottom: 50px;
 	text-align: left;
+	line-height: 20px;
+}
+.maincontent li,
+.maincontent p {
+	line-height: 30px;
+}
+.maincontent h1,
+.maincontent h2 {
+	text-transform: uppercase;
 }
 .maincontent__h1,
 .maincontent__h2 {
@@ -633,6 +885,7 @@ func (cc *ContentComponent) GetCss() string {
 .maincontent__h2 {
 	font-size: 18px;
 	line-height: 20px;
+	text-transform: uppercase;
 }
 .maincontent__h2 {
 	color: grey;
@@ -724,6 +977,52 @@ func (crc *CopyRightComponent) GetCss() string {
 }
 
 func (crc *CopyRightComponent) GetJs() string { return `` }
+
+// NarrativeCopyRightComponent
+type NarrativeCopyRightComponent struct {
+	abstractComponent
+	wrapper
+}
+
+func NewNarrativeCopyRightComponent() *NarrativeCopyRightComponent {
+	c := new(NarrativeCopyRightComponent)
+	return c
+}
+
+func (crc *NarrativeCopyRightComponent) VisitPage(p staticIntf.Page) {
+	n := htmlDoc.NewNode("div", `All content including but not limited to the art, characters, story, website design & graphics are © copyright 2013-2018 Ingmar Drewing unless otherwise stated. All rights reserved. Do not copy, alter or reuse without expressed written permission.`, "class", "copyright")
+	wn := crc.wrap(n)
+	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (crc *NarrativeCopyRightComponent) GetCss() string {
+	return `
+.copyright {
+	background-color: black;
+	color: white;
+	text-align: left;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	padding: 20px 20px 50px;
+	margin-top: 20px;
+}
+.copyright__license {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+.copyright__cc {
+    display: block;
+    border-width: 0;
+    background-image: url(https://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png);
+    width: 88px;
+    height: 31px;
+    margin-right: 15px;
+    margin-bottom: 5px;
+}
+`
+}
+
+func (crc *NarrativeCopyRightComponent) GetJs() string { return `` }
 
 /* cookie notifier component */
 
