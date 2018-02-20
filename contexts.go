@@ -13,6 +13,15 @@ import (
 	"github.com/tdewolff/minify/js"
 )
 
+var headerComponents []staticIntf.Component = []staticIntf.Component{
+	NewGeneralMetaComponent(),
+	NewFaviconComponent(),
+	NewGlobalCssComponent(),
+	NewGoogleComponent(),
+	NewTwitterComponent(),
+	NewFBComponent(),
+	NewCssLinkComponent()}
+
 /* Global Context */
 
 type ContextImpl struct {
@@ -45,8 +54,8 @@ func (c *ContextImpl) SetGlobalFields(
 	section,
 	fbPage,
 	twitterPage,
-	cssUrl,
 	rssUrl,
+	cssUrl,
 	home,
 	disqusShortname string) {
 
@@ -197,6 +206,13 @@ func (c *ContextImpl) AddComponent(comp staticIntf.Component) {
 	c.components = append(c.components, comp)
 }
 
+func (c *ContextImpl) AddComponents(comps ...staticIntf.Component) {
+	for _, comp := range comps {
+		comp.SetContext(c)
+		c.AddComponent(comp)
+	}
+}
+
 func (c *ContextImpl) GetHomeUrl() string {
 	return c.homeUrl
 }
@@ -297,41 +313,8 @@ func (c *ContextImpl) GetReadNavigationLocations() []staticIntf.Location {
 	return nil
 }
 
-func fillContextWithComponents(context staticIntf.Context, components ...staticIntf.Component) {
-	for _, compo := range components {
-		compo.SetContext(context)
-		context.AddComponent(compo)
-	}
-}
-
-func newContext(mainnavi, footernavi []staticIntf.Location, contentComponents []staticIntf.Component) staticIntf.Context {
-	c := new(ContextImpl)
-	c.mainNavigationLocations = mainnavi
-	c.footerNavigationLocations = footernavi
-
-	fillContextWithComponents(c,
-		NewGeneralMetaComponent(),
-		NewFaviconComponent(),
-		NewGlobalCssComponent(),
-		NewGoogleComponent(),
-		NewTwitterComponent(),
-		NewFBComponent(),
-		NewCssLinkComponent(),
-		NewTitleComponent())
-
-	fillContextWithComponents(c, contentComponents...)
-
-	fillContextWithComponents(c,
-		NewMainHeaderComponent(),
-		NewMainNaviComponent(),
-		NewCopyRightComponent(),
-		NewFooterNaviComponent())
-
-	return c
-}
-
-/* Pages Context */
-
+// Create Narrrative Context
+// used for graphic novels
 func NewNarrativeContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {
 
 	c := new(ContextImpl)
@@ -339,14 +322,8 @@ func NewNarrativeContext(mainnavi, footernavi []staticIntf.Location) staticIntf.
 	c.footerNavigationLocations = footernavi
 	c.fsSetOff = "devabo.de/"
 
-	fillContextWithComponents(c,
-		NewGeneralMetaComponent(),
-		NewFaviconComponent(),
-		NewGlobalCssComponent(),
-		NewGoogleComponent(),
-		NewTwitterComponent(),
-		NewFBComponent(),
-		NewCssLinkComponent(),
+	c.AddComponents(headerComponents...)
+	c.AddComponents(
 		NewTitleComponent(),
 		NewNarrativeHeaderComponent(),
 		NewNarrativeComponent(),
@@ -358,22 +335,16 @@ func NewNarrativeContext(mainnavi, footernavi []staticIntf.Location) staticIntf.
 	return c
 }
 
-/* Pages Context */
-
+// Pages context, used for static pages
+// of a site, featuring separate subjects
 func NewPagesContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {
 
 	c := new(ContextImpl)
 	c.mainNavigationLocations = mainnavi
 	c.footerNavigationLocations = footernavi
 
-	fillContextWithComponents(c,
-		NewGeneralMetaComponent(),
-		NewFaviconComponent(),
-		NewGlobalCssComponent(),
-		NewGoogleComponent(),
-		NewTwitterComponent(),
-		NewFBComponent(),
-		NewCssLinkComponent(),
+	c.AddComponents(headerComponents...)
+	c.AddComponents(
 		NewTitleComponent(),
 		NewStartPageComponent(),
 		NewMainHeaderComponent(),
@@ -384,30 +355,63 @@ func NewPagesContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Cont
 	return c
 }
 
-/* Blog Context */
-
+// Blog context, used for blog pages
 func NewBlogContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {
-	contentComponents := []staticIntf.Component{
+
+	c := new(ContextImpl)
+	c.mainNavigationLocations = mainnavi
+	c.footerNavigationLocations = footernavi
+
+	c.AddComponents(headerComponents...)
+	c.AddComponents(
+		NewTitleComponent(),
 		NewContentComponent(),
-		NewDisqusComponent()}
-	c := newContext(mainnavi, footernavi, contentComponents)
+		NewDisqusComponent(),
+		NewMainHeaderComponent(),
+		NewMainNaviComponent(),
+		NewCopyRightComponent(),
+		NewFooterNaviComponent())
+
 	return c
 }
 
-/* Footer Context */
-
-func NewFooterContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {
-	contentComponents := []staticIntf.Component{
-		NewContentComponent()}
-	c := newContext(mainnavi, footernavi, contentComponents)
-	return c
-}
-
-/* Blog Navi Context */
-
+// Blog navigation context
+// creates pages containing a navigations overview
+// of blog pages
 func NewBlogNaviContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {
-	contentComponents := []staticIntf.Component{
-		NewBlogNaviContextComponent()}
-	c := newContext(mainnavi, footernavi, contentComponents)
+
+	c := new(ContextImpl)
+	c.mainNavigationLocations = mainnavi
+	c.footerNavigationLocations = footernavi
+
+	c.AddComponents(headerComponents...)
+	c.AddComponents(
+		NewTitleComponent(),
+		NewBlogNaviContextComponent(),
+		NewMainHeaderComponent(),
+		NewMainNaviComponent(),
+		NewCopyRightComponent(),
+		NewFooterNaviComponent())
+
+	return c
+}
+
+// Marginal context use for pages contained
+// within the marginal navigation (imprint, terms of use, etc.)
+func NewMarginalContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {
+
+	c := new(ContextImpl)
+	c.mainNavigationLocations = mainnavi
+	c.footerNavigationLocations = footernavi
+
+	c.AddComponents(headerComponents...)
+	c.AddComponents(
+		NewTitleComponent(),
+		NewContentComponent(),
+		NewMainHeaderComponent(),
+		NewMainNaviComponent(),
+		NewCopyRightComponent(),
+		NewFooterNaviComponent())
+
 	return c
 }
