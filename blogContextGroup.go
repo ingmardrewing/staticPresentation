@@ -2,10 +2,23 @@ package staticPresentation
 
 import "github.com/ingmardrewing/staticIntf"
 
-func NewBlogContextGroup(pagesContext, naviContext staticIntf.Context) staticIntf.ContextGroup {
+func NewBlogContextGroup(
+	posts []staticIntf.Page,
+	dto staticIntf.ContextDto,
+	mainNavi []staticIntf.Location,
+	footerNavi []staticIntf.Location) staticIntf.ContextGroup {
+
+	bc := NewBlogContext(mainNavi, footerNavi)
+	bc.SetContextDto(dto)
+	bc.SetElements(posts)
+
+	bnc := NewBlogNaviContext(mainNavi, footerNavi)
+	bnc.SetContextDto(dto)
+	bnc.FsSetOff("/blog/")
+
 	cg := new(blogContextGroup)
-	cg.pagesContext = pagesContext
-	cg.naviContext = naviContext
+	cg.pagesContext = bc
+	cg.naviContext = bnc
 	cg.generateNaviPages()
 	return cg
 }
