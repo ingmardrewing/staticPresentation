@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
@@ -45,32 +46,19 @@ type ContextImpl struct {
 	components                []staticIntf.Component
 }
 
-func (c *ContextImpl) SetGlobalFields(
-	twitterHandle,
-	topic,
-	tags,
-	site,
-	cardType,
-	section,
-	fbPage,
-	twitterPage,
-	rssUrl,
-	cssUrl,
-	home,
-	disqusShortname string) {
-
-	c.twitterHandle = twitterHandle
-	c.contentSection = topic
-	c.tags = tags
-	c.siteName = site
-	c.twitterCardType = cardType
-	c.ogType = section
-	c.fbPageUrl = fbPage
-	c.twitterPageUrl = twitterPage
-	c.cssUrl = cssUrl
-	c.rssUrl = rssUrl
-	c.homeUrl = home
-	c.disqusShortname = disqusShortname
+func (c *ContextImpl) SetContextDto(dto staticIntf.ContextDto) {
+	c.twitterHandle = dto.TwitterHandle()
+	c.contentSection = dto.Topic()
+	c.tags = dto.Tags()
+	c.siteName = dto.Site()
+	c.twitterCardType = dto.CardType()
+	c.ogType = dto.Section()
+	c.fbPageUrl = dto.FBPage()
+	c.twitterPageUrl = dto.TwitterPage()
+	c.cssUrl = dto.Css()
+	c.rssUrl = dto.Rss()
+	c.homeUrl = dto.Domain()
+	c.disqusShortname = dto.DisqusId()
 }
 
 func (c *ContextImpl) getSingleRssEntry(p staticIntf.Page) string {
@@ -182,7 +170,10 @@ func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
 	return fcs
 }
 
-func (c *ContextImpl) FsSetOff() string {
+func (c *ContextImpl) FsSetOff(fsSetOff ...string) string {
+	if len(fsSetOff) > 0 {
+		c.fsSetOff = fsSetOff[0]
+	}
 	return c.fsSetOff
 }
 
@@ -237,8 +228,11 @@ func (c *ContextImpl) GetCssUrl() string {
 	letterBytes := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	n := 10
 	b := make([]byte, n)
+
+	s := rand.NewSource(time.Now().UnixNano())
+	r := rand.New(s)
 	for i := range b {
-		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+		b[i] = letterBytes[r.Intn(len(letterBytes))]
 	}
 	pseudoParam := string(b)
 	return c.cssUrl + "?" + pseudoParam
@@ -387,6 +381,7 @@ func NewBlogNaviContext(mainnavi, footernavi []staticIntf.Location) staticIntf.C
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
 		NewTitleComponent(),
+		NewBlogNaviPageContentComponent(),
 		NewBlogNaviContextComponent(),
 		NewMainHeaderComponent(),
 		NewMainNaviComponent(),
