@@ -289,7 +289,8 @@ func (b *BlogNaviComponent) addPrevious(p staticIntf.Page) *htmlDoc.Node {
 	if pageBefore == nil {
 		return htmlDoc.NewNode("span", "< previous posts", "class", "blognavicomponent__previous")
 	}
-	return htmlDoc.NewNode("a", "< previous posts", "href", pageBefore.PathFromDocRoot()+pageBefore.HtmlFilename(), "rel", "prev", "class", "blognavicomponent__previous")
+	href := path.Join(pageBefore.PathFromDocRoot(), pageBefore.HtmlFilename())
+	return htmlDoc.NewNode("a", "< previous posts", "href", href, "rel", "prev", "class", "blognavicomponent__previous")
 }
 
 func (b *BlogNaviComponent) addNext(p staticIntf.Page) *htmlDoc.Node {
@@ -297,7 +298,9 @@ func (b *BlogNaviComponent) addNext(p staticIntf.Page) *htmlDoc.Node {
 	if pageAfter == nil {
 		return htmlDoc.NewNode("span", "next posts >", "class", "blognavicomponent__next")
 	}
-	return htmlDoc.NewNode("a", "next posts >", "href", pageAfter.PathFromDocRoot()+pageAfter.HtmlFilename(), "rel", "next", "class", "blognavicomponent__next")
+
+	href := path.Join(pageAfter.PathFromDocRoot(), pageAfter.HtmlFilename())
+	return htmlDoc.NewNode("a", "next posts >", "href", href, "rel", "next", "class", "blognavicomponent__next")
 }
 
 func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
@@ -1153,8 +1156,9 @@ func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
 			ta = page.ImageUrl()
 		}
 
+		href := path.Join(page.PathFromDocRoot(), page.HtmlFilename())
 		a := htmlDoc.NewNode("a", " ",
-			"href", "/"+page.PathFromDocRoot()+page.HtmlFilename(),
+			"href", href,
 			"class", "blognavientry__tile")
 		span := htmlDoc.NewNode("span", " ",
 			"style", "background-image: url("+page.ThumbnailUrl()+")",
