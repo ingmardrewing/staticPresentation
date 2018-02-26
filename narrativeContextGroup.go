@@ -13,7 +13,7 @@ func NewNarrativeContextGroup(
 	narrativeCtx.SetElements(pages)
 	narrativeCtx.AddRss()
 
-	// TODO: Genrate archive pages, etc.
+	// TODO: Genrate archive pages, separate rss, etc.
 
 	cg := new(narrativeContextGroup)
 	cg.pagesContext = narrativeCtx

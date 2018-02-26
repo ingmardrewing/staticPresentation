@@ -8,19 +8,20 @@ func NewBlogContextGroup(
 	mainNavi []staticIntf.Location,
 	footerNavi []staticIntf.Location) staticIntf.ContextGroup {
 
-	bc := NewBlogContext(mainNavi, footerNavi)
-	bc.SetContextDto(dto)
-	bc.SetElements(posts)
-	bc.FsSetOff("/blog/")
-
-	bnc := NewBlogNaviContext(mainNavi, footerNavi)
-	bnc.SetContextDto(dto)
-	bnc.FsSetOff("/blog/")
-
 	cg := new(blogContextGroup)
-	cg.pagesContext = bc
-	cg.naviContext = bnc
+
+	cg.pagesContext = NewBlogContext(mainNavi, footerNavi)
+	cg.pagesContext.SetContextDto(dto)
+	cg.pagesContext.SetElements(posts)
+	cg.pagesContext.FsSetOff("/blog/")
+	cg.pagesContext.AddRss()
+
+	cg.naviContext = NewBlogNaviContext(mainNavi, footerNavi)
+	cg.naviContext.SetContextDto(dto)
+	cg.naviContext.FsSetOff("/blog/")
+
 	cg.generateNaviPages()
+
 	return cg
 }
 
