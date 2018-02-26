@@ -9,8 +9,8 @@ import (
 	"github.com/ingmardrewing/staticIntf"
 )
 
-/* component */
-
+// abstractComponent implementing default functions
+// for implementing components
 type abstractComponent struct {
 	context staticIntf.Context
 }
@@ -19,13 +19,11 @@ func (ac *abstractComponent) SetContext(context staticIntf.Context) {
 	ac.context = context
 }
 
-func (ac *abstractComponent) GetCss() string {
-	return ""
-}
+func (ac *abstractComponent) GetCss() string { return "" }
 
-func (ac *abstractComponent) GetJs() string {
-	return ""
-}
+func (ac *abstractComponent) GetJs() string { return "" }
+
+func (ac *abstractComponent) VisitPage(p staticIntf.Page) {}
 
 func (b *abstractComponent) getIndexOfPage(p staticIntf.Page) int {
 	for i, l := range b.context.GetElements() {
@@ -72,7 +70,7 @@ func (b *abstractComponent) getPageAfter(p staticIntf.Page) staticIntf.Page {
 	return nil
 }
 
-/* wrapper */
+// wrapper
 type wrapper struct{}
 
 func (cw *wrapper) wrap(n *htmlDoc.Node, addedclasses ...string) *htmlDoc.Node {
@@ -93,8 +91,6 @@ func NewGlobalCssComponent() *GlobalCssComponent {
 type GlobalCssComponent struct {
 	abstractComponent
 }
-
-func (gcc *GlobalCssComponent) VisitPage(p staticIntf.Page) {}
 
 func (gcc *GlobalCssComponent) GetCss() string {
 	return `
@@ -313,7 +309,7 @@ func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
 	next := b.addNext(p)
 	nav.AddChild(next)
 
-	d := htmlDoc.NewNode("div", "", "class", "blognavicomponent")
+	d := htmlDoc.NewNode("div", "", "class", "blognavicomponent meta")
 	d.AddChild(htmlDoc.NewNode("div", p.Content()))
 	d.AddChild(nav)
 	wn := b.wrap(d)
@@ -332,13 +328,14 @@ func (b *BlogNaviComponent) GetCss() string {
 .blognavicomponent {
 	text-align: left;
 	padding-top: 123px;
-	padding-bottom: 20px;
+}
+.blognavicomponent.meta {
+	padding-top: 0;
 }
 .blognavicomponent__nav {
 	text-align: center;
 	color: lightgrey;
-	margin-top: 40px;
-	margin-bottom: 20px;
+	margin-bottom: 50px;
 }
 .blognavicomponent__nav span {
 	font-family: Arial Black, Arial, Helvetica, sans-serif;
@@ -355,37 +352,6 @@ func (b *BlogNaviComponent) GetCss() string {
 	text-transform: uppercase;
 	font-weight: 900;
 	font-size: 16px;
-}
-
-a.blognavientry__tile {
-	display: block;
-	position: relative;
-	width: 390px;
-	height: 470px;
-	margin-bottom: 20px;
-	float: left;
-	text-decoration: none;
-}
-
-.blognavientry__tile:nth-child(odd) {
-	margin-right: 20px;
-}
-
-.blognavientry__image {
-	display: block;
-	width: 390px;
-	height: 390px;
-	background-size: cover;
-}
-.blognavientry__tile h2 {
-	font-family: Arial Black, Arial, Helvetica, sans-serif;
-	text-transform: uppercase;
-	color: black;
-	margin-top: 4px;
-	line-height: 24px;
-}
-.blognavientry__tile:hover h2 {
-	color: grey;
 }
 `
 }
@@ -454,10 +420,6 @@ func (nv *NarrativeNaviComponent) next(p staticIntf.Page) *htmlDoc.Node {
 	return htmlDoc.NewNode("a", "next page &gt;", "href", href, "rel", "next", "class", "narrativenavigation__next narrativenavigation__item")
 }
 
-func (mhc *NarrativeNaviComponent) GetJs() string {
-	return ""
-}
-
 func (mhc *NarrativeNaviComponent) GetCss() string {
 	return `
 .narrativenavigation{
@@ -504,10 +466,6 @@ func (nv *NarrativeHeaderComponent) VisitPage(p staticIntf.Page) {
 
 	wn := nv.wrap(n, "header__wrapper")
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
-}
-
-func (mhc *NarrativeHeaderComponent) GetJs() string {
-	return ""
 }
 
 func (mhc *NarrativeHeaderComponent) GetCss() string {
@@ -578,10 +536,6 @@ func (nv *MainNaviComponent) VisitPage(p staticIntf.Page) {
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
-func (mhc *MainNaviComponent) GetJs() string {
-	return ""
-}
-
 func (mhc *MainNaviComponent) GetCss() string {
 	return `
 .mainnavi {
@@ -649,8 +603,6 @@ func (f *FooterNaviComponent) VisitPage(p staticIntf.Page) {
 	wn := f.wrap(node, "footernavi__wrapper")
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
-
-func (f *FooterNaviComponent) GetJs() string { return "" }
 
 func (f *FooterNaviComponent) GetCss() string {
 	return `
@@ -743,10 +695,6 @@ func (mhc *MainHeaderComponent) VisitPage(p staticIntf.Page) {
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
-func (mhc *MainHeaderComponent) GetJs() string {
-	return ""
-}
-
 func (mhc *MainHeaderComponent) GetCss() string {
 	return `
 .headerbar__wrapper {
@@ -796,13 +744,6 @@ func (cc *NarrativeComponent) VisitPage(p staticIntf.Page) {
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
-func (cc *NarrativeComponent) GetJs() string { return "" }
-
-func (cc *NarrativeComponent) GetCss() string {
-	return `
-`
-}
-
 /* start page component */
 type StartPageComponent struct {
 	abstractComponent
@@ -827,13 +768,6 @@ func (cc *StartPageComponent) VisitPage(p staticIntf.Page) {
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
-func (cc *StartPageComponent) GetJs() string { return "" }
-
-func (cc *StartPageComponent) GetCss() string {
-	return `
-`
-}
-
 /* content component */
 type ContentComponent struct {
 	abstractComponent
@@ -856,8 +790,6 @@ func (cc *ContentComponent) VisitPage(p staticIntf.Page) {
 	wn := cc.wrap(n)
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
-
-func (cc *ContentComponent) GetJs() string { return "" }
 
 func (cc *ContentComponent) GetCss() string {
 	return `
@@ -930,8 +862,6 @@ func (gal *GalleryComponent) VisitPage(p staticIntf.Page) {
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
-func (gal *GalleryComponent) getCss() string { return `` }
-
 /* copyright component */
 type CopyRightComponent struct {
 	abstractComponent
@@ -975,8 +905,6 @@ func (crc *CopyRightComponent) GetCss() string {
 }
 `
 }
-
-func (crc *CopyRightComponent) GetJs() string { return `` }
 
 // NarrativeCopyRightComponent
 type NarrativeCopyRightComponent struct {
@@ -1022,16 +950,9 @@ func (crc *NarrativeCopyRightComponent) GetCss() string {
 `
 }
 
-func (crc *NarrativeCopyRightComponent) GetJs() string { return `` }
-
 /* cookie notifier component */
 
-type CookieNotifierComponent struct {
-}
-
-func (cnc *CookieNotifierComponent) VisitPage(p staticIntf.Page) {}
-
-func (cnc *CookieNotifierComponent) getCss() string { return `` }
+type CookieNotifierComponent struct{}
 
 func (cnc *CookieNotifierComponent) getJs() string {
 	return `
@@ -1206,5 +1127,79 @@ cli_show_cookiebar({
 					settings: '{"animate_speed_hide":"500","animate_speed_show":"500","background":"#fff","border":"#444","border_on":true,"button_1_button_colour":"#000","button_1_button_hover":"#000000","button_1_link_colour":"#fff","button_1_as_button":true,"button_2_button_colour":"#333","button_2_button_hover":"#292929","button_2_link_colour":"#444","button_2_as_button":false,"font_family":"inherit","header_fix":false,"notify_animate_hide":true,"notify_animate_show":false,"notify_div_id":"#cookie-law-info-bar","notify_position_horizontal":"right","notify_position_vertical":"bottom","scroll_close":false,"scroll_close_reload":false,"showagain_tab":false,"showagain_background":"#fff","showagain_border":"#000","showagain_div_id":"#cookie-law-info-again","showagain_x_position":"100px","text":"#000","show_once_yn":false,"show_once":"10000"}'
 });
 
+`
+}
+
+// Generates navigational overview pages filled
+// with thumbnails
+
+func NewBlogNaviPageContentComponent() *BlogNaviPageContentComponent {
+	bnpc := new(BlogNaviPageContentComponent)
+	return bnpc
+}
+
+type BlogNaviPageContentComponent struct {
+	abstractComponent
+	wrapper
+}
+
+func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
+	n := htmlDoc.NewNode("div", "", "class", "blognavicomponent")
+
+	for _, page := range p.(staticIntf.NaviPage).NavigatedPages() {
+
+		ta := page.ThumbnailUrl()
+		if ta == "" {
+			ta = page.ImageUrl()
+		}
+
+		a := htmlDoc.NewNode("a", " ",
+			"href", "/"+page.PathFromDocRoot()+page.HtmlFilename(),
+			"class", "blognavientry__tile")
+		span := htmlDoc.NewNode("span", " ",
+			"style", "background-image: url("+page.ThumbnailUrl()+")",
+			"class", "blognavientry__image")
+		h2 := htmlDoc.NewNode("h2", page.Title())
+		a.AddChild(span)
+		a.AddChild(h2)
+		n.AddChild(a)
+	}
+	n.AddChild(htmlDoc.NewNode("div", "", "style", "clear: both"))
+	wn := b.wrap(n)
+	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (b *BlogNaviPageContentComponent) GetCss() string {
+	return `
+a.blognavientry__tile {
+	display: block;
+	position: relative;
+	width: 390px;
+	height: 470px;
+	margin-bottom: 20px;
+	float: left;
+	text-decoration: none;
+}
+
+.blognavientry__tile:nth-child(odd) {
+	margin-right: 20px;
+}
+
+.blognavientry__image {
+	display: block;
+	width: 390px;
+	height: 390px;
+	background-size: cover;
+}
+.blognavientry__tile h2 {
+	font-family: Arial Black, Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	color: black;
+	margin-top: 4px;
+	line-height: 24px;
+}
+.blognavientry__tile:hover h2 {
+	color: grey;
+}
 `
 }
