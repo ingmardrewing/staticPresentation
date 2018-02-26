@@ -11,6 +11,7 @@ func NewBlogContextGroup(
 	bc := NewBlogContext(mainNavi, footerNavi)
 	bc.SetContextDto(dto)
 	bc.SetElements(posts)
+	bc.FsSetOff("/blog/")
 
 	bnc := NewBlogNaviContext(mainNavi, footerNavi)
 	bnc.SetContextDto(dto)
@@ -24,5 +25,5 @@ func NewBlogContextGroup(
 }
 
 type blogContextGroup struct {
-	abstractContextGroup
+	navigationalContextGroup
 }
