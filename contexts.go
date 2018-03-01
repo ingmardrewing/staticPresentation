@@ -36,7 +36,6 @@ type ContextImpl struct {
 	twitterPageUrl            string
 	cssUrl                    string
 	rssUrl                    string
-	homeUrl                   string
 	disqusShortname           string
 	fsSetOff                  string
 	addRss                    bool
@@ -57,7 +56,6 @@ func (c *ContextImpl) SetContextDto(dto staticIntf.ContextDto) {
 	c.twitterPageUrl = dto.TwitterPage()
 	c.cssUrl = dto.Css()
 	c.rssUrl = dto.Rss()
-	c.homeUrl = dto.Domain()
 	c.disqusShortname = dto.DisqusId()
 }
 
@@ -204,10 +202,6 @@ func (c *ContextImpl) AddComponents(comps ...staticIntf.Component) {
 	}
 }
 
-func (c *ContextImpl) GetHomeUrl() string {
-	return c.homeUrl
-}
-
 func (c *ContextImpl) GetRssUrl() string {
 	return c.rssUrl
 }
@@ -314,7 +308,6 @@ func NewNarrativeContext(mainnavi, footernavi []staticIntf.Location) staticIntf.
 	c := new(ContextImpl)
 	c.mainNavigationLocations = mainnavi
 	c.footerNavigationLocations = footernavi
-	c.fsSetOff = "devabo.de/"
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(

@@ -664,7 +664,8 @@ func (dc *DisqusComponent) GetJs() string {
 }
 
 func (dc *DisqusComponent) VisitPage(p staticIntf.Page) {
-	dc.configuredJs = fmt.Sprintf(`var disqus_config = function () { this.page.title= "%s"; this.page.url = '%s'; this.page.identifier =  '%s'; }; (function() { var d = document, s = d.createElement('script'); s.src = 'https://%s.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();`, p.Title(), p.Domain()+p.PathFromDocRoot()+p.HtmlFilename(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
+	dc.configuredJs = fmt.Sprintf(`var disqus_config = function () { this.page.title= "%s"; this.page.url = '%s'; this.page.identifier =  '%s'; }; (function() { var d = document, s = d.createElement('script'); s.src = 'https://%s.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();`, p.Title(),
+		dc.abstractComponent.context.GetSiteName()+p.PathFromDocRoot()+p.HtmlFilename(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
 	n := htmlDoc.NewNode("div", " ", "id", "disqus_thread", "class", "disqus")
 	js := htmlDoc.NewNode("script", dc.configuredJs)
 	wn := dc.wrap(n)
@@ -685,7 +686,7 @@ func NewMainHeaderComponent() *MainHeaderComponent {
 
 func (mhc *MainHeaderComponent) VisitPage(p staticIntf.Page) {
 	logo := htmlDoc.NewNode("a", "<!-- logo -->",
-		"href", mhc.abstractComponent.context.GetHomeUrl(),
+		"href", "https://"+mhc.abstractComponent.context.GetSiteName(),
 		"class", "headerbar__logo")
 	logocontainer := htmlDoc.NewNode("div", "",
 		"class", "headerbar__logocontainer")
