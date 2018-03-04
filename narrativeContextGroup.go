@@ -7,12 +7,9 @@ import (
 
 func NewNarrativeContextGroup(
 	pages []staticIntf.Page,
-	dto staticIntf.ContextDto,
-	mainNavi []staticIntf.Location,
-	footerNavi []staticIntf.Location) staticIntf.ContextGroup {
+	cd staticIntf.CommonData) staticIntf.ContextGroup {
 
-	narrativeCtx := NewNarrativeContext(mainNavi, footerNavi)
-	narrativeCtx.SetContextDto(dto)
+	narrativeCtx := NewNarrativeContext(cd)
 	narrativeCtx.SetElements(pages)
 	narrativeCtx.AddRss()
 
@@ -20,7 +17,6 @@ func NewNarrativeContextGroup(
 
 	cg := new(narrativeContextGroup)
 	cg.pagesContext = narrativeCtx
-	cg.dto = dto
 	return cg
 }
 
@@ -32,6 +28,9 @@ type narrativeContextGroup struct {
 func (a *narrativeContextGroup) RenderPages(dir string) []fs.FileContainer {
 	fcs := a.pagesContext.RenderPages(dir)
 	if len(fcs) > 1 {
+		// copy the content of the last page
+		// of the narrative and add a page with
+		// this content as index page
 		lastPageFc := fcs[len(fcs)-2]
 		index := fs.NewFileContainer()
 		index.SetData(lastPageFc.GetData())

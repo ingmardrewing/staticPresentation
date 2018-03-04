@@ -11,6 +11,7 @@ import (
 type abstractContextGroup struct {
 	pages        []staticIntf.Page
 	pagesContext staticIntf.Context
+	commonData   staticIntf.CommonData
 }
 
 func (a *abstractContextGroup) GetComponents() []staticIntf.Component {
@@ -53,7 +54,7 @@ func (n *navigationalContextGroup) RenderPages(dir string) []fs.FileContainer {
 	return append(pages, n.naviContext.RenderPages(dir)...)
 }
 
-func (n *navigationalContextGroup) generateNaviPages() {
+func (n *navigationalContextGroup) Init() {
 	bundles := n.generateBundles()
 	last := len(bundles) - 1
 	naviPages := []staticIntf.Page{}

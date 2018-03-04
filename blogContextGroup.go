@@ -4,23 +4,21 @@ import "github.com/ingmardrewing/staticIntf"
 
 func NewBlogContextGroup(
 	posts []staticIntf.Page,
-	dto staticIntf.ContextDto,
-	mainNavi []staticIntf.Location,
-	footerNavi []staticIntf.Location) staticIntf.ContextGroup {
+	cd staticIntf.CommonData) staticIntf.ContextGroup {
 
 	cg := new(blogContextGroup)
 
-	cg.pagesContext = NewBlogContext(mainNavi, footerNavi)
-	cg.pagesContext.SetContextDto(dto)
-	cg.pagesContext.SetElements(posts)
+	cg.pagesContext = NewBlogContext(cd)
+	cg.pagesContext.SetContextDto(cd.ContextDto())
 	cg.pagesContext.FsSetOff("/blog/")
+	cg.pagesContext.SetElements(posts)
 	cg.pagesContext.AddRss()
 
-	cg.naviContext = NewBlogNaviContext(mainNavi, footerNavi)
-	cg.naviContext.SetContextDto(dto)
+	cg.naviContext = NewBlogNaviContext(cd)
+	cg.naviContext.SetContextDto(cd.ContextDto())
 	cg.naviContext.FsSetOff("/blog/")
 
-	cg.generateNaviPages()
+	cg.Init()
 
 	return cg
 }

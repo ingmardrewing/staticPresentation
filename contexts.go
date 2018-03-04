@@ -26,23 +26,22 @@ var headerComponents []staticIntf.Component = []staticIntf.Component{
 /* Global Context */
 
 type ContextImpl struct {
-	twitterHandle             string
-	contentSection            string
-	tags                      string
-	siteName                  string
-	twitterCardType           string
-	ogType                    string
-	fbPageUrl                 string
-	twitterPageUrl            string
-	cssUrl                    string
-	rssUrl                    string
-	disqusShortname           string
-	fsSetOff                  string
-	addRss                    bool
-	mainNavigationLocations   []staticIntf.Location
-	footerNavigationLocations []staticIntf.Location
-	pages                     []staticIntf.Page
-	components                []staticIntf.Component
+	twitterHandle   string
+	contentSection  string
+	tags            string
+	siteName        string
+	twitterCardType string
+	ogType          string
+	fbPageUrl       string
+	twitterPageUrl  string
+	cssUrl          string
+	rssUrl          string
+	disqusShortname string
+	fsSetOff        string
+	addRss          bool
+	pages           []staticIntf.Page
+	components      []staticIntf.Component
+	commonData      staticIntf.CommonData
 }
 
 func (c *ContextImpl) SetContextDto(dto staticIntf.ContextDto) {
@@ -211,11 +210,11 @@ func (c *ContextImpl) GetDisqusShortname() string {
 }
 
 func (c *ContextImpl) GetMainNavigationLocations() []staticIntf.Location {
-	return c.mainNavigationLocations
+	return c.commonData.Main()
 }
 
 func (c *ContextImpl) GetFooterNavigationLocations() []staticIntf.Location {
-	return c.footerNavigationLocations
+	return c.commonData.Marginal()
 }
 
 func (c *ContextImpl) GetCssUrl() string {
@@ -303,11 +302,10 @@ func (c *ContextImpl) GetReadNavigationLocations() []staticIntf.Location {
 
 // Create Narrrative Context
 // used for graphic novels
-func NewNarrativeContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {
+func NewNarrativeContext(cd staticIntf.CommonData) staticIntf.Context {
 
 	c := new(ContextImpl)
-	c.mainNavigationLocations = mainnavi
-	c.footerNavigationLocations = footernavi
+	c.commonData = cd
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -324,11 +322,10 @@ func NewNarrativeContext(mainnavi, footernavi []staticIntf.Location) staticIntf.
 
 // Pages context, used for static pages
 // of a site, featuring separate subjects
-func NewPagesContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {
+func NewPagesContext(cd staticIntf.CommonData) staticIntf.Context {
 
 	c := new(ContextImpl)
-	c.mainNavigationLocations = mainnavi
-	c.footerNavigationLocations = footernavi
+	c.commonData = cd
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -343,11 +340,10 @@ func NewPagesContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Cont
 }
 
 // Blog context, used for blog pages
-func NewBlogContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {
+func NewBlogContext(cd staticIntf.CommonData) staticIntf.Context {
 
 	c := new(ContextImpl)
-	c.mainNavigationLocations = mainnavi
-	c.footerNavigationLocations = footernavi
+	c.commonData = cd
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -365,11 +361,10 @@ func NewBlogContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Conte
 // Blog navigation context
 // creates pages containing a navigations overview
 // of blog pages
-func NewBlogNaviContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {
+func NewBlogNaviContext(cd staticIntf.CommonData) staticIntf.Context {
 
 	c := new(ContextImpl)
-	c.mainNavigationLocations = mainnavi
-	c.footerNavigationLocations = footernavi
+	c.commonData = cd
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -386,11 +381,10 @@ func NewBlogNaviContext(mainnavi, footernavi []staticIntf.Location) staticIntf.C
 
 // Marginal context use for pages contained
 // within the marginal navigation (imprint, terms of use, etc.)
-func NewMarginalContext(mainnavi, footernavi []staticIntf.Location) staticIntf.Context {
+func NewMarginalContext(cd staticIntf.CommonData) staticIntf.Context {
 
 	c := new(ContextImpl)
-	c.mainNavigationLocations = mainnavi
-	c.footerNavigationLocations = footernavi
+	c.commonData = cd
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
