@@ -1,8 +1,6 @@
 package staticPresentation
 
 import (
-	"fmt"
-
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 )
@@ -11,27 +9,28 @@ func NewNarrativeContextGroup(
 	pages []staticIntf.Page,
 	cd staticIntf.CommonData) staticIntf.ContextGroup {
 
-	narrativeCtx := NewNarrativeContext(cd)
-	narrativeCtx.SetElements(pages)
-
-	// TODO: Genrate archive pages, separate rss, etc.
-
 	cg := new(narrativeContextGroup)
-	cg.pagesContext = narrativeCtx
+
+	cg.pagesContext = NewNarrativeContext(cd)
+	cg.pagesContext.FsSetOff("")
+	cg.pagesContext.SetElements(pages)
+
 	return cg
 }
 
 type narrativeContextGroup struct {
-	navigationalContextGroup
+	abstractContextGroup
 }
 
 func (a *narrativeContextGroup) RenderPages(dir string) []fs.FileContainer {
 	fcs := a.pagesContext.RenderPages(dir)
+
 	if len(fcs) > 1 {
 		// copy the content of the last page
 		// of the narrative and add a page with
 		// this content as index page
-		lastPageFc := fcs[len(fcs)-2]
+		inx := len(fcs) - 2
+		lastPageFc := fcs[inx]
 		index := fs.NewFileContainer()
 		index.SetData(lastPageFc.GetData())
 		index.SetPath(a.pagesContext.CommonData().ContextDto().TargetDir())
@@ -42,6 +41,6 @@ func (a *narrativeContextGroup) RenderPages(dir string) []fs.FileContainer {
 	if rss != nil {
 		fcs = append(fcs, rss)
 	}
-	fmt.Println("group size fcs: ", len(fcs))
+
 	return fcs
 }

@@ -18,6 +18,7 @@ type abstractContextGroup struct {
 }
 
 func (a *abstractContextGroup) GetComponents() []staticIntf.Component {
+	fmt.Println("XXX")
 	return a.pagesContext.GetComponents()
 }
 
@@ -117,9 +118,9 @@ func (n *navigationalContextGroup) generateBundles() [][]staticIntf.Page {
 	return pageBundles
 }
 
-func (b *navigationalContextGroup) rss(targetDir string) fs.FileContainer {
-	if len(b.pagesContext.GetPages()) > 0 {
-		cd := b.pagesContext.CommonData()
+func (a *abstractContextGroup) rss(targetDir string) fs.FileContainer {
+	if len(a.pagesContext.GetPages()) > 0 {
+		cd := a.pagesContext.CommonData()
 
 		rssPath := cd.ContextDto().Rss()
 		rssFilename := "rss.xml"
@@ -132,14 +133,14 @@ func (b *navigationalContextGroup) rss(targetDir string) fs.FileContainer {
 		fc := fs.NewFileContainer()
 		fc.SetPath(path.Join(targetDir, rssPath))
 		fc.SetFilename(rssFilename)
-		fc.SetDataAsString(b.rssContent())
+		fc.SetDataAsString(a.rssContent())
 
 		return fc
 	}
 	return nil
 }
 
-func (b *navigationalContextGroup) getSingleRssEntry(p staticIntf.Page) string {
+func (a *abstractContextGroup) getSingleRssEntry(p staticIntf.Page) string {
 	rssItem := `  <item>
 	<title>%s</title>
 	<link>%s</link>
@@ -160,12 +161,12 @@ func (b *navigationalContextGroup) getSingleRssEntry(p staticIntf.Page) string {
 
 }
 
-func (b *navigationalContextGroup) rssContent() string {
+func (a *abstractContextGroup) rssContent() string {
 
-	last10 := b.getLastPages(10)
+	last10 := a.getLastPages(10)
 	rss := []string{}
 	for _, p := range last10 {
-		rss = append(rss, b.getSingleRssEntry(p))
+		rss = append(rss, a.getSingleRssEntry(p))
 	}
 	itemsRss := strings.Join(rss, "\n")
 
@@ -206,8 +207,8 @@ func (b *navigationalContextGroup) rssContent() string {
 	return fmt.Sprintf(rssTemplate, domain, domain, domain, domain, domain, "rss.xml", date, itemsRss)
 }
 
-func (b *navigationalContextGroup) getLastPages(nr int) []staticIntf.Page {
-	pgs := b.pagesContext.GetPages()
+func (a *abstractContextGroup) getLastPages(nr int) []staticIntf.Page {
+	pgs := a.pagesContext.GetPages()
 	if len(pgs) > nr {
 		return pgs[len(pgs)-nr:]
 	}

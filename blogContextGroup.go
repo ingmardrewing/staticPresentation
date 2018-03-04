@@ -31,11 +31,13 @@ type blogContextGroup struct {
 
 func (b *blogContextGroup) RenderPages(targetDir string) []fs.FileContainer {
 	fcs := b.pagesContext.RenderPages(targetDir)
+
 	fcs = append(fcs, b.naviContext.RenderPages(targetDir)...)
 	rss := b.rss(targetDir)
 	if rss != nil {
 		fcs = append(fcs, rss)
 	}
 	fmt.Println("group size fcs: ", len(fcs))
+
 	return fcs
 }
