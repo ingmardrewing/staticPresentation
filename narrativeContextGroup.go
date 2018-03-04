@@ -1,6 +1,8 @@
 package staticPresentation
 
 import (
+	"fmt"
+
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 )
@@ -11,7 +13,6 @@ func NewNarrativeContextGroup(
 
 	narrativeCtx := NewNarrativeContext(cd)
 	narrativeCtx.SetElements(pages)
-	narrativeCtx.AddRss()
 
 	// TODO: Genrate archive pages, separate rss, etc.
 
@@ -21,8 +22,7 @@ func NewNarrativeContextGroup(
 }
 
 type narrativeContextGroup struct {
-	abstractContextGroup
-	dto staticIntf.ContextDto
+	navigationalContextGroup
 }
 
 func (a *narrativeContextGroup) RenderPages(dir string) []fs.FileContainer {
@@ -34,9 +34,14 @@ func (a *narrativeContextGroup) RenderPages(dir string) []fs.FileContainer {
 		lastPageFc := fcs[len(fcs)-2]
 		index := fs.NewFileContainer()
 		index.SetData(lastPageFc.GetData())
-		index.SetPath(a.dto.TargetDir())
+		index.SetPath(a.pagesContext.CommonData().ContextDto().TargetDir())
 		index.SetFilename("index.html")
-		return append(fcs, index)
+		fcs = append(fcs, index)
 	}
+	rss := a.rss(dir)
+	if rss != nil {
+		fcs = append(fcs, rss)
+	}
+	fmt.Println("group size fcs: ", len(fcs))
 	return fcs
 }

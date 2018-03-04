@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"path"
-	"strings"
 	"time"
 
 	"github.com/ingmardrewing/fs"
@@ -35,105 +34,19 @@ type ContextImpl struct {
 	fbPageUrl       string
 	twitterPageUrl  string
 	cssUrl          string
-	rssUrl          string
 	disqusShortname string
 	fsSetOff        string
-	addRss          bool
 	pages           []staticIntf.Page
 	components      []staticIntf.Component
 	commonData      staticIntf.CommonData
 }
 
-func (c *ContextImpl) SetContextDto(dto staticIntf.ContextDto) {
-	c.twitterHandle = dto.TwitterHandle()
-	c.contentSection = dto.Topic()
-	c.tags = dto.Tags()
-	c.siteName = dto.Site()
-	c.twitterCardType = dto.CardType()
-	c.ogType = dto.Section()
-	c.fbPageUrl = dto.FBPage()
-	c.twitterPageUrl = dto.TwitterPage()
-	c.cssUrl = dto.Css()
-	c.rssUrl = dto.Rss()
-	c.disqusShortname = dto.DisqusId()
-}
-
-func (c *ContextImpl) getSingleRssEntry(p staticIntf.Page) string {
-	rssItem := `  <item>
-	<title>%s</title>
-	<link>%s</link>
-	<pubDate>%s</pubDate>
-	<dc:creator><![CDATA[Ingmar Drewing]]></dc:creator>
-	<guid>%s/index.html</guid>
-	<description><![CDATA[%s]]></description>
-	<content:encoded><![CDATA[%s]]></content:encoded>
-
-	<media:thumbnail url="%s" />
-	<media:content url="%s" medium="image">
-	  <media:title type="html">%s</media:title>
-	  <media:thumbnail url="%s" />
-	</media:content>
-  </item>
-`
-	return fmt.Sprintf(rssItem, p.Title(), p.Url(), p.PublishedTime(), p.Content(), p.Url(), p.Description(), p.ImageUrl(), p.ImageUrl(), p.ImageUrl(), p.Title())
-
-}
-
-func (c *ContextImpl) AddRss() {
-	c.addRss = true
-}
-
-func (c *ContextImpl) rss() string {
-
-	last10 := c.getLastPages(10)
-	rss := []string{}
-	for _, p := range last10 {
-		rss = append(rss, c.getSingleRssEntry(p))
-	}
-	itemsRss := strings.Join(rss, "\n")
-
-	rssTemplate := `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
-	xmlns:content="http://purl.org/rss/1.0/modules/content/"
-	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
-	xmlns:dc="http://purl.org/dc/elements/1.1/"
-	xmlns:atom="http://www.w3.org/2005/Atom"
-	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
-	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
-	xmlns:media="http://search.yahoo.com/mrss/"
-	>
-
-<channel>
-	<title>%s</title>
-    <image>
-      <url>https://%s/favicon-32x32.png</url>
-      <title>%s</title>
-      <link>https://%s</link>
-      <width>32</width>
-      <height>32</height>
-      <description>A science-fiction webcomic about the lives of software developers in the far, funny and dystopian future</description>
-    </image>
-	<atom:link href="https://%s/%s" rel="self" type="application/rss+xml" />
-	<link>https://%s</link>
-	<description>%s</description>
-	<lastBuildDate>%s</lastBuildDate>
-	<language>en-US</language>
-	<sy:updatePeriod>weekly</sy:updatePeriod>
-	<sy:updateFrequency>1</sy:updateFrequency>
-	<generator>https://github.com/ingmardrewing/static</generator>
-%s
-	</channel>
-</rss>
-`
-	domain := last10[0].Domain()
-	date := last10[len(last10)-1].PublishedTime()
-	return fmt.Sprintf(rssTemplate, domain, domain, domain, domain, domain, "rss.xml", date, itemsRss)
-}
-
-func (c *ContextImpl) getLastPages(nr int) []staticIntf.Page {
-	if len(c.pages) > nr {
-		return c.pages[len(c.pages)-nr:]
-	}
+func (c *ContextImpl) GetPages() []staticIntf.Page {
 	return c.pages
+}
+
+func (c *ContextImpl) CommonData() staticIntf.CommonData {
+	return c.commonData
 }
 
 func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
@@ -154,14 +67,6 @@ func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
 		fc.SetFilename(p.HtmlFilename())
 
 		fc.SetDataAsString(html)
-		fcs = append(fcs, fc)
-	}
-	if c.addRss && len(c.pages) > 0 {
-		path := path.Join(targetDir, c.FsSetOff())
-		fc := fs.NewFileContainer()
-		fc.SetPath(path)
-		fc.SetFilename("rss.xml")
-		fc.SetDataAsString(c.rss())
 		fcs = append(fcs, fc)
 	}
 	return fcs
@@ -199,10 +104,6 @@ func (c *ContextImpl) AddComponents(comps ...staticIntf.Component) {
 		comp.SetContext(c)
 		c.AddComponent(comp)
 	}
-}
-
-func (c *ContextImpl) GetRssUrl() string {
-	return c.rssUrl
 }
 
 func (c *ContextImpl) GetDisqusShortname() string {
@@ -300,12 +201,30 @@ func (c *ContextImpl) GetReadNavigationLocations() []staticIntf.Location {
 	return nil
 }
 
+func NewContext(cd staticIntf.CommonData) staticIntf.Context {
+	c := new(ContextImpl)
+	c.commonData = cd
+
+	dto := cd.ContextDto()
+	c.twitterHandle = dto.TwitterHandle()
+	c.contentSection = dto.Topic()
+	c.tags = dto.Tags()
+	c.siteName = dto.Site()
+	c.twitterCardType = dto.CardType()
+	c.ogType = dto.Section()
+	c.fbPageUrl = dto.FBPage()
+	c.twitterPageUrl = dto.TwitterPage()
+	c.cssUrl = dto.Css()
+	c.disqusShortname = dto.DisqusId()
+
+	return c
+}
+
 // Create Narrrative Context
 // used for graphic novels
 func NewNarrativeContext(cd staticIntf.CommonData) staticIntf.Context {
 
-	c := new(ContextImpl)
-	c.commonData = cd
+	c := NewContext(cd)
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -324,8 +243,7 @@ func NewNarrativeContext(cd staticIntf.CommonData) staticIntf.Context {
 // of a site, featuring separate subjects
 func NewPagesContext(cd staticIntf.CommonData) staticIntf.Context {
 
-	c := new(ContextImpl)
-	c.commonData = cd
+	c := NewContext(cd)
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -342,8 +260,7 @@ func NewPagesContext(cd staticIntf.CommonData) staticIntf.Context {
 // Blog context, used for blog pages
 func NewBlogContext(cd staticIntf.CommonData) staticIntf.Context {
 
-	c := new(ContextImpl)
-	c.commonData = cd
+	c := NewContext(cd)
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -354,7 +271,6 @@ func NewBlogContext(cd staticIntf.CommonData) staticIntf.Context {
 		NewMainNaviComponent(),
 		NewCopyRightComponent(),
 		NewFooterNaviComponent())
-
 	return c
 }
 
@@ -363,8 +279,7 @@ func NewBlogContext(cd staticIntf.CommonData) staticIntf.Context {
 // of blog pages
 func NewBlogNaviContext(cd staticIntf.CommonData) staticIntf.Context {
 
-	c := new(ContextImpl)
-	c.commonData = cd
+	c := NewContext(cd)
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -383,8 +298,7 @@ func NewBlogNaviContext(cd staticIntf.CommonData) staticIntf.Context {
 // within the marginal navigation (imprint, terms of use, etc.)
 func NewMarginalContext(cd staticIntf.CommonData) staticIntf.Context {
 
-	c := new(ContextImpl)
-	c.commonData = cd
+	c := NewContext(cd)
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
