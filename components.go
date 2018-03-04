@@ -289,7 +289,8 @@ func (b *BlogNaviComponent) addPrevious(p staticIntf.Page) *htmlDoc.Node {
 	if pageBefore == nil {
 		return htmlDoc.NewNode("span", "< previous posts", "class", "blognavicomponent__previous")
 	}
-	return htmlDoc.NewNode("a", "< previous posts", "href", pageBefore.PathFromDocRoot()+pageBefore.HtmlFilename(), "rel", "prev", "class", "blognavicomponent__previous")
+	href := path.Join(pageBefore.PathFromDocRoot(), pageBefore.HtmlFilename())
+	return htmlDoc.NewNode("a", "< previous posts", "href", href, "rel", "prev", "class", "blognavicomponent__previous")
 }
 
 func (b *BlogNaviComponent) addNext(p staticIntf.Page) *htmlDoc.Node {
@@ -297,7 +298,9 @@ func (b *BlogNaviComponent) addNext(p staticIntf.Page) *htmlDoc.Node {
 	if pageAfter == nil {
 		return htmlDoc.NewNode("span", "next posts >", "class", "blognavicomponent__next")
 	}
-	return htmlDoc.NewNode("a", "next posts >", "href", pageAfter.PathFromDocRoot()+pageAfter.HtmlFilename(), "rel", "next", "class", "blognavicomponent__next")
+
+	href := path.Join(pageAfter.PathFromDocRoot(), pageAfter.HtmlFilename())
+	return htmlDoc.NewNode("a", "next posts >", "href", href, "rel", "next", "class", "blognavicomponent__next")
 }
 
 func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
@@ -519,7 +522,10 @@ func (nv *MainNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "mainnavi")
 	for _, l := range nv.abstractComponent.context.GetMainNavigationLocations() {
-		if p.Url() == l.Url() {
+		setOff := nv.abstractComponent.context.FsSetOff()
+		pagePath := path.Join(setOff, p.Url())
+		fmt.Println(l.Title(), pagePath, "<>", l.Url())
+		if pagePath == l.Url() {
 			span := htmlDoc.NewNode("span", l.Title(),
 				"class", "mainnavi__navelement--current")
 			nav.AddChild(span)
@@ -587,7 +593,9 @@ func (f *FooterNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "footernavi")
 	for _, l := range f.abstractComponent.context.GetFooterNavigationLocations() {
-		if p.Url() == l.Url() {
+		setOff := f.abstractComponent.context.FsSetOff()
+		pagePath := path.Join(setOff, p.Url())
+		if pagePath == l.Url() {
 			span := htmlDoc.NewNode("span", l.Title(),
 				"class", "footernavi__navelement--current")
 			nav.AddChild(span)
@@ -661,7 +669,8 @@ func (dc *DisqusComponent) GetJs() string {
 }
 
 func (dc *DisqusComponent) VisitPage(p staticIntf.Page) {
-	dc.configuredJs = fmt.Sprintf(`var disqus_config = function () { this.page.title= "%s"; this.page.url = '%s'; this.page.identifier =  '%s'; }; (function() { var d = document, s = d.createElement('script'); s.src = 'https://%s.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();`, p.Title(), p.Domain()+p.PathFromDocRoot()+p.HtmlFilename(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
+	dc.configuredJs = fmt.Sprintf(`var disqus_config = function () { this.page.title= "%s"; this.page.url = '%s'; this.page.identifier =  '%s'; }; (function() { var d = document, s = d.createElement('script'); s.src = 'https://%s.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();`, p.Title(),
+		dc.abstractComponent.context.GetSiteName()+p.PathFromDocRoot()+p.HtmlFilename(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
 	n := htmlDoc.NewNode("div", " ", "id", "disqus_thread", "class", "disqus")
 	js := htmlDoc.NewNode("script", dc.configuredJs)
 	wn := dc.wrap(n)
@@ -682,7 +691,7 @@ func NewMainHeaderComponent() *MainHeaderComponent {
 
 func (mhc *MainHeaderComponent) VisitPage(p staticIntf.Page) {
 	logo := htmlDoc.NewNode("a", "<!-- logo -->",
-		"href", mhc.abstractComponent.context.GetHomeUrl(),
+		"href", "https://"+mhc.abstractComponent.context.GetSiteName(),
 		"class", "headerbar__logo")
 	logocontainer := htmlDoc.NewNode("div", "",
 		"class", "headerbar__logocontainer")
@@ -1153,8 +1162,9 @@ func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
 			ta = page.ImageUrl()
 		}
 
+		href := path.Join(page.PathFromDocRoot(), page.HtmlFilename())
 		a := htmlDoc.NewNode("a", " ",
-			"href", "/"+page.PathFromDocRoot()+page.HtmlFilename(),
+			"href", href,
 			"class", "blognavientry__tile")
 		span := htmlDoc.NewNode("span", " ",
 			"style", "background-image: url("+page.ThumbnailUrl()+")",

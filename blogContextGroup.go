@@ -1,30 +1,43 @@
 package staticPresentation
 
-import "github.com/ingmardrewing/staticIntf"
+import (
+	"fmt"
+
+	"github.com/ingmardrewing/fs"
+	"github.com/ingmardrewing/staticIntf"
+)
 
 func NewBlogContextGroup(
 	posts []staticIntf.Page,
-	dto staticIntf.ContextDto,
-	mainNavi []staticIntf.Location,
-	footerNavi []staticIntf.Location) staticIntf.ContextGroup {
+	cd staticIntf.CommonData) staticIntf.ContextGroup {
 
 	cg := new(blogContextGroup)
 
-	cg.pagesContext = NewBlogContext(mainNavi, footerNavi)
-	cg.pagesContext.SetContextDto(dto)
-	cg.pagesContext.SetElements(posts)
+	cg.pagesContext = NewBlogContext(cd)
 	cg.pagesContext.FsSetOff("/blog/")
-	cg.pagesContext.AddRss()
+	cg.pagesContext.SetElements(posts)
 
-	cg.naviContext = NewBlogNaviContext(mainNavi, footerNavi)
-	cg.naviContext.SetContextDto(dto)
+	cg.naviContext = NewBlogNaviContext(cd)
 	cg.naviContext.FsSetOff("/blog/")
 
-	cg.generateNaviPages()
+	cg.Init()
 
 	return cg
 }
 
 type blogContextGroup struct {
 	navigationalContextGroup
+}
+
+func (b *blogContextGroup) RenderPages(targetDir string) []fs.FileContainer {
+	fcs := b.pagesContext.RenderPages(targetDir)
+
+	fcs = append(fcs, b.naviContext.RenderPages(targetDir)...)
+	rss := b.rss(targetDir)
+	if rss != nil {
+		fcs = append(fcs, rss)
+	}
+	fmt.Println("group size fcs: ", len(fcs))
+
+	return fcs
 }

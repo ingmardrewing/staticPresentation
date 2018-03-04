@@ -8,18 +8,15 @@ import (
 func NewSiteContextGroup(
 	pages []staticIntf.Page,
 	marginalPages []staticIntf.Page,
-	dto staticIntf.ContextDto,
-	mainNavi []staticIntf.Location,
-	footerNavi []staticIntf.Location) staticIntf.ContextGroup {
+	cd staticIntf.CommonData) staticIntf.ContextGroup {
 
 	cg := new(siteContextGroup)
-	cg.pagesContext = NewPagesContext(mainNavi, footerNavi)
-	cg.pagesContext.SetElements(pages)
-	cg.pagesContext.SetContextDto(dto)
 
-	cg.marginalContext = NewMarginalContext(mainNavi, footerNavi)
+	cg.pagesContext = NewPagesContext(cd)
+	cg.pagesContext.SetElements(pages)
+
+	cg.marginalContext = NewMarginalContext(cd)
 	cg.marginalContext.SetElements(marginalPages)
-	cg.marginalContext.SetContextDto(dto)
 
 	return cg
 }
