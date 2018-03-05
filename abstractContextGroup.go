@@ -18,7 +18,6 @@ type abstractContextGroup struct {
 }
 
 func (a *abstractContextGroup) GetComponents() []staticIntf.Component {
-	fmt.Println("XXX")
 	return a.pagesContext.GetComponents()
 }
 

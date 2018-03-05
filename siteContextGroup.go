@@ -18,6 +18,11 @@ func NewSiteContextGroup(
 	cg.marginalContext = NewMarginalContext(cd)
 	cg.marginalContext.SetElements(marginalPages)
 
+	locs := ElementsToLocations(marginalPages)
+	for _, l := range locs {
+		cd.AddMarginal(l)
+	}
+
 	return cg
 }
 
@@ -32,6 +37,15 @@ func (s *siteContextGroup) GetComponents() []staticIntf.Component {
 }
 
 func (s *siteContextGroup) RenderPages(dir string) []fs.FileContainer {
+
 	fcs := s.pagesContext.RenderPages(dir)
 	return append(fcs, s.marginalContext.RenderPages(dir)...)
+}
+
+func ElementsToLocations(elements []staticIntf.Page) []staticIntf.Location {
+	locs := []staticIntf.Location{}
+	for _, p := range elements {
+		locs = append(locs, p)
+	}
+	return locs
 }

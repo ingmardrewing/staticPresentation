@@ -1,8 +1,6 @@
 package staticPresentation
 
 import (
-	"fmt"
-
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 )
@@ -37,7 +35,6 @@ func (b *blogContextGroup) RenderPages(targetDir string) []fs.FileContainer {
 	if rss != nil {
 		fcs = append(fcs, rss)
 	}
-	fmt.Println("group size fcs: ", len(fcs))
 
 	return fcs
 }
