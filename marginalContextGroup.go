@@ -7,7 +7,7 @@ import (
 
 func NewMarginalContextGroup(
 	marginalPages []staticIntf.Page,
-	cd staticIntf.CommonData) staticIntf.ContextGroup {
+	cd staticIntf.Site) staticIntf.ContextGroup {
 
 	cg := new(marginalContextGroup)
 

@@ -38,14 +38,14 @@ type ContextImpl struct {
 	fsSetOff        string
 	pages           []staticIntf.Page
 	components      []staticIntf.Component
-	commonData      staticIntf.CommonData
+	commonData      staticIntf.Site
 }
 
 func (c *ContextImpl) GetPages() []staticIntf.Page {
 	return c.pages
 }
 
-func (c *ContextImpl) CommonData() staticIntf.CommonData {
+func (c *ContextImpl) CommonData() staticIntf.Site {
 	return c.commonData
 }
 
@@ -201,7 +201,7 @@ func (c *ContextImpl) GetReadNavigationLocations() []staticIntf.Location {
 	return nil
 }
 
-func NewContext(cd staticIntf.CommonData) staticIntf.Context {
+func NewContext(cd staticIntf.Site) staticIntf.Context {
 	c := new(ContextImpl)
 	c.commonData = cd
 
@@ -222,7 +222,7 @@ func NewContext(cd staticIntf.CommonData) staticIntf.Context {
 
 // Create Narrrative Context
 // used for graphic novels
-func NewNarrativeContext(cd staticIntf.CommonData) staticIntf.Context {
+func NewNarrativeContext(cd staticIntf.Site) staticIntf.Context {
 
 	c := NewContext(cd)
 
@@ -241,7 +241,7 @@ func NewNarrativeContext(cd staticIntf.CommonData) staticIntf.Context {
 
 // Pages context, used for static pages
 // of a site, featuring separate subjects
-func NewPagesContext(cd staticIntf.CommonData) staticIntf.Context {
+func NewPagesContext(cd staticIntf.Site) staticIntf.Context {
 
 	c := NewContext(cd)
 
@@ -258,7 +258,7 @@ func NewPagesContext(cd staticIntf.CommonData) staticIntf.Context {
 }
 
 // Blog context, used for blog pages
-func NewBlogContext(cd staticIntf.CommonData) staticIntf.Context {
+func NewBlogContext(cd staticIntf.Site) staticIntf.Context {
 
 	c := NewContext(cd)
 
@@ -277,7 +277,7 @@ func NewBlogContext(cd staticIntf.CommonData) staticIntf.Context {
 // Blog navigation context
 // creates pages containing a navigations overview
 // of blog pages
-func NewBlogNaviContext(cd staticIntf.CommonData) staticIntf.Context {
+func NewBlogNaviContext(cd staticIntf.Site) staticIntf.Context {
 
 	c := NewContext(cd)
 
@@ -296,7 +296,7 @@ func NewBlogNaviContext(cd staticIntf.CommonData) staticIntf.Context {
 
 // Marginal context use for pages contained
 // within the marginal navigation (imprint, terms of use, etc.)
-func NewMarginalContext(cd staticIntf.CommonData) staticIntf.Context {
+func NewMarginalContext(cd staticIntf.Site) staticIntf.Context {
 
 	c := NewContext(cd)
 

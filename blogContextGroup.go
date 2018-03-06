@@ -7,7 +7,7 @@ import (
 
 func NewBlogContextGroup(
 	posts []staticIntf.Page,
-	cd staticIntf.CommonData) staticIntf.ContextGroup {
+	cd staticIntf.Site) staticIntf.ContextGroup {
 
 	cg := new(blogContextGroup)
 

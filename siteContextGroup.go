@@ -4,7 +4,7 @@ import "github.com/ingmardrewing/staticIntf"
 
 func NewSiteContextGroup(
 	pages []staticIntf.Page,
-	cd staticIntf.CommonData) staticIntf.ContextGroup {
+	cd staticIntf.Site) staticIntf.ContextGroup {
 
 	cg := new(siteContextGroup)
 
