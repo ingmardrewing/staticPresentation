@@ -522,9 +522,9 @@ func (nv *MainNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "mainnavi")
 	for _, l := range nv.abstractComponent.context.GetMainNavigationLocations() {
-		setOff := nv.abstractComponent.context.FsSetOff()
-		pagePath := path.Join(setOff, p.Url())
-		if pagePath == l.Url() {
+
+		url := path.Join(nv.abstractComponent.context.FsSetOff(), p.Url())
+		if url == l.Url() {
 			span := htmlDoc.NewNode("span", l.Title(),
 				"class", "mainnavi__navelement--current")
 			nav.AddChild(span)
@@ -592,9 +592,9 @@ func (f *FooterNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "footernavi")
 	for _, l := range f.abstractComponent.context.GetFooterNavigationLocations() {
-		setOff := f.abstractComponent.context.FsSetOff()
-		pagePath := path.Join(setOff, p.Url())
-		if pagePath == l.Url() {
+
+		url := path.Join(f.abstractComponent.context.FsSetOff(), p.Url())
+		if url == l.Url() {
 			span := htmlDoc.NewNode("span", l.Title(),
 				"class", "footernavi__navelement--current")
 			nav.AddChild(span)

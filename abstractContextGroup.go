@@ -72,6 +72,8 @@ func (n *navigationalContextGroup) Init() {
 		np.Domain(n.Domain())
 		np.Title(n.naviPageTitle())
 		np.Description(n.naviPageDescription())
+
+		np.Url(path.Join(n.naviPagePathFromDocRoot(), filename))
 		np.HtmlFilename(filename)
 		np.PathFromDocRoot(n.naviPagePathFromDocRoot())
 
