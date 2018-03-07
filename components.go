@@ -359,7 +359,33 @@ func (b *BlogNaviComponent) GetCss() string {
 `
 }
 
-/* NarrativeNaviComponent */
+func NewNarrativeArchiveComponent() *NarrativeArchiveComponent {
+	return new(NarrativeArchiveComponent)
+}
+
+type NarrativeArchiveComponent struct {
+	abstractComponent
+	wrapper
+}
+
+func (na *NarrativeArchiveComponent) VisitPage(p staticIntf.Page) {
+
+	div := htmlDoc.NewNode("div", " ", "style", "text-align:left;")
+	ul := htmlDoc.NewNode("ul", "")
+	for _, page := range p.(staticIntf.NaviPage).NavigatedPages() {
+
+		a := htmlDoc.NewNode("a", page.Title(), "href", page.Url(), "class", "narrativearchive__link")
+		li := htmlDoc.NewNode("li", "")
+		li.AddChild(a)
+		ul.AddChild(li)
+	}
+
+	div.AddChild(ul)
+	wn := na.wrap(div, "narrativearchive__wrapper")
+	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+// NarrativeNaviComponent
 func NewNarrativeNaviComponent() *NarrativeNaviComponent {
 	nc := new(NarrativeNaviComponent)
 	return nc
@@ -1161,7 +1187,7 @@ func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
 			ta = page.ImageUrl()
 		}
 
-		href := path.Join(page.PathFromDocRoot(), page.HtmlFilename())
+		href := path.Join("/", b.abstractComponent.context.FsSetOff(), page.PathFromDocRoot(), page.HtmlFilename())
 		a := htmlDoc.NewNode("a", " ",
 			"href", href,
 			"class", "blognavientry__tile")

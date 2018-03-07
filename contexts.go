@@ -239,6 +239,23 @@ func NewNarrativeContext(cd staticIntf.Site) staticIntf.Context {
 	return c
 }
 
+// Create Narrrative Context
+// used for graphic novels
+func NewNarrativeArchiveContext(cd staticIntf.Site) staticIntf.Context {
+
+	c := NewContext(cd)
+
+	c.AddComponents(headerComponents...)
+	c.AddComponents(
+		NewTitleComponent(),
+		NewNarrativeHeaderComponent(),
+		NewNarrativeArchiveComponent(),
+		NewNarrativeCopyRightComponent(),
+		NewFooterNaviComponent())
+
+	return c
+}
+
 // Pages context, used for static pages
 // of a site, featuring separate subjects
 func NewPagesContext(cd staticIntf.Site) staticIntf.Context {
