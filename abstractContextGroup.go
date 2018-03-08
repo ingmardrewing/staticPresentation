@@ -13,7 +13,7 @@ import (
 type abstractContextGroup struct {
 	pages        []staticIntf.Page
 	pagesContext staticIntf.Context
-	commonData   staticIntf.Site
+	site         staticIntf.Site
 }
 
 func (a *abstractContextGroup) GetComponents() []staticIntf.Component {
@@ -36,15 +36,14 @@ func (a *abstractContextGroup) Init() {}
 
 func (a *abstractContextGroup) rss(targetDir string) fs.FileContainer {
 	if len(a.pagesContext.GetPages()) > 0 {
-		cd := a.pagesContext.CommonData()
 
-		rssPath := cd.Rss()
+		rssPath := a.pagesContext.SiteDto().Rss()
 		rssFilename := "rss.xml"
 		rssLabel := "rss"
 
 		url := path.Join(rssPath, rssFilename)
 		l := staticModel.NewLocation(url, "", rssLabel, "", "", "")
-		cd.AddMarginal(l)
+		a.pagesContext.SiteDto().AddMarginal(l)
 
 		fc := fs.NewFileContainer()
 		fc.SetPath(path.Join(targetDir, rssPath))

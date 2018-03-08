@@ -38,19 +38,19 @@ type ContextImpl struct {
 	fsSetOff        string
 	pages           []staticIntf.Page
 	components      []staticIntf.Component
-	commonData      staticIntf.Site
+	site            staticIntf.Site
+}
+
+func (c *ContextImpl) SiteDto() staticIntf.Site {
+	return c.site
 }
 
 func (c *ContextImpl) GetPages() []staticIntf.Page {
 	return c.pages
 }
 
-func (c *ContextImpl) CommonData() staticIntf.Site {
-	return c.commonData
-}
-
 func (c *ContextImpl) RenderPages() []fs.FileContainer {
-	targetDir := c.commonData.TargetDir()
+	targetDir := c.site.TargetDir()
 	fcs := []fs.FileContainer{}
 	for _, p := range c.pages {
 
@@ -112,11 +112,11 @@ func (c *ContextImpl) GetDisqusShortname() string {
 }
 
 func (c *ContextImpl) GetMainNavigationLocations() []staticIntf.Location {
-	return c.commonData.Main()
+	return c.site.Main()
 }
 
 func (c *ContextImpl) GetFooterNavigationLocations() []staticIntf.Location {
-	return c.commonData.Marginal()
+	return c.site.Marginal()
 }
 
 func (c *ContextImpl) GetCssUrl() string {
@@ -204,7 +204,7 @@ func (c *ContextImpl) GetReadNavigationLocations() []staticIntf.Location {
 
 func NewContext(site staticIntf.Site) staticIntf.Context {
 	c := new(ContextImpl)
-	c.commonData = site
+	c.site = site
 
 	c.twitterHandle = site.TwitterHandle()
 	c.contentSection = site.Topic()

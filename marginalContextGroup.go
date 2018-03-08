@@ -9,6 +9,7 @@ func NewMarginalContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 
 	cg := new(marginalContextGroup)
 
+	cg.site = s
 	cg.marginalContext = NewMarginalContext(s)
 	cg.marginalContext.SetElements(s.Marginals())
 
