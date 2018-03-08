@@ -20,8 +20,8 @@ func (a *abstractContextGroup) GetComponents() []staticIntf.Component {
 	return a.pagesContext.GetComponents()
 }
 
-func (a *abstractContextGroup) RenderPages(dir string) []fs.FileContainer {
-	return a.pagesContext.RenderPages(dir)
+func (a *abstractContextGroup) RenderPages() []fs.FileContainer {
+	return a.pagesContext.RenderPages()
 }
 
 func (a *abstractContextGroup) Domain() string { return "" }
@@ -38,7 +38,7 @@ func (a *abstractContextGroup) rss(targetDir string) fs.FileContainer {
 	if len(a.pagesContext.GetPages()) > 0 {
 		cd := a.pagesContext.CommonData()
 
-		rssPath := cd.ContextDto().Rss()
+		rssPath := cd.Rss()
 		rssFilename := "rss.xml"
 		rssLabel := "rss"
 

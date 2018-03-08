@@ -49,7 +49,8 @@ func (c *ContextImpl) CommonData() staticIntf.Site {
 	return c.commonData
 }
 
-func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
+func (c *ContextImpl) RenderPages() []fs.FileContainer {
+	targetDir := c.commonData.TargetDir()
 	fcs := []fs.FileContainer{}
 	for _, p := range c.pages {
 
@@ -201,21 +202,20 @@ func (c *ContextImpl) GetReadNavigationLocations() []staticIntf.Location {
 	return nil
 }
 
-func NewContext(cd staticIntf.Site) staticIntf.Context {
+func NewContext(site staticIntf.Site) staticIntf.Context {
 	c := new(ContextImpl)
-	c.commonData = cd
+	c.commonData = site
 
-	dto := cd.ContextDto()
-	c.twitterHandle = dto.TwitterHandle()
-	c.contentSection = dto.Topic()
-	c.tags = dto.Tags()
-	c.siteName = dto.Site()
-	c.twitterCardType = dto.CardType()
-	c.ogType = dto.Section()
-	c.fbPageUrl = dto.FBPage()
-	c.twitterPageUrl = dto.TwitterPage()
-	c.cssUrl = dto.Css()
-	c.disqusShortname = dto.DisqusId()
+	c.twitterHandle = site.TwitterHandle()
+	c.contentSection = site.Topic()
+	c.tags = site.Tags()
+	c.siteName = site.Site()
+	c.twitterCardType = site.CardType()
+	c.ogType = site.Section()
+	c.fbPageUrl = site.FBPage()
+	c.twitterPageUrl = site.TwitterPage()
+	c.cssUrl = site.Css()
+	c.disqusShortname = site.DisqusId()
 
 	return c
 }

@@ -8,6 +8,7 @@ import (
 func NewBlogContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 
 	cg := new(blogContextGroup)
+	cg.site = s
 
 	cg.pagesContext = NewBlogContext(s)
 	cg.pagesContext.FsSetOff("/blog/")
@@ -23,13 +24,15 @@ func NewBlogContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 
 type blogContextGroup struct {
 	navigationalContextGroup
+	site staticIntf.Site
 }
 
-func (b *blogContextGroup) RenderPages(targetDir string) []fs.FileContainer {
-	fcs := b.pagesContext.RenderPages(targetDir)
+func (b *blogContextGroup) RenderPages() []fs.FileContainer {
 
-	fcs = append(fcs, b.naviContext.RenderPages(targetDir)...)
-	rss := b.rss(targetDir)
+	fcs := b.pagesContext.RenderPages()
+	fcs = append(fcs, b.naviContext.RenderPages()...)
+
+	rss := b.rss(b.site.TargetDir())
 	if rss != nil {
 		fcs = append(fcs, rss)
 	}

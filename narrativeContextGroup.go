@@ -33,7 +33,7 @@ func (a *narrativeContextGroup) Init() {
 	np := staticModel.NewEmptyNaviPage()
 	np.NavigatedPages(a.pagesContext.GetElements()...)
 	np.Title("Archive")
-	np.Domain(a.site.ContextDto().Domain())
+	np.Domain(a.site.Domain())
 	filename := "archive.html"
 	np.Url(filename)
 	np.HtmlFilename(filename)
@@ -42,10 +42,10 @@ func (a *narrativeContextGroup) Init() {
 	a.site.AddMarginal(np)
 }
 
-func (a *narrativeContextGroup) RenderPages(dir string) []fs.FileContainer {
-	fcs := a.pagesContext.RenderPages(dir)
+func (a *narrativeContextGroup) RenderPages() []fs.FileContainer {
+	fcs := a.pagesContext.RenderPages()
 
-	fcs = append(fcs, a.narrativeArchiveContext.RenderPages(dir)...)
+	fcs = append(fcs, a.narrativeArchiveContext.RenderPages()...)
 
 	if len(fcs) > 1 {
 		// copy the content of the last page
@@ -55,11 +55,11 @@ func (a *narrativeContextGroup) RenderPages(dir string) []fs.FileContainer {
 		lastPageFc := fcs[inx]
 		index := fs.NewFileContainer()
 		index.SetData(lastPageFc.GetData())
-		index.SetPath(a.pagesContext.CommonData().ContextDto().TargetDir())
+		index.SetPath(a.site.TargetDir())
 		index.SetFilename("index.html")
 		fcs = append(fcs, index)
 	}
-	rss := a.rss(dir)
+	rss := a.rss(a.site.TargetDir())
 	if rss != nil {
 		fcs = append(fcs, rss)
 	}

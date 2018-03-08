@@ -19,9 +19,9 @@ func (n *navigationalContextGroup) GetComponents() []staticIntf.Component {
 	return append(components, n.naviContext.GetComponents()...)
 }
 
-func (n *navigationalContextGroup) RenderPages(dir string) []fs.FileContainer {
-	pages := n.pagesContext.RenderPages(dir)
-	return append(pages, n.naviContext.RenderPages(dir)...)
+func (n *navigationalContextGroup) RenderPages() []fs.FileContainer {
+	pages := n.pagesContext.RenderPages()
+	return append(pages, n.naviContext.RenderPages()...)
 }
 
 func (n *navigationalContextGroup) Init() {

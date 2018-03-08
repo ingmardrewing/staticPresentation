@@ -29,6 +29,6 @@ func (s *marginalContextGroup) GetComponents() []staticIntf.Component {
 	return s.marginalContext.GetComponents()
 }
 
-func (s *marginalContextGroup) RenderPages(dir string) []fs.FileContainer {
-	return s.marginalContext.RenderPages(dir)
+func (s *marginalContextGroup) RenderPages() []fs.FileContainer {
+	return s.marginalContext.RenderPages()
 }
