@@ -5,18 +5,16 @@ import (
 	"github.com/ingmardrewing/staticIntf"
 )
 
-func NewMarginalContextGroup(
-	marginalPages []staticIntf.Page,
-	cd staticIntf.Site) staticIntf.ContextGroup {
+func NewMarginalContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 
 	cg := new(marginalContextGroup)
 
-	cg.marginalContext = NewMarginalContext(cd)
-	cg.marginalContext.SetElements(marginalPages)
+	cg.marginalContext = NewMarginalContext(s)
+	cg.marginalContext.SetElements(s.Marginals())
 
-	locs := ElementsToLocations(marginalPages)
+	locs := ElementsToLocations(s.Marginals())
 	for _, l := range locs {
-		cd.AddMarginal(l)
+		s.AddMarginal(l)
 	}
 
 	return cg

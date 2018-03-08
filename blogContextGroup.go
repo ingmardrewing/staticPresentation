@@ -5,17 +5,15 @@ import (
 	"github.com/ingmardrewing/staticIntf"
 )
 
-func NewBlogContextGroup(
-	posts []staticIntf.Page,
-	cd staticIntf.Site) staticIntf.ContextGroup {
+func NewBlogContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 
 	cg := new(blogContextGroup)
 
-	cg.pagesContext = NewBlogContext(cd)
+	cg.pagesContext = NewBlogContext(s)
 	cg.pagesContext.FsSetOff("/blog/")
-	cg.pagesContext.SetElements(posts)
+	cg.pagesContext.SetElements(s.Posts())
 
-	cg.naviContext = NewBlogNaviContext(cd)
+	cg.naviContext = NewBlogNaviContext(s)
 	cg.naviContext.FsSetOff("/blog/")
 
 	cg.Init()

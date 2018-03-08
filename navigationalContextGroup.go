@@ -34,7 +34,7 @@ func (n *navigationalContextGroup) Init() {
 			filename = "index.html"
 		}
 
-		np := staticModel.NewNaviPage()
+		np := staticModel.NewEmptyNaviPage()
 		np.NavigatedPages(bundle...)
 		np.Domain(n.Domain())
 		np.Title(n.naviPageTitle())

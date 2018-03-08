@@ -2,14 +2,12 @@ package staticPresentation
 
 import "github.com/ingmardrewing/staticIntf"
 
-func NewSiteContextGroup(
-	pages []staticIntf.Page,
-	cd staticIntf.Site) staticIntf.ContextGroup {
+func NewSiteContextGroup(cd staticIntf.Site) staticIntf.ContextGroup {
 
 	cg := new(siteContextGroup)
 
 	cg.pagesContext = NewPagesContext(cd)
-	cg.pagesContext.SetElements(pages)
+	cg.pagesContext.SetElements(cd.Pages())
 
 	return cg
 }

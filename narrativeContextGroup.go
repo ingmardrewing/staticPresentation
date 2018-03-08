@@ -6,18 +6,16 @@ import (
 	"github.com/ingmardrewing/staticModel"
 )
 
-func NewNarrativeContextGroup(
-	pages []staticIntf.Page,
-	site staticIntf.Site) staticIntf.ContextGroup {
+func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 
 	cg := new(narrativeContextGroup)
-	cg.site = site
+	cg.site = s
 
-	cg.pagesContext = NewNarrativeContext(site)
+	cg.pagesContext = NewNarrativeContext(s)
 	cg.pagesContext.FsSetOff("")
-	cg.pagesContext.SetElements(pages)
+	cg.pagesContext.SetElements(s.Narratives())
 
-	cg.narrativeArchiveContext = NewNarrativeArchiveContext(site)
+	cg.narrativeArchiveContext = NewNarrativeArchiveContext(s)
 	cg.narrativeArchiveContext.FsSetOff("")
 
 	cg.Init()
@@ -32,7 +30,7 @@ type narrativeContextGroup struct {
 }
 
 func (a *narrativeContextGroup) Init() {
-	np := staticModel.NewNaviPage()
+	np := staticModel.NewEmptyNaviPage()
 	np.NavigatedPages(a.pagesContext.GetElements()...)
 	np.Title("Archive")
 	np.Domain(a.site.ContextDto().Domain())
