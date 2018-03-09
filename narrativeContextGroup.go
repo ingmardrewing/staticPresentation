@@ -11,9 +11,9 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 	cg := new(narrativeContextGroup)
 	cg.site = s
 
-	cg.pagesContext = NewNarrativeContext(s)
-	cg.pagesContext.FsSetOff("")
-	cg.pagesContext.SetElements(s.Narratives())
+	cg.context = NewNarrativeContext(s)
+	cg.context.FsSetOff("")
+	cg.context.SetElements(s.Narratives())
 
 	cg.narrativeArchiveContext = NewNarrativeArchiveContext(s)
 	cg.narrativeArchiveContext.FsSetOff("")
@@ -29,20 +29,17 @@ type narrativeContextGroup struct {
 }
 
 func (a *narrativeContextGroup) Init() {
-	np := staticModel.NewEmptyNaviPage()
-	np.NavigatedPages(a.pagesContext.GetElements()...)
+	np := staticModel.NewEmptyNaviPage(a.site.Domain())
+	np.NavigatedPages(a.context.GetElements()...)
 	np.Title("Archive")
-	np.Domain(a.site.Domain())
-	filename := "archive.html"
-	np.Url(filename)
-	np.HtmlFilename(filename)
+	np.HtmlFilename("archive.html")
 	np.PathFromDocRoot("")
 	a.narrativeArchiveContext.SetElements([]staticIntf.Page{np})
 	a.site.AddMarginal(np)
 }
 
 func (a *narrativeContextGroup) RenderPages() []fs.FileContainer {
-	fcs := a.pagesContext.RenderPages()
+	fcs := a.context.RenderPages()
 
 	fcs = append(fcs, a.narrativeArchiveContext.RenderPages()...)
 

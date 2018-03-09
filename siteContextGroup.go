@@ -6,8 +6,8 @@ func NewSiteContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 
 	cg := new(siteContextGroup)
 	cg.site = s
-	cg.pagesContext = NewPagesContext(s)
-	cg.pagesContext.SetElements(s.Pages())
+	cg.context = NewPagesContext(s)
+	cg.context.SetElements(s.Pages())
 
 	return cg
 }

@@ -11,20 +11,20 @@ import (
 )
 
 type abstractContextGroup struct {
-	pages        []staticIntf.Page
-	pagesContext staticIntf.Context
-	site         staticIntf.Site
+	pages   []staticIntf.Page
+	context staticIntf.Context
+	site    staticIntf.Site
 }
 
 func (a *abstractContextGroup) GetComponents() []staticIntf.Component {
-	return a.pagesContext.GetComponents()
+	return a.context.GetComponents()
 }
 
 func (a *abstractContextGroup) RenderPages() []fs.FileContainer {
-	return a.pagesContext.RenderPages()
+	return a.context.RenderPages()
 }
 
-func (a *abstractContextGroup) Domain() string { return "" }
+func (a *abstractContextGroup) Domain() string { return a.site.Domain() }
 
 func (a *abstractContextGroup) naviPageDescription() string { return "" }
 
@@ -35,15 +35,15 @@ func (a *abstractContextGroup) naviPagePathFromDocRoot() string { return "" }
 func (a *abstractContextGroup) Init() {}
 
 func (a *abstractContextGroup) rss(targetDir string) fs.FileContainer {
-	if len(a.pagesContext.GetPages()) > 0 {
+	if len(a.context.GetPages()) > 0 {
 
-		rssPath := a.pagesContext.SiteDto().Rss()
+		rssPath := a.context.SiteDto().Rss()
 		rssFilename := "rss.xml"
 		rssLabel := "rss"
 
 		url := path.Join(rssPath, rssFilename)
 		l := staticModel.NewLocation(url, "", rssLabel, "", "", "")
-		a.pagesContext.SiteDto().AddMarginal(l)
+		a.context.SiteDto().AddMarginal(l)
 
 		fc := fs.NewFileContainer()
 		fc.SetPath(path.Join(targetDir, rssPath))
@@ -70,9 +70,8 @@ func (a *abstractContextGroup) getSingleRssEntry(p staticIntf.Page) string {
 	  <media:title type="html">%s</media:title>
 	  <media:thumbnail url="%s" />
 	</media:content>
-  </item>
-`
-	return fmt.Sprintf(rssItem, p.Title(), p.Url(), p.PublishedTime(), p.Content(), p.Url(), p.Description(), p.ImageUrl(), p.ImageUrl(), p.ImageUrl(), p.Title())
+  </item>`
+	return fmt.Sprintf(rssItem, p.Title(), p.Url(), p.PublishedTime(), p.Url(), p.Description(), p.Content(), p.ImageUrl(), p.ImageUrl(), p.ImageUrl(), p.Title())
 
 }
 
@@ -123,7 +122,7 @@ func (a *abstractContextGroup) rssContent() string {
 }
 
 func (a *abstractContextGroup) getLastPages(nr int) []staticIntf.Page {
-	pgs := a.pagesContext.GetPages()
+	pgs := a.context.GetPages()
 	if len(pgs) > nr {
 		return pgs[len(pgs)-nr:]
 	}

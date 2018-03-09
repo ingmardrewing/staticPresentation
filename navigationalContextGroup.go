@@ -1,6 +1,7 @@
 package staticPresentation
 
 import (
+	"fmt"
 	"path"
 	"strconv"
 
@@ -15,16 +16,17 @@ type navigationalContextGroup struct {
 }
 
 func (n *navigationalContextGroup) GetComponents() []staticIntf.Component {
-	components := n.pagesContext.GetComponents()
+	components := n.context.GetComponents()
 	return append(components, n.naviContext.GetComponents()...)
 }
 
 func (n *navigationalContextGroup) RenderPages() []fs.FileContainer {
-	pages := n.pagesContext.RenderPages()
+	pages := n.context.RenderPages()
 	return append(pages, n.naviContext.RenderPages()...)
 }
 
 func (n *navigationalContextGroup) Init() {
+	fmt.Println("wrust", n.Domain())
 	bundles := n.generateBundles()
 	last := len(bundles) - 1
 	naviPages := []staticIntf.Page{}
@@ -34,15 +36,21 @@ func (n *navigationalContextGroup) Init() {
 			filename = "index.html"
 		}
 
-		np := staticModel.NewEmptyNaviPage()
+		p := path.Join(n.naviContext.FsSetOff(), n.naviPagePathFromDocRoot())
+		fmt.Println("domain::", n.Domain())
+		fmt.Println("path", n.naviPagePathFromDocRoot())
+		fmt.Println("composed path", p)
+
+		np := staticModel.NewEmptyNaviPage(n.Domain())
 		np.NavigatedPages(bundle...)
-		np.Domain(n.Domain())
 		np.Title(n.naviPageTitle())
 		np.Description(n.naviPageDescription())
 
-		np.Url(path.Join(n.naviPagePathFromDocRoot(), filename))
+		np.Domain(n.Domain())
+		np.PathFromDocRoot(p)
 		np.HtmlFilename(filename)
-		np.PathFromDocRoot(n.naviPagePathFromDocRoot())
+
+		fmt.Println("navi pages url: ", np.Url())
 
 		naviPages = append(naviPages, np)
 	}
@@ -50,7 +58,7 @@ func (n *navigationalContextGroup) Init() {
 }
 
 func (n *navigationalContextGroup) getReversedPages() []staticIntf.Page {
-	pages := n.pagesContext.GetElements()
+	pages := n.context.GetElements()
 	length := len(pages)
 	reversed := []staticIntf.Page{}
 	for i := length - 1; i >= 0; i-- {

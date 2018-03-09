@@ -548,9 +548,9 @@ func (nv *MainNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "mainnavi")
 	for _, l := range nv.abstractComponent.context.GetMainNavigationLocations() {
-
-		url := path.Join(nv.abstractComponent.context.FsSetOff(), p.Url())
-		if url == l.Url() {
+		//fsSetup := nv.abstractComponent.context.FsSetOff()
+		fmt.Println(p.Url(), "<>", l.Url())
+		if p.Url() == l.Url() {
 			span := htmlDoc.NewNode("span", l.Title(),
 				"class", "mainnavi__navelement--current")
 			nav.AddChild(span)

@@ -61,7 +61,7 @@ func (c *ContextImpl) RenderPages() []fs.FileContainer {
 		doc.AddRootAttr("itemscope")
 		doc.AddRootAttr("lang", "en")
 		html := doc.Render()
-		path := path.Join(targetDir, c.FsSetOff(), p.PathFromDocRoot())
+		path := path.Join(targetDir, p.PathFromDocRoot())
 
 		fc := fs.NewFileContainer()
 		fc.SetPath(path)
