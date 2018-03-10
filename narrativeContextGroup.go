@@ -28,6 +28,11 @@ type narrativeContextGroup struct {
 	narrativeArchiveContext staticIntf.Context
 }
 
+func (a *narrativeContextGroup) GetComponents() []staticIntf.Component {
+	components := a.context.GetComponents()
+	return append(components, a.narrativeArchiveContext.GetComponents()...)
+}
+
 func (a *narrativeContextGroup) Init() {
 	np := staticModel.NewEmptyNaviPage(a.site.Domain())
 	np.NavigatedPages(a.context.GetElements()...)

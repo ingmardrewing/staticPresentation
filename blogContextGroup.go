@@ -1,7 +1,6 @@
 package staticPresentation
 
 import (
-	"fmt"
 	"path"
 
 	"github.com/ingmardrewing/fs"
@@ -24,7 +23,6 @@ func NewBlogContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 	cg.naviContext = NewBlogNaviContext(s)
 	cg.naviContext.FsSetOff("/blog/")
 
-	fmt.Println("prmf", s.Domain())
 	cg.Init()
 
 	return cg
@@ -39,7 +37,7 @@ func (b *blogContextGroup) RenderPages() []fs.FileContainer {
 	fcs := b.context.RenderPages()
 	fcs = append(fcs, b.naviContext.RenderPages()...)
 
-	rss := b.rss(b.site.TargetDir())
+	rss := b.rss(path.Join(b.site.TargetDir(), b.naviContext.FsSetOff()))
 	if rss != nil {
 		fcs = append(fcs, rss)
 	}

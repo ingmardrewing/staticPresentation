@@ -7,7 +7,6 @@ import (
 
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
-	"github.com/ingmardrewing/staticModel"
 )
 
 type abstractContextGroup struct {
@@ -39,11 +38,6 @@ func (a *abstractContextGroup) rss(targetDir string) fs.FileContainer {
 
 		rssPath := a.context.SiteDto().Rss()
 		rssFilename := "rss.xml"
-		rssLabel := "rss"
-
-		url := path.Join(rssPath, rssFilename)
-		l := staticModel.NewLocation(url, "", rssLabel, "", "", "")
-		a.context.SiteDto().AddMarginal(l)
 
 		fc := fs.NewFileContainer()
 		fc.SetPath(path.Join(targetDir, rssPath))

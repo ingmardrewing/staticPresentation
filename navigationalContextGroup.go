@@ -1,7 +1,6 @@
 package staticPresentation
 
 import (
-	"fmt"
 	"path"
 	"strconv"
 
@@ -26,7 +25,6 @@ func (n *navigationalContextGroup) RenderPages() []fs.FileContainer {
 }
 
 func (n *navigationalContextGroup) Init() {
-	fmt.Println("wrust", n.Domain())
 	bundles := n.generateBundles()
 	last := len(bundles) - 1
 	naviPages := []staticIntf.Page{}
@@ -37,9 +35,6 @@ func (n *navigationalContextGroup) Init() {
 		}
 
 		p := path.Join(n.naviContext.FsSetOff(), n.naviPagePathFromDocRoot())
-		fmt.Println("domain::", n.Domain())
-		fmt.Println("path", n.naviPagePathFromDocRoot())
-		fmt.Println("composed path", p)
 
 		np := staticModel.NewEmptyNaviPage(n.Domain())
 		np.NavigatedPages(bundle...)
@@ -49,8 +44,6 @@ func (n *navigationalContextGroup) Init() {
 		np.Domain(n.Domain())
 		np.PathFromDocRoot(p)
 		np.HtmlFilename(filename)
-
-		fmt.Println("navi pages url: ", np.Url())
 
 		naviPages = append(naviPages, np)
 	}

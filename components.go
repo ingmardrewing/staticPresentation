@@ -371,18 +371,43 @@ type NarrativeArchiveComponent struct {
 func (na *NarrativeArchiveComponent) VisitPage(p staticIntf.Page) {
 
 	div := htmlDoc.NewNode("div", " ", "style", "text-align:left;")
-	ul := htmlDoc.NewNode("ul", "")
+	ul := htmlDoc.NewNode("ul", "", "class", "narrativearchive__wrapper")
 	for _, page := range p.(staticIntf.NaviPage).NavigatedPages() {
-
-		a := htmlDoc.NewNode("a", page.Title(), "href", page.Url(), "class", "narrativearchive__link")
-		li := htmlDoc.NewNode("li", "")
+		span := htmlDoc.NewNode("span", page.Title(), "class", "narrativearchive__title")
+		img := htmlDoc.NewNode("img", "", "src", "data:image/png;base64,"+page.ThumbBase64())
+		a := htmlDoc.NewNode("a", "", "href", page.PathFromDocRootWithName(), "class", "narrativearchive__link")
+		a.AddChild(span)
+		a.AddChild(img)
+		li := htmlDoc.NewNode("li", "", "class", "narrativearchive__tile")
 		li.AddChild(a)
 		ul.AddChild(li)
 	}
 
 	div.AddChild(ul)
-	wn := na.wrap(div, "narrativearchive__wrapper")
+	wn := na.wrap(div, "narrativearchive__metawrapper")
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (na *NarrativeArchiveComponent) GetCss() string {
+	return `.narrativearchive__tile{
+	display: block;
+	width: 200px;
+	height: 240px;
+	float: left;
+	text-align: center;
+	margin-bottom: 60px;
+}
+.narrativearchive__title{
+	display: block;
+}
+.narrativearchive__wrapper {
+	padding-left: 0;
+}
+.narrativearchive__wrapper:after {
+	content: "";
+	display: table;
+	clear: both;
+}`
 }
 
 // NarrativeNaviComponent
@@ -548,15 +573,18 @@ func (nv *MainNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "mainnavi")
 	for _, l := range nv.abstractComponent.context.GetMainNavigationLocations() {
-		//fsSetup := nv.abstractComponent.context.FsSetOff()
-		fmt.Println(p.Url(), "<>", l.Url())
-		if p.Url() == l.Url() {
+		if len(p.ExternalLink()) > 0 {
+			a := htmlDoc.NewNode("a", l.Title(),
+				"href", l.ExternalLink(),
+				"class", "mainnavi__navelement")
+			nav.AddChild(a)
+		} else if p.Url() == l.Url() {
 			span := htmlDoc.NewNode("span", l.Title(),
 				"class", "mainnavi__navelement--current")
 			nav.AddChild(span)
 		} else {
 			a := htmlDoc.NewNode("a", l.Title(),
-				"href", l.Url(),
+				"href", l.PathFromDocRootWithName(),
 				"class", "mainnavi__navelement")
 			nav.AddChild(a)
 		}
@@ -619,14 +647,18 @@ func (f *FooterNaviComponent) VisitPage(p staticIntf.Page) {
 		"class", "footernavi")
 	for _, l := range f.abstractComponent.context.GetFooterNavigationLocations() {
 
-		url := path.Join(f.abstractComponent.context.FsSetOff(), p.Url())
-		if url == l.Url() {
+		if len(p.ExternalLink()) > 0 {
+			a := htmlDoc.NewNode("a", l.Title(),
+				"href", l.ExternalLink(),
+				"class", "mainnavi__navelement")
+			nav.AddChild(a)
+		} else if p.Url() == l.Url() {
 			span := htmlDoc.NewNode("span", l.Title(),
 				"class", "footernavi__navelement--current")
 			nav.AddChild(span)
 		} else {
 			a := htmlDoc.NewNode("a", l.Title(),
-				"href", l.Url(),
+				"href", l.PathFromDocRootWithName(),
 				"class", "footernavi__navelement")
 			nav.AddChild(a)
 		}
@@ -1186,10 +1218,8 @@ func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
 		if ta == "" {
 			ta = page.ImageUrl()
 		}
-
-		href := path.Join("/", b.abstractComponent.context.FsSetOff(), page.PathFromDocRoot(), page.HtmlFilename())
 		a := htmlDoc.NewNode("a", " ",
-			"href", href,
+			"href", page.PathFromDocRootWithName(),
 			"class", "blognavientry__tile")
 		span := htmlDoc.NewNode("span", " ",
 			"style", "background-image: url("+page.ThumbnailUrl()+")",
