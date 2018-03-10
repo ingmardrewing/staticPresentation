@@ -38,18 +38,19 @@ type ContextImpl struct {
 	fsSetOff        string
 	pages           []staticIntf.Page
 	components      []staticIntf.Component
-	commonData      staticIntf.CommonData
+	site            staticIntf.Site
+}
+
+func (c *ContextImpl) SiteDto() staticIntf.Site {
+	return c.site
 }
 
 func (c *ContextImpl) GetPages() []staticIntf.Page {
 	return c.pages
 }
 
-func (c *ContextImpl) CommonData() staticIntf.CommonData {
-	return c.commonData
-}
-
-func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
+func (c *ContextImpl) RenderPages() []fs.FileContainer {
+	targetDir := c.site.TargetDir()
 	fcs := []fs.FileContainer{}
 	for _, p := range c.pages {
 
@@ -60,7 +61,7 @@ func (c *ContextImpl) RenderPages(targetDir string) []fs.FileContainer {
 		doc.AddRootAttr("itemscope")
 		doc.AddRootAttr("lang", "en")
 		html := doc.Render()
-		path := path.Join(targetDir, c.FsSetOff(), p.PathFromDocRoot())
+		path := path.Join(targetDir, p.PathFromDocRoot())
 
 		fc := fs.NewFileContainer()
 		fc.SetPath(path)
@@ -111,11 +112,11 @@ func (c *ContextImpl) GetDisqusShortname() string {
 }
 
 func (c *ContextImpl) GetMainNavigationLocations() []staticIntf.Location {
-	return c.commonData.Main()
+	return c.site.Main()
 }
 
 func (c *ContextImpl) GetFooterNavigationLocations() []staticIntf.Location {
-	return c.commonData.Marginal()
+	return c.site.Marginal()
 }
 
 func (c *ContextImpl) GetCssUrl() string {
@@ -201,28 +202,27 @@ func (c *ContextImpl) GetReadNavigationLocations() []staticIntf.Location {
 	return nil
 }
 
-func NewContext(cd staticIntf.CommonData) staticIntf.Context {
+func NewContext(site staticIntf.Site) staticIntf.Context {
 	c := new(ContextImpl)
-	c.commonData = cd
+	c.site = site
 
-	dto := cd.ContextDto()
-	c.twitterHandle = dto.TwitterHandle()
-	c.contentSection = dto.Topic()
-	c.tags = dto.Tags()
-	c.siteName = dto.Site()
-	c.twitterCardType = dto.CardType()
-	c.ogType = dto.Section()
-	c.fbPageUrl = dto.FBPage()
-	c.twitterPageUrl = dto.TwitterPage()
-	c.cssUrl = dto.Css()
-	c.disqusShortname = dto.DisqusId()
+	c.twitterHandle = site.TwitterHandle()
+	c.contentSection = site.Topic()
+	c.tags = site.Tags()
+	c.siteName = site.Site()
+	c.twitterCardType = site.CardType()
+	c.ogType = site.Section()
+	c.fbPageUrl = site.FBPage()
+	c.twitterPageUrl = site.TwitterPage()
+	c.cssUrl = site.Css()
+	c.disqusShortname = site.DisqusId()
 
 	return c
 }
 
 // Create Narrrative Context
 // used for graphic novels
-func NewNarrativeContext(cd staticIntf.CommonData) staticIntf.Context {
+func NewNarrativeContext(cd staticIntf.Site) staticIntf.Context {
 
 	c := NewContext(cd)
 
@@ -239,9 +239,26 @@ func NewNarrativeContext(cd staticIntf.CommonData) staticIntf.Context {
 	return c
 }
 
+// Create Narrrative Context
+// used for graphic novels
+func NewNarrativeArchiveContext(cd staticIntf.Site) staticIntf.Context {
+
+	c := NewContext(cd)
+
+	c.AddComponents(headerComponents...)
+	c.AddComponents(
+		NewTitleComponent(),
+		NewNarrativeHeaderComponent(),
+		NewNarrativeArchiveComponent(),
+		NewNarrativeCopyRightComponent(),
+		NewFooterNaviComponent())
+
+	return c
+}
+
 // Pages context, used for static pages
 // of a site, featuring separate subjects
-func NewPagesContext(cd staticIntf.CommonData) staticIntf.Context {
+func NewPagesContext(cd staticIntf.Site) staticIntf.Context {
 
 	c := NewContext(cd)
 
@@ -258,7 +275,7 @@ func NewPagesContext(cd staticIntf.CommonData) staticIntf.Context {
 }
 
 // Blog context, used for blog pages
-func NewBlogContext(cd staticIntf.CommonData) staticIntf.Context {
+func NewBlogContext(cd staticIntf.Site) staticIntf.Context {
 
 	c := NewContext(cd)
 
@@ -277,7 +294,7 @@ func NewBlogContext(cd staticIntf.CommonData) staticIntf.Context {
 // Blog navigation context
 // creates pages containing a navigations overview
 // of blog pages
-func NewBlogNaviContext(cd staticIntf.CommonData) staticIntf.Context {
+func NewBlogNaviContext(cd staticIntf.Site) staticIntf.Context {
 
 	c := NewContext(cd)
 
@@ -296,7 +313,7 @@ func NewBlogNaviContext(cd staticIntf.CommonData) staticIntf.Context {
 
 // Marginal context use for pages contained
 // within the marginal navigation (imprint, terms of use, etc.)
-func NewMarginalContext(cd staticIntf.CommonData) staticIntf.Context {
+func NewMarginalContext(cd staticIntf.Site) staticIntf.Context {
 
 	c := NewContext(cd)
 
