@@ -646,25 +646,26 @@ func (cc *ContentComponent) GetCss() string {
 .maincontent p {
 	line-height: 30px;
 }
-.maincontent h1,
-.maincontent h2 {
-	text-transform: uppercase;
-}
 .maincontent__h1,
 .maincontent__h2 {
+	text-transform: uppercase;
 	display: inline-block;
 	font-family: Arial Black, Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
-}
-.maincontent__h1 ,
-.maincontent__h2 {
 	font-size: 18px;
 	line-height: 20px;
 	text-transform: uppercase;
 }
-.maincontent__h2 {
+.maincontent__h1 + .maincontent__h2 {
 	color: grey;
 	margin-left: 10px;
+}
+.maincontent__h2 + p ,
+.maincontent__h2 + dl {
+	margin-top: 0;
+}
+dd + dt {
+	margin-top: 10px;
 }
 `
 }
