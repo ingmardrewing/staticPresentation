@@ -222,6 +222,23 @@ func NewContext(site staticIntf.Site) staticIntf.Context {
 
 // Create Narrrative Context
 // used for graphic novels
+func NewNarrativeMarginalContext(cd staticIntf.Site) staticIntf.Context {
+
+	c := NewContext(cd)
+
+	c.AddComponents(headerComponents...)
+	c.AddComponents(
+		NewTitleComponent(),
+		NewNarrativeHeaderComponent(),
+		NewPlainContentComponent(),
+		NewNarrativeCopyRightComponent(),
+		NewFooterNaviComponent())
+
+	return c
+}
+
+// Create Narrrative Context
+// used for graphic novels
 func NewNarrativeContext(cd staticIntf.Site) staticIntf.Context {
 
 	c := NewContext(cd)

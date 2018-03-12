@@ -452,7 +452,7 @@ func (f *FooterNaviComponent) VisitPage(p staticIntf.Page) {
 		if len(l.ExternalLink()) > 0 {
 			a := htmlDoc.NewNode("a", l.Title(),
 				"href", l.ExternalLink(),
-				"class", "mainnavi__navelement")
+				"class", "footernavi__navelement")
 			nav.AddChild(a)
 		} else if p.Url() == l.Url() {
 			span := htmlDoc.NewNode("span", l.Title(),
@@ -611,14 +611,14 @@ func (cc *StartPageComponent) VisitPage(p staticIntf.Page) {
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
-/* content component */
+// content component
+func NewContentComponent() *ContentComponent {
+	return new(ContentComponent)
+}
+
 type ContentComponent struct {
 	abstractComponent
 	wrapper
-}
-
-func NewContentComponent() *ContentComponent {
-	return new(ContentComponent)
 }
 
 func (cc *ContentComponent) VisitPage(p staticIntf.Page) {
@@ -1303,6 +1303,65 @@ header .orange {
 
 header {
 	text-align: left;
+}
+`
+}
+
+// content component
+func NewPlainContentComponent() *PlainContentComponent {
+	return new(PlainContentComponent)
+}
+
+type PlainContentComponent struct {
+	abstractComponent
+	wrapper
+}
+
+func (cc *PlainContentComponent) VisitPage(p staticIntf.Page) {
+	n := htmlDoc.NewNode("main", p.Content(),
+		"class", "narrativemarginal")
+	wn := cc.wrap(n)
+	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (cc *PlainContentComponent) GetCss() string {
+	return `
+h1 ,
+.narrativemarginal h1 ,
+.narrativemarginal h2 ,
+.narrativemarginal h3 {
+	text-transform: uppercase;
+	font-family: Arial Black, Arial, Helvetica, sans-serif;
+}
+.narrativemarginal{
+	padding-top: 0;
+	padding-bottom: 50px;
+	text-align: left;
+	line-height: 20px;
+}
+.narrativemarginal li,
+.narrativemarginal p {
+	line-height: 30px;
+}
+.narrativemarginal h1,
+.narrativemarginal h2 {
+	text-transform: uppercase;
+}
+.narrativemarginal__h1,
+.narrativemarginal__h2 {
+	display: inline-block;
+	font-family: Arial Black, Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+}
+.narrativemarginal__h1 ,
+.narrativemarginal__h2 {
+	font-size: 18px;
+	line-height: 20px;
+	text-transform: uppercase;
+}
+.narrativemarginal__h2 {
+	color: grey;
+	margin-left: 10px;
 }
 `
 }
