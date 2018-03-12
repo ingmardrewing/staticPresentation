@@ -12,11 +12,12 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 	cg.site = s
 
 	cg.context = NewNarrativeContext(s)
-	cg.context.FsSetOff("")
 	cg.context.SetElements(s.Narratives())
 
 	cg.narrativeArchiveContext = NewNarrativeArchiveContext(s)
-	cg.narrativeArchiveContext.FsSetOff("")
+
+	cg.narrativeMarginalContext = NewNarrativeMarginalContext(s)
+	cg.narrativeMarginalContext.SetElements(s.NarrativeMarginals())
 
 	cg.Init()
 
@@ -25,12 +26,14 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 
 type narrativeContextGroup struct {
 	abstractContextGroup
-	narrativeArchiveContext staticIntf.Context
+	narrativeArchiveContext  staticIntf.Context
+	narrativeMarginalContext staticIntf.Context
 }
 
 func (a *narrativeContextGroup) GetComponents() []staticIntf.Component {
-	components := a.context.GetComponents()
-	return append(components, a.narrativeArchiveContext.GetComponents()...)
+	cmps := a.context.GetComponents()
+	cmps = append(cmps, a.narrativeArchiveContext.GetComponents()...)
+	return append(cmps, a.narrativeMarginalContext.GetComponents()...)
 }
 
 func (a *narrativeContextGroup) Init() {
@@ -41,6 +44,10 @@ func (a *narrativeContextGroup) Init() {
 	np.PathFromDocRoot("")
 	a.narrativeArchiveContext.SetElements([]staticIntf.Page{np})
 	a.site.AddMarginal(np)
+
+	for _, n := range a.site.NarrativeMarginals() {
+		a.site.AddMarginal(n)
+	}
 }
 
 func (a *narrativeContextGroup) RenderPages() []fs.FileContainer {
@@ -64,6 +71,7 @@ func (a *narrativeContextGroup) RenderPages() []fs.FileContainer {
 	if rss != nil {
 		fcs = append(fcs, rss)
 	}
+	fcs = append(fcs, a.narrativeMarginalContext.RenderPages()...)
 
 	return fcs
 }
