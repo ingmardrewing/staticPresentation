@@ -23,7 +23,7 @@ func NewMarginalContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 
 type marginalContextGroup struct {
 	abstractContextGroup
-	marginalContext staticIntf.Context
+	marginalContext staticIntf.SubContext
 }
 
 func (s *marginalContextGroup) GetComponents() []staticIntf.Component {

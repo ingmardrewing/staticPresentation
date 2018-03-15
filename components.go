@@ -12,10 +12,10 @@ import (
 // abstractComponent implementing default functions
 // for implementing components
 type abstractComponent struct {
-	context staticIntf.Context
+	context staticIntf.SubContext
 }
 
-func (ac *abstractComponent) SetContext(context staticIntf.Context) {
+func (ac *abstractComponent) SetContext(context staticIntf.SubContext) {
 	ac.context = context
 }
 

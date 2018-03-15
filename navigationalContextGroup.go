@@ -11,7 +11,7 @@ import (
 
 type navigationalContextGroup struct {
 	abstractContextGroup
-	naviContext staticIntf.Context
+	naviContext staticIntf.SubContext
 }
 
 func (n *navigationalContextGroup) GetComponents() []staticIntf.Component {

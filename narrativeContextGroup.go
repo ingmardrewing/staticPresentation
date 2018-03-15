@@ -26,8 +26,8 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 
 type narrativeContextGroup struct {
 	abstractContextGroup
-	narrativeArchiveContext  staticIntf.Context
-	narrativeMarginalContext staticIntf.Context
+	narrativeArchiveContext  staticIntf.SubContext
+	narrativeMarginalContext staticIntf.SubContext
 }
 
 func (a *narrativeContextGroup) GetComponents() []staticIntf.Component {

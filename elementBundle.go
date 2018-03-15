@@ -22,3 +22,11 @@ func (l *elementBundle) full() bool {
 func (l *elementBundle) getElements() []staticIntf.Page {
 	return l.elements
 }
+
+func ElementsToLocations(elements []staticIntf.Page) []staticIntf.Location {
+	locs := []staticIntf.Location{}
+	for _, p := range elements {
+		locs = append(locs, p)
+	}
+	return locs
+}
