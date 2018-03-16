@@ -1,8 +1,6 @@
 package staticPresentation
 
 import (
-	"path"
-
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 )
@@ -31,20 +29,14 @@ func (a *abstractContextGroup) naviPagePathFromDocRoot() string { return "" }
 
 func (a *abstractContextGroup) Init() {}
 
-func (a *abstractContextGroup) rss(targetDir string) fs.FileContainer {
-	if len(a.context.GetPages()) > 0 {
-		r := NewRssRenderer(a.getLastPages(10))
-		rssPath := path.Join(targetDir, a.context.SiteDto().Rss())
-		rssFilename := "rss.xml"
-		return r.Render(rssPath, rssFilename)
+func (b *blogContextGroup) getLastTenReversedPages() []staticIntf.Page {
+	pages := b.context.GetElements()
+	if len(pages) > 10 {
+		reversed := make([]staticIntf.Page, 10)
+		for i := 0; i < 10; i++ {
+			reversed[i] = pages[len(pages)-i-1]
+		}
+		return reversed
 	}
-	return nil
-}
-
-func (a *abstractContextGroup) getLastPages(nr int) []staticIntf.Page {
-	pgs := a.context.GetPages()
-	if len(pgs) > nr {
-		return pgs[len(pgs)-nr:]
-	}
-	return pgs
+	return pages
 }

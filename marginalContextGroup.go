@@ -13,11 +13,6 @@ func NewMarginalContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 	cg.marginalContext = NewMarginalContext(s)
 	cg.marginalContext.SetElements(s.Marginals())
 
-	locs := ElementsToLocations(s.Marginals())
-	for _, l := range locs {
-		s.AddMarginal(l)
-	}
-
 	return cg
 }
 

@@ -2,34 +2,49 @@ package staticPresentation
 
 import (
 	"fmt"
+	"path"
 	"strings"
 
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 )
 
-func NewRssRenderer(pages []staticIntf.Page) *rssRenderer {
+func NewRssRenderer(
+	pages []staticIntf.Page,
+	targetDir string,
+	rssPath string,
+	rssFilename string) *rssRenderer {
+
 	r := new(rssRenderer)
 	r.pages = pages
+	r.targetDir = targetDir
+	r.rssPath = rssPath
+	r.rssFilename = rssFilename
 	return r
 }
 
 type rssRenderer struct {
-	pages []staticIntf.Page
+	pages       []staticIntf.Page
+	targetDir   string
+	rssPath     string
+	rssFilename string
 }
 
-func (r *rssRenderer) Render(rssPath, rssFilename string) fs.FileContainer {
-	fc := fs.NewFileContainer()
-	fc.SetPath(rssPath)
-	fc.SetFilename(rssFilename)
-	fc.SetDataAsString(r.rssContent())
-	return fc
+func (r *rssRenderer) Render() fs.FileContainer {
+	if len(r.pages) > 0 {
+		fc := fs.NewFileContainer()
+		fc.SetPath(path.Join(r.targetDir, r.rssPath))
+		fc.SetFilename(r.rssFilename)
+		fc.SetDataAsString(r.renderRssContent())
+		return fc
+	}
+	return nil
 }
 
-func (r *rssRenderer) rssContent() string {
+func (r *rssRenderer) renderRssContent() string {
 	rss := []string{}
 	for _, p := range r.pages {
-		rss = append(rss, r.getSingleRssEntry(p))
+		rss = append(rss, r.renderSingleRssEntry(p))
 	}
 	itemsRss := strings.Join(rss, "\n")
 
@@ -46,15 +61,15 @@ func (r *rssRenderer) rssContent() string {
 <channel>
 	<title>%s</title>
     <image>
-      <url>https://%s/favicon-32x32.png</url>
+      <url>%s</url>
       <title>%s</title>
-      <link>https://%s</link>
+      <link>%s</link>
       <width>32</width>
       <height>32</height>
       <description>A science-fiction webcomic about the lives of software developers in the far, funny and dystopian future</description>
     </image>
-	<atom:link href="https://%s/%s" rel="self" type="application/rss+xml" />
-	<link>https://%s</link>
+	<atom:link href="%s" rel="self" type="application/rss+xml" />
+	<link>%s</link>
 	<description>%s</description>
 	<lastBuildDate>%s</lastBuildDate>
 	<language>en-US</language>
@@ -66,11 +81,30 @@ func (r *rssRenderer) rssContent() string {
 </rss>
 `
 	domain := r.pages[0].Domain()
-	date := r.pages[len(r.pages)-1].PublishedTime()
-	return fmt.Sprintf(rssTemplate, domain, domain, domain, domain, domain, "rss.xml", date, "", itemsRss, "")
+	title := domain
+	favUrl := "https://" + domain + "/favicon-32x32.png"
+	favTitle := domain
+	favLink := "https://" + domain
+	atomLink := "https://" + domain + r.rssPath + r.rssFilename
+	link := "https://" + domain + r.rssPath + r.rssFilename
+	description := ""
+
+	lastbuilddate := r.pages[0].PublishedTime()
+
+	return fmt.Sprintf(
+		rssTemplate,
+		title,
+		favUrl,
+		favTitle,
+		favLink,
+		atomLink,
+		link,
+		description,
+		lastbuilddate,
+		itemsRss)
 }
 
-func (r *rssRenderer) getSingleRssEntry(p staticIntf.Page) string {
+func (r *rssRenderer) renderSingleRssEntry(p staticIntf.Page) string {
 	rssItem := `  <item>
 	<title>%s</title>
 	<link>%s</link>
@@ -86,6 +120,6 @@ func (r *rssRenderer) getSingleRssEntry(p staticIntf.Page) string {
 	  <media:thumbnail url="%s" />
 	</media:content>
   </item>`
-	return fmt.Sprintf(rssItem, p.Title(), p.Url(), p.PublishedTime(), p.Url(), p.Description(), p.Content(), p.ImageUrl(), p.ImageUrl(), p.ImageUrl(), p.Title())
+	return fmt.Sprintf(rssItem, p.Title(), p.Url(), p.PublishedTime(), p.Url(), p.Description(), p.Content(), p.ImageUrl(), p.ImageUrl(), p.ImageUrl(), p.ImageUrl())
 
 }

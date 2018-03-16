@@ -1,6 +1,8 @@
 package staticPresentation
 
 import (
+	"fmt"
+
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticModel"
@@ -52,8 +54,8 @@ func (a *narrativeContextGroup) Init() {
 
 func (a *narrativeContextGroup) RenderPages() []fs.FileContainer {
 	fcs := a.context.RenderPages()
-
 	fcs = append(fcs, a.narrativeArchiveContext.RenderPages()...)
+	fcs = append(fcs, a.narrativeMarginalContext.RenderPages()...)
 
 	if len(fcs) > 1 {
 		// copy the content of the last page
@@ -67,11 +69,18 @@ func (a *narrativeContextGroup) RenderPages() []fs.FileContainer {
 		index.SetFilename("index.html")
 		fcs = append(fcs, index)
 	}
-	rss := a.rss(a.site.TargetDir())
-	if rss != nil {
-		fcs = append(fcs, rss)
+
+	fmt.Println("wurst", a.site.RssPath())
+	rr := NewRssRenderer(
+		a.site.Posts(),
+		a.site.TargetDir(),
+		a.site.RssPath(),
+		a.site.RssFilename())
+	rssFc := rr.Render()
+
+	if rssFc != nil {
+		fcs = append(fcs, rssFc)
 	}
-	fcs = append(fcs, a.narrativeMarginalContext.RenderPages()...)
 
 	return fcs
 }
