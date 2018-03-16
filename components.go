@@ -12,10 +12,10 @@ import (
 // abstractComponent implementing default functions
 // for implementing components
 type abstractComponent struct {
-	context staticIntf.Context
+	context staticIntf.SubContext
 }
 
-func (ac *abstractComponent) SetContext(context staticIntf.Context) {
+func (ac *abstractComponent) SetContext(context staticIntf.SubContext) {
 	ac.context = context
 }
 
@@ -529,7 +529,7 @@ func (dc *DisqusComponent) GetJs() string {
 
 func (dc *DisqusComponent) VisitPage(p staticIntf.Page) {
 	dc.configuredJs = fmt.Sprintf(`var disqus_config = function () { this.page.title= "%s"; this.page.url = '%s'; this.page.identifier =  '%s'; }; (function() { var d = document, s = d.createElement('script'); s.src = 'https://%s.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();`, p.Title(),
-		dc.abstractComponent.context.GetSiteName()+p.PathFromDocRoot()+p.HtmlFilename(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
+		p.Url(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
 	n := htmlDoc.NewNode("div", " ", "id", "disqus_thread", "class", "disqus")
 	js := htmlDoc.NewNode("script", dc.configuredJs)
 	wn := dc.wrap(n)
@@ -646,25 +646,26 @@ func (cc *ContentComponent) GetCss() string {
 .maincontent p {
 	line-height: 30px;
 }
-.maincontent h1,
-.maincontent h2 {
-	text-transform: uppercase;
-}
 .maincontent__h1,
 .maincontent__h2 {
+	text-transform: uppercase;
 	display: inline-block;
 	font-family: Arial Black, Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
-}
-.maincontent__h1 ,
-.maincontent__h2 {
 	font-size: 18px;
 	line-height: 20px;
 	text-transform: uppercase;
 }
-.maincontent__h2 {
+.maincontent__h1 + .maincontent__h2 {
 	color: grey;
 	margin-left: 10px;
+}
+.maincontent__h2 + p ,
+.maincontent__h2 + dl {
+	margin-top: 0;
+}
+dd + dt {
+	margin-top: 10px;
 }
 `
 }

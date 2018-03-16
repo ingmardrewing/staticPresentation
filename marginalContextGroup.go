@@ -13,17 +13,12 @@ func NewMarginalContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 	cg.marginalContext = NewMarginalContext(s)
 	cg.marginalContext.SetElements(s.Marginals())
 
-	locs := ElementsToLocations(s.Marginals())
-	for _, l := range locs {
-		s.AddMarginal(l)
-	}
-
 	return cg
 }
 
 type marginalContextGroup struct {
 	abstractContextGroup
-	marginalContext staticIntf.Context
+	marginalContext staticIntf.SubContext
 }
 
 func (s *marginalContextGroup) GetComponents() []staticIntf.Component {

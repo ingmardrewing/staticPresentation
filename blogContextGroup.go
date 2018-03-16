@@ -1,27 +1,20 @@
 package staticPresentation
 
 import (
-	"path"
-
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 )
 
 func NewBlogContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 
-	posts := s.Posts()
-	for _, p := range posts {
-		newPath := path.Join("/blog/", p.PathFromDocRoot())
-		p.PathFromDocRoot(newPath)
-	}
-
 	cg := new(blogContextGroup)
 	cg.site = s
+
 	cg.context = NewBlogContext(s)
-	cg.context.SetElements(posts)
+	cg.context.SetElements(s.Posts())
 
 	cg.naviContext = NewBlogNaviContext(s)
-	cg.naviContext.FsSetOff("/blog/")
+	cg.naviContext.SetElements(s.PostNaviPages())
 
 	cg.Init()
 
@@ -37,9 +30,15 @@ func (b *blogContextGroup) RenderPages() []fs.FileContainer {
 	fcs := b.context.RenderPages()
 	fcs = append(fcs, b.naviContext.RenderPages()...)
 
-	rss := b.rss(path.Join(b.site.TargetDir(), b.naviContext.FsSetOff()))
-	if rss != nil {
-		fcs = append(fcs, rss)
+	rr := NewRssRenderer(
+		b.getLastTenReversedPages(),
+		b.site.TargetDir(),
+		b.site.RssPath(),
+		b.site.RssFilename())
+	rssFc := rr.Render()
+
+	if rssFc != nil {
+		fcs = append(fcs, rssFc)
 	}
 
 	return fcs
