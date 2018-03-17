@@ -45,11 +45,11 @@ func (c *subContext) SiteDto() staticIntf.Site {
 	return c.site
 }
 
-func (c *subContext) GetPages() []staticIntf.Page {
+func (c *subContext) GetPagesObsolete() []staticIntf.Page {
 	return c.pages
 }
 
-func (c *subContext) RenderPages() []fs.FileContainer {
+func (c *subContext) Render() []fs.FileContainer {
 	targetDir := c.site.TargetDir()
 	fcs := []fs.FileContainer{}
 	for _, p := range c.pages {
@@ -80,7 +80,7 @@ func (c *subContext) FsSetOff(fsSetOff ...string) string {
 	return c.fsSetOff
 }
 
-func (c *subContext) SetElements(pages []staticIntf.Page) {
+func (c *subContext) SetPages(pages []staticIntf.Page) {
 	c.pages = pages
 }
 
@@ -88,7 +88,7 @@ func (c *subContext) GetComponents() []staticIntf.Component {
 	return c.components
 }
 
-func (c *subContext) GetElements() []staticIntf.Page {
+func (c *subContext) GetPages() []staticIntf.Page {
 	return c.pages
 }
 
@@ -202,7 +202,7 @@ func (c *subContext) GetReadNavigationLocations() []staticIntf.Location {
 	return nil
 }
 
-func NewContext(site staticIntf.Site) staticIntf.SubContext {
+func NewContext(site staticIntf.Site) staticIntf.Renderer {
 	c := new(subContext)
 	c.site = site
 
@@ -222,7 +222,7 @@ func NewContext(site staticIntf.Site) staticIntf.SubContext {
 
 // Create Narrrative Context
 // used for graphic novels
-func NewNarrativeMarginalContext(cd staticIntf.Site) staticIntf.SubContext {
+func NewNarrativeMarginalContext(cd staticIntf.Site) staticIntf.Renderer {
 
 	c := NewContext(cd)
 
@@ -239,7 +239,7 @@ func NewNarrativeMarginalContext(cd staticIntf.Site) staticIntf.SubContext {
 
 // Create Narrrative Context
 // used for graphic novels
-func NewNarrativeContext(cd staticIntf.Site) staticIntf.SubContext {
+func NewNarrativeContext(cd staticIntf.Site) staticIntf.Renderer {
 
 	c := NewContext(cd)
 
@@ -258,7 +258,7 @@ func NewNarrativeContext(cd staticIntf.Site) staticIntf.SubContext {
 
 // Create Narrrative Context
 // used for graphic novels
-func NewNarrativeArchiveContext(cd staticIntf.Site) staticIntf.SubContext {
+func NewNarrativeArchiveContext(cd staticIntf.Site) staticIntf.Renderer {
 
 	c := NewContext(cd)
 
@@ -275,7 +275,7 @@ func NewNarrativeArchiveContext(cd staticIntf.Site) staticIntf.SubContext {
 
 // Pages context, used for static pages
 // of a site, featuring separate subjects
-func NewPagesContext(cd staticIntf.Site) staticIntf.SubContext {
+func NewPagesContext(cd staticIntf.Site) staticIntf.Renderer {
 
 	c := NewContext(cd)
 
@@ -292,7 +292,7 @@ func NewPagesContext(cd staticIntf.Site) staticIntf.SubContext {
 }
 
 // Blog context, used for blog pages
-func NewBlogContext(cd staticIntf.Site) staticIntf.SubContext {
+func NewBlogRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
 	c := NewContext(cd)
 
@@ -311,7 +311,7 @@ func NewBlogContext(cd staticIntf.Site) staticIntf.SubContext {
 // Blog navigation context
 // creates pages containing a navigations overview
 // of blog pages
-func NewBlogNaviContext(cd staticIntf.Site) staticIntf.SubContext {
+func NewBlogNaviRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
 	c := NewContext(cd)
 
@@ -330,7 +330,7 @@ func NewBlogNaviContext(cd staticIntf.Site) staticIntf.SubContext {
 
 // Marginal context use for pages contained
 // within the marginal navigation (imprint, terms of use, etc.)
-func NewMarginalContext(cd staticIntf.Site) staticIntf.SubContext {
+func NewMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
 	c := NewContext(cd)
 

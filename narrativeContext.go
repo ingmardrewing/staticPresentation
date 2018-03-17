@@ -1,50 +1,48 @@
 package staticPresentation
 
 import (
-	"fmt"
-
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticModel"
 )
 
-func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
+func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
 
-	cg := new(narrativeContextGroup)
+	cg := new(narrativeContext)
 	cg.site = s
 
-	cg.context = NewNarrativeContext(s)
-	cg.context.SetElements(s.Narratives())
+	cg.renderer = NewNarrativeContext(s)
+	cg.renderer.SetPages(s.Narratives())
 
 	cg.narrativeArchiveContext = NewNarrativeArchiveContext(s)
 
 	cg.narrativeMarginalContext = NewNarrativeMarginalContext(s)
-	cg.narrativeMarginalContext.SetElements(s.NarrativeMarginals())
+	cg.narrativeMarginalContext.SetPages(s.NarrativeMarginals())
 
-	cg.Init()
+	cg.GenerateArchivePage()
 
 	return cg
 }
 
-type narrativeContextGroup struct {
-	abstractContextGroup
-	narrativeArchiveContext  staticIntf.SubContext
-	narrativeMarginalContext staticIntf.SubContext
+type narrativeContext struct {
+	abstractContext
+	narrativeArchiveContext  staticIntf.Renderer
+	narrativeMarginalContext staticIntf.Renderer
 }
 
-func (a *narrativeContextGroup) GetComponents() []staticIntf.Component {
-	cmps := a.context.GetComponents()
+func (a *narrativeContext) GetComponents() []staticIntf.Component {
+	cmps := a.renderer.GetComponents()
 	cmps = append(cmps, a.narrativeArchiveContext.GetComponents()...)
 	return append(cmps, a.narrativeMarginalContext.GetComponents()...)
 }
 
-func (a *narrativeContextGroup) Init() {
+func (a *narrativeContext) GenerateArchivePage() {
 	np := staticModel.NewEmptyNaviPage(a.site.Domain())
-	np.NavigatedPages(a.context.GetElements()...)
+	np.NavigatedPages(a.renderer.GetPages()...)
 	np.Title("Archive")
 	np.HtmlFilename("archive.html")
 	np.PathFromDocRoot("")
-	a.narrativeArchiveContext.SetElements([]staticIntf.Page{np})
+	a.narrativeArchiveContext.SetPages([]staticIntf.Page{np})
 	a.site.AddMarginal(np)
 
 	for _, n := range a.site.NarrativeMarginals() {
@@ -52,10 +50,10 @@ func (a *narrativeContextGroup) Init() {
 	}
 }
 
-func (a *narrativeContextGroup) RenderPages() []fs.FileContainer {
-	fcs := a.context.RenderPages()
-	fcs = append(fcs, a.narrativeArchiveContext.RenderPages()...)
-	fcs = append(fcs, a.narrativeMarginalContext.RenderPages()...)
+func (a *narrativeContext) RenderPages() []fs.FileContainer {
+	fcs := a.renderer.Render()
+	fcs = append(fcs, a.narrativeArchiveContext.Render()...)
+	fcs = append(fcs, a.narrativeMarginalContext.Render()...)
 
 	if len(fcs) > 1 {
 		// copy the content of the last page
@@ -70,9 +68,8 @@ func (a *narrativeContextGroup) RenderPages() []fs.FileContainer {
 		fcs = append(fcs, index)
 	}
 
-	fmt.Println("wurst", a.site.RssPath())
 	rr := NewRssRenderer(
-		a.site.Posts(),
+		a.site.Narratives(),
 		a.site.TargetDir(),
 		a.site.RssPath(),
 		a.site.RssFilename())
