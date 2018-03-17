@@ -21,7 +21,7 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 	cg.narrativeMarginalContext = NewNarrativeMarginalContext(s)
 	cg.narrativeMarginalContext.SetPages(s.NarrativeMarginals())
 
-	cg.Init()
+	cg.GenerateArchivePage()
 
 	return cg
 }
@@ -38,7 +38,7 @@ func (a *narrativeContext) GetComponents() []staticIntf.Component {
 	return append(cmps, a.narrativeMarginalContext.GetComponents()...)
 }
 
-func (a *narrativeContext) Init() {
+func (a *narrativeContext) GenerateArchivePage() {
 	np := staticModel.NewEmptyNaviPage(a.site.Domain())
 	np.NavigatedPages(a.renderer.GetPages()...)
 	np.Title("Archive")

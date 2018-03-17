@@ -22,11 +22,16 @@ func NewBlogContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 }
 
 type blogContext struct {
-	navigationalContext
+	abstractContext
+	naviRenderer staticIntf.Renderer
+}
+
+func (b *blogContext) GetComponents() []staticIntf.Component {
+	components := b.renderer.GetComponents()
+	return append(components, b.naviRenderer.GetComponents()...)
 }
 
 func (b *blogContext) RenderPages() []fs.FileContainer {
-
 	fcs := b.renderer.Render()
 	fcs = append(fcs, b.naviRenderer.Render()...)
 
