@@ -2,7 +2,6 @@ package staticPresentation
 
 import (
 	"fmt"
-	"path"
 	"strings"
 
 	"github.com/ingmardrewing/fs"
@@ -11,29 +10,36 @@ import (
 
 func NewRssRenderer(
 	pages []staticIntf.Page,
-	targetDir string,
-	rssPath string,
+	fsPath string,
+	pathFromDocRoot string,
 	rssFilename string) *rssRenderer {
 
+	fmt.Printf("fsPath: %s\npathFromDocRoot: %s\nrssFilename: %s\n",
+		fsPath, pathFromDocRoot, rssFilename)
 	r := new(rssRenderer)
 	r.pages = pages
-	r.targetDir = targetDir
-	r.rssPath = rssPath
+
+	r.fsPath = fsPath
+	r.pathFromDocRoot = pathFromDocRoot
+
 	r.rssFilename = rssFilename
 	return r
 }
 
 type rssRenderer struct {
-	pages       []staticIntf.Page
-	targetDir   string
-	rssPath     string
+	pages     []staticIntf.Page
+	targetDir string
+
+	fsPath          string
+	pathFromDocRoot string
+
 	rssFilename string
 }
 
 func (r *rssRenderer) Render() fs.FileContainer {
 	if len(r.pages) > 0 {
 		fc := fs.NewFileContainer()
-		fc.SetPath(path.Join(r.targetDir, r.rssPath))
+		fc.SetPath(r.fsPath)
 		fc.SetFilename(r.rssFilename)
 		fc.SetDataAsString(r.renderRssContent())
 		return fc
@@ -85,8 +91,8 @@ func (r *rssRenderer) renderRssContent() string {
 	favUrl := "https://" + domain + "/favicon-32x32.png"
 	favTitle := domain
 	favLink := "https://" + domain
-	atomLink := "https://" + domain + r.rssPath + r.rssFilename
-	link := "https://" + domain + r.rssPath + r.rssFilename
+	atomLink := "https://" + domain + r.pathFromDocRoot + r.rssFilename
+	link := "https://" + domain + r.pathFromDocRoot + r.rssFilename
 	description := ""
 
 	lastbuilddate := r.pages[0].PublishedTime()

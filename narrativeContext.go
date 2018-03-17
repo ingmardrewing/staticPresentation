@@ -69,7 +69,7 @@ func (a *narrativeContext) RenderPages() []fs.FileContainer {
 	}
 
 	rr := NewRssRenderer(
-		a.site.Posts(),
+		a.site.Narratives(),
 		a.site.TargetDir(),
 		a.site.RssPath(),
 		a.site.RssFilename())

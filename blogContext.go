@@ -1,12 +1,13 @@
 package staticPresentation
 
 import (
+	"path"
+
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 )
 
 func NewBlogContext(s staticIntf.Site) staticIntf.Context {
-
 	cg := new(blogContext)
 	cg.site = s
 
@@ -35,8 +36,8 @@ func (b *blogContext) RenderPages() []fs.FileContainer {
 
 	rr := NewRssRenderer(
 		b.getLastTenReversedPages(),
-		b.site.TargetDir(),
-		b.site.RssPath(),
+		path.Join(b.site.TargetDir(), "/blog/"),
+		"/blog/",
 		b.site.RssFilename())
 	rssFc := rr.Render()
 
