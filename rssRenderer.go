@@ -14,8 +14,6 @@ func NewRssRenderer(
 	pathFromDocRoot string,
 	rssFilename string) *rssRenderer {
 
-	fmt.Printf("fsPath: %s\npathFromDocRoot: %s\nrssFilename: %s\n",
-		fsPath, pathFromDocRoot, rssFilename)
 	r := new(rssRenderer)
 	r.pages = pages
 
