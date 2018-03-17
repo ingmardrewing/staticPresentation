@@ -16,8 +16,6 @@ func NewBlogContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 	cg.naviRenderer = NewBlogNaviRenderer(s)
 	cg.naviRenderer.SetPages(s.PostNaviPages())
 
-	cg.Init()
-
 	return cg
 }
 

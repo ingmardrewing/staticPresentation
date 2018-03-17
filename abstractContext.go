@@ -21,14 +21,6 @@ func (a *abstractContext) RenderPages() []fs.FileContainer {
 
 func (a *abstractContext) Domain() string { return a.site.Domain() }
 
-func (a *abstractContext) naviPageDescription() string { return "" }
-
-func (a *abstractContext) naviPageTitle() string { return "" }
-
-func (a *abstractContext) naviPagePathFromDocRoot() string { return "" }
-
-func (a *abstractContext) Init() {}
-
 func (b *abstractContext) getLastTenReversedPages() []staticIntf.Page {
 	pages := b.renderer.GetPages()
 	if len(pages) > 10 {
