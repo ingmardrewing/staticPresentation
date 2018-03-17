@@ -7,28 +7,28 @@ import (
 
 func NewBlogContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 
-	cg := new(blogContextGroup)
+	cg := new(blogContext)
 	cg.site = s
 
-	cg.context = NewBlogContext(s)
-	cg.context.SetElements(s.Posts())
+	cg.renderer = NewBlogRenderer(s)
+	cg.renderer.SetPages(s.Posts())
 
-	cg.naviContext = NewBlogNaviContext(s)
-	cg.naviContext.SetElements(s.PostNaviPages())
+	cg.naviRenderer = NewBlogNaviRenderer(s)
+	cg.naviRenderer.SetPages(s.PostNaviPages())
 
 	cg.Init()
 
 	return cg
 }
 
-type blogContextGroup struct {
-	navigationalContextGroup
+type blogContext struct {
+	navigationalContext
 }
 
-func (b *blogContextGroup) RenderPages() []fs.FileContainer {
+func (b *blogContext) RenderPages() []fs.FileContainer {
 
-	fcs := b.context.RenderPages()
-	fcs = append(fcs, b.naviContext.RenderPages()...)
+	fcs := b.renderer.Render()
+	fcs = append(fcs, b.naviRenderer.Render()...)
 
 	rr := NewRssRenderer(
 		b.getLastTenReversedPages(),

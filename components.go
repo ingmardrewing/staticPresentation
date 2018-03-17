@@ -12,10 +12,10 @@ import (
 // abstractComponent implementing default functions
 // for implementing components
 type abstractComponent struct {
-	context staticIntf.SubContext
+	context staticIntf.Renderer
 }
 
-func (ac *abstractComponent) SetContext(context staticIntf.SubContext) {
+func (ac *abstractComponent) SetContext(context staticIntf.Renderer) {
 	ac.context = context
 }
 
@@ -26,7 +26,7 @@ func (ac *abstractComponent) GetJs() string { return "" }
 func (ac *abstractComponent) VisitPage(p staticIntf.Page) {}
 
 func (b *abstractComponent) getIndexOfPage(p staticIntf.Page) int {
-	for i, l := range b.context.GetElements() {
+	for i, l := range b.context.GetPages() {
 		lurl := l.PathFromDocRoot() + l.HtmlFilename()
 		purl := p.PathFromDocRoot() + p.HtmlFilename()
 		if lurl == purl {
@@ -37,7 +37,7 @@ func (b *abstractComponent) getIndexOfPage(p staticIntf.Page) int {
 }
 
 func (b *abstractComponent) getFirstPage() staticIntf.Page {
-	pages := b.context.GetElements()
+	pages := b.context.GetPages()
 	if len(pages) > 0 {
 		return pages[0]
 	}
@@ -45,7 +45,7 @@ func (b *abstractComponent) getFirstPage() staticIntf.Page {
 }
 
 func (b *abstractComponent) getLastPage() staticIntf.Page {
-	pages := b.context.GetElements()
+	pages := b.context.GetPages()
 	if len(pages) > 0 {
 		return pages[len(pages)-1]
 	}
@@ -54,7 +54,7 @@ func (b *abstractComponent) getLastPage() staticIntf.Page {
 
 func (b *abstractComponent) getPageBefore(p staticIntf.Page) staticIntf.Page {
 	index := b.getIndexOfPage(p)
-	pages := b.context.GetElements()
+	pages := b.context.GetPages()
 	if index > 0 {
 		return pages[index-1]
 	}
@@ -63,7 +63,7 @@ func (b *abstractComponent) getPageBefore(p staticIntf.Page) staticIntf.Page {
 
 func (b *abstractComponent) getPageAfter(p staticIntf.Page) staticIntf.Page {
 	index := b.getIndexOfPage(p)
-	pages := b.context.GetElements()
+	pages := b.context.GetPages()
 	if index+1 < len(pages) {
 		return pages[index+1]
 	}
@@ -320,7 +320,7 @@ func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
 }
 
 func (b *BlogNaviComponent) VisitPage(p staticIntf.Page) {
-	if len(b.abstractComponent.context.GetElements()) < 3 {
+	if len(b.abstractComponent.context.GetPages()) < 3 {
 		return
 	}
 	b.addBodyNodes(p)

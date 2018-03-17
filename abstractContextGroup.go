@@ -5,32 +5,32 @@ import (
 	"github.com/ingmardrewing/staticIntf"
 )
 
-type abstractContextGroup struct {
-	pages   []staticIntf.Page
-	context staticIntf.SubContext
-	site    staticIntf.Site
+type abstractContext struct {
+	pages    []staticIntf.Page
+	renderer staticIntf.Renderer
+	site     staticIntf.Site
 }
 
-func (a *abstractContextGroup) GetComponents() []staticIntf.Component {
-	return a.context.GetComponents()
+func (a *abstractContext) GetComponents() []staticIntf.Component {
+	return a.renderer.GetComponents()
 }
 
-func (a *abstractContextGroup) RenderPages() []fs.FileContainer {
-	return a.context.RenderPages()
+func (a *abstractContext) RenderPages() []fs.FileContainer {
+	return a.renderer.Render()
 }
 
-func (a *abstractContextGroup) Domain() string { return a.site.Domain() }
+func (a *abstractContext) Domain() string { return a.site.Domain() }
 
-func (a *abstractContextGroup) naviPageDescription() string { return "" }
+func (a *abstractContext) naviPageDescription() string { return "" }
 
-func (a *abstractContextGroup) naviPageTitle() string { return "" }
+func (a *abstractContext) naviPageTitle() string { return "" }
 
-func (a *abstractContextGroup) naviPagePathFromDocRoot() string { return "" }
+func (a *abstractContext) naviPagePathFromDocRoot() string { return "" }
 
-func (a *abstractContextGroup) Init() {}
+func (a *abstractContext) Init() {}
 
-func (b *blogContextGroup) getLastTenReversedPages() []staticIntf.Page {
-	pages := b.context.GetElements()
+func (b *abstractContext) getLastTenReversedPages() []staticIntf.Page {
+	pages := b.renderer.GetPages()
 	if len(pages) > 10 {
 		reversed := make([]staticIntf.Page, 10)
 		for i := 0; i < 10; i++ {

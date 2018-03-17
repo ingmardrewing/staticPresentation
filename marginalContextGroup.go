@@ -6,25 +6,22 @@ import (
 )
 
 func NewMarginalContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
-
-	cg := new(marginalContextGroup)
-
+	cg := new(marginalContext)
 	cg.site = s
-	cg.marginalContext = NewMarginalContext(s)
-	cg.marginalContext.SetElements(s.Marginals())
-
+	cg.marginalContext = NewMarginalRenderer(s)
+	cg.marginalContext.SetPages(s.Marginals())
 	return cg
 }
 
-type marginalContextGroup struct {
-	abstractContextGroup
-	marginalContext staticIntf.SubContext
+type marginalContext struct {
+	abstractContext
+	marginalContext staticIntf.Renderer
 }
 
-func (s *marginalContextGroup) GetComponents() []staticIntf.Component {
+func (s *marginalContext) GetComponents() []staticIntf.Component {
 	return s.marginalContext.GetComponents()
 }
 
-func (s *marginalContextGroup) RenderPages() []fs.FileContainer {
-	return s.marginalContext.RenderPages()
+func (s *marginalContext) RenderPages() []fs.FileContainer {
+	return s.marginalContext.Render()
 }

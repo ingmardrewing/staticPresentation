@@ -5,17 +5,17 @@ import (
 	"github.com/ingmardrewing/staticIntf"
 )
 
-type navigationalContextGroup struct {
-	abstractContextGroup
-	naviContext staticIntf.SubContext
+type navigationalContext struct {
+	abstractContext
+	naviRenderer staticIntf.Renderer
 }
 
-func (n *navigationalContextGroup) GetComponents() []staticIntf.Component {
-	components := n.context.GetComponents()
-	return append(components, n.naviContext.GetComponents()...)
+func (n *navigationalContext) GetComponents() []staticIntf.Component {
+	components := n.renderer.GetComponents()
+	return append(components, n.naviRenderer.GetComponents()...)
 }
 
-func (n *navigationalContextGroup) RenderPages() []fs.FileContainer {
-	pages := n.context.RenderPages()
-	return append(pages, n.naviContext.RenderPages()...)
+func (n *navigationalContext) RenderPages() []fs.FileContainer {
+	pages := n.renderer.Render()
+	return append(pages, n.naviRenderer.Render()...)
 }

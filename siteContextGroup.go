@@ -4,15 +4,15 @@ import "github.com/ingmardrewing/staticIntf"
 
 func NewSiteContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
 
-	cg := new(siteContextGroup)
+	cg := new(siteContext)
 	cg.site = s
-	cg.context = NewPagesContext(s)
-	cg.context.SetElements(s.Pages())
+	cg.renderer = NewPagesContext(s)
+	cg.renderer.SetPages(s.Pages())
 
 	return cg
 }
 
-type siteContextGroup struct {
-	abstractContextGroup
-	marginalContext staticIntf.SubContext
+type siteContext struct {
+	abstractContext
+	marginalContext staticIntf.Renderer
 }
