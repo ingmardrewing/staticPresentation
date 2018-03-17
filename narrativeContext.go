@@ -1,8 +1,6 @@
 package staticPresentation
 
 import (
-	"fmt"
-
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticModel"
@@ -70,7 +68,6 @@ func (a *narrativeContext) RenderPages() []fs.FileContainer {
 		fcs = append(fcs, index)
 	}
 
-	fmt.Println("wurst", a.site.RssPath())
 	rr := NewRssRenderer(
 		a.site.Posts(),
 		a.site.TargetDir(),
