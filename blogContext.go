@@ -5,7 +5,7 @@ import (
 	"github.com/ingmardrewing/staticIntf"
 )
 
-func NewBlogContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
+func NewBlogContext(s staticIntf.Site) staticIntf.Context {
 
 	cg := new(blogContext)
 	cg.site = s

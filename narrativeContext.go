@@ -6,7 +6,7 @@ import (
 	"github.com/ingmardrewing/staticModel"
 )
 
-func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
+func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
 
 	cg := new(narrativeContext)
 	cg.site = s

@@ -5,7 +5,7 @@ import (
 	"github.com/ingmardrewing/staticIntf"
 )
 
-func NewMarginalContextGroup(s staticIntf.Site) staticIntf.ContextGroup {
+func NewMarginalContextGroup(s staticIntf.Site) staticIntf.Context {
 	cg := new(marginalContext)
 	cg.site = s
 	cg.marginalContext = NewMarginalRenderer(s)
