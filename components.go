@@ -15,7 +15,7 @@ type abstractComponent struct {
 	context staticIntf.Renderer
 }
 
-func (ac *abstractComponent) SetContext(context staticIntf.Renderer) {
+func (ac *abstractComponent) SetRenderer(context staticIntf.Renderer) {
 	ac.context = context
 }
 
@@ -279,7 +279,7 @@ type BlogNaviComponent struct {
 	abstractComponent
 }
 
-func NewBlogNaviContextComponent() *BlogNaviComponent {
+func NewBlogNaviComponent() *BlogNaviComponent {
 	bnc := new(BlogNaviComponent)
 	return bnc
 }

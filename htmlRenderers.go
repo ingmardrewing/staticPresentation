@@ -22,9 +22,9 @@ var headerComponents []staticIntf.Component = []staticIntf.Component{
 	NewFBComponent(),
 	NewCssLinkComponent()}
 
-/* Global Context */
+/* Global Renderer */
 
-type subContext struct {
+type renderer struct {
 	twitterHandle   string
 	contentSection  string
 	tags            string
@@ -41,15 +41,15 @@ type subContext struct {
 	site            staticIntf.Site
 }
 
-func (c *subContext) SiteDto() staticIntf.Site {
+func (c *renderer) SiteDto() staticIntf.Site {
 	return c.site
 }
 
-func (c *subContext) GetPagesObsolete() []staticIntf.Page {
+func (c *renderer) GetPagesObsolete() []staticIntf.Page {
 	return c.pages
 }
 
-func (c *subContext) Render() []fs.FileContainer {
+func (c *renderer) Render() []fs.FileContainer {
 	targetDir := c.site.TargetDir()
 	fcs := []fs.FileContainer{}
 	for _, p := range c.pages {
@@ -73,53 +73,53 @@ func (c *subContext) Render() []fs.FileContainer {
 	return fcs
 }
 
-func (c *subContext) FsSetOff(fsSetOff ...string) string {
+func (c *renderer) FsSetOff(fsSetOff ...string) string {
 	if len(fsSetOff) > 0 {
 		c.fsSetOff = fsSetOff[0]
 	}
 	return c.fsSetOff
 }
 
-func (c *subContext) SetPages(pages []staticIntf.Page) {
+func (c *renderer) SetPages(pages []staticIntf.Page) {
 	c.pages = pages
 }
 
-func (c *subContext) GetComponents() []staticIntf.Component {
+func (c *renderer) GetComponents() []staticIntf.Component {
 	return c.components
 }
 
-func (c *subContext) GetPages() []staticIntf.Page {
+func (c *renderer) GetPages() []staticIntf.Page {
 	return c.pages
 }
 
-func (c *subContext) AddPage(p staticIntf.Page) {
+func (c *renderer) AddPage(p staticIntf.Page) {
 	c.pages = append(c.pages, p)
 }
 
-func (c *subContext) AddComponent(comp staticIntf.Component) {
+func (c *renderer) AddComponent(comp staticIntf.Component) {
 	c.components = append(c.components, comp)
 }
 
-func (c *subContext) AddComponents(comps ...staticIntf.Component) {
+func (c *renderer) AddComponents(comps ...staticIntf.Component) {
 	for _, comp := range comps {
-		comp.SetContext(c)
+		comp.SetRenderer(c)
 		c.AddComponent(comp)
 	}
 }
 
-func (c *subContext) GetDisqusShortname() string {
+func (c *renderer) GetDisqusShortname() string {
 	return c.disqusShortname
 }
 
-func (c *subContext) GetMainNavigationLocations() []staticIntf.Location {
+func (c *renderer) GetMainNavigationLocations() []staticIntf.Location {
 	return c.site.Main()
 }
 
-func (c *subContext) GetFooterNavigationLocations() []staticIntf.Location {
+func (c *renderer) GetFooterNavigationLocations() []staticIntf.Location {
 	return c.site.Marginal()
 }
 
-func (c *subContext) GetCssUrl() string {
+func (c *renderer) GetCssUrl() string {
 	letterBytes := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	n := 10
 	b := make([]byte, n)
@@ -133,39 +133,39 @@ func (c *subContext) GetCssUrl() string {
 	return c.cssUrl + "?" + pseudoParam
 }
 
-func (c *subContext) GetTwitterPage() string {
+func (c *renderer) GetTwitterPage() string {
 	return c.twitterPageUrl
 }
 
-func (c *subContext) GetFBPageUrl() string {
+func (c *renderer) GetFBPageUrl() string {
 	return c.fbPageUrl
 }
 
-func (c *subContext) GetOGType() string {
+func (c *renderer) GetOGType() string {
 	return c.ogType
 }
 
-func (c *subContext) GetTwitterCardType() string {
+func (c *renderer) GetTwitterCardType() string {
 	return c.twitterCardType
 }
 
-func (c *subContext) GetTwitterHandle() string {
+func (c *renderer) GetTwitterHandle() string {
 	return c.twitterHandle
 }
 
-func (c *subContext) GetContentSection() string {
+func (c *renderer) GetContentSection() string {
 	return c.contentSection
 }
 
-func (c *subContext) GetContentTags() string {
+func (c *renderer) GetContentTags() string {
 	return c.tags
 }
 
-func (c *subContext) GetSiteName() string {
+func (c *renderer) GetSiteName() string {
 	return c.siteName
 }
 
-func (c *subContext) GetCss() string {
+func (c *renderer) GetCss() string {
 	css := ""
 	for _, c := range c.components {
 		css += c.GetCss()
@@ -173,7 +173,7 @@ func (c *subContext) GetCss() string {
 	return c.minifyCss(css)
 }
 
-func (c *subContext) GetJs() string {
+func (c *renderer) GetJs() string {
 	jsCode := ""
 	for _, c := range c.components {
 		jsCode += c.GetJs()
@@ -188,7 +188,7 @@ func (c *subContext) GetJs() string {
 	return fmt.Sprintf(`<script>%s</script>`, s)
 }
 
-func (c *subContext) minifyCss(txt string) string {
+func (c *renderer) minifyCss(txt string) string {
 	m := minify.New()
 	m.AddFunc("text/css", css.Minify)
 	s, err := m.String("text/css", txt)
@@ -198,12 +198,12 @@ func (c *subContext) minifyCss(txt string) string {
 	return s
 }
 
-func (c *subContext) GetReadNavigationLocations() []staticIntf.Location {
+func (c *renderer) GetReadNavigationLocations() []staticIntf.Location {
 	return nil
 }
 
-func NewContext(site staticIntf.Site) staticIntf.Renderer {
-	c := new(subContext)
+func NewRenderer(site staticIntf.Site) staticIntf.Renderer {
+	c := new(renderer)
 	c.site = site
 
 	c.twitterHandle = site.TwitterHandle()
@@ -220,11 +220,11 @@ func NewContext(site staticIntf.Site) staticIntf.Renderer {
 	return c
 }
 
-// Create Narrrative Context
+// Create Narrrative Renderer
 // used for graphic novels
-func NewNarrativeMarginalContext(cd staticIntf.Site) staticIntf.Renderer {
+func NewNarrativeMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewContext(cd)
+	c := NewRenderer(cd)
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -237,11 +237,11 @@ func NewNarrativeMarginalContext(cd staticIntf.Site) staticIntf.Renderer {
 	return c
 }
 
-// Create Narrrative Context
+// Create Narrrative Renderer
 // used for graphic novels
-func NewNarrativeContext(cd staticIntf.Site) staticIntf.Renderer {
+func NewNarrativeRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewContext(cd)
+	c := NewRenderer(cd)
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -256,11 +256,11 @@ func NewNarrativeContext(cd staticIntf.Site) staticIntf.Renderer {
 	return c
 }
 
-// Create Narrrative Context
+// Create Narrrative Renderer
 // used for graphic novels
-func NewNarrativeArchiveContext(cd staticIntf.Site) staticIntf.Renderer {
+func NewNarrativeArchiveRename(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewContext(cd)
+	c := NewRenderer(cd)
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -275,9 +275,9 @@ func NewNarrativeArchiveContext(cd staticIntf.Site) staticIntf.Renderer {
 
 // Pages context, used for static pages
 // of a site, featuring separate subjects
-func NewPagesContext(cd staticIntf.Site) staticIntf.Renderer {
+func NewPagesRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewContext(cd)
+	c := NewRenderer(cd)
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -294,7 +294,7 @@ func NewPagesContext(cd staticIntf.Site) staticIntf.Renderer {
 // Blog context, used for blog pages
 func NewBlogRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewContext(cd)
+	c := NewRenderer(cd)
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -313,13 +313,13 @@ func NewBlogRenderer(cd staticIntf.Site) staticIntf.Renderer {
 // of blog pages
 func NewBlogNaviRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewContext(cd)
+	c := NewRenderer(cd)
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
 		NewTitleComponent(),
 		NewBlogNaviPageContentComponent(),
-		NewBlogNaviContextComponent(),
+		NewBlogNaviComponent(),
 		NewMainHeaderComponent(),
 		NewMainNaviComponent(),
 		NewCopyRightComponent(),
@@ -332,7 +332,7 @@ func NewBlogNaviRenderer(cd staticIntf.Site) staticIntf.Renderer {
 // within the marginal navigation (imprint, terms of use, etc.)
 func NewMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewContext(cd)
+	c := NewRenderer(cd)
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(

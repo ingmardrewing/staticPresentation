@@ -11,12 +11,12 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
 	cg := new(narrativeContext)
 	cg.site = s
 
-	cg.renderer = NewNarrativeContext(s)
+	cg.renderer = NewNarrativeRenderer(s)
 	cg.renderer.SetPages(s.Narratives())
 
-	cg.narrativeArchiveContext = NewNarrativeArchiveContext(s)
+	cg.narrativeArchiveContext = NewNarrativeArchiveRename(s)
 
-	cg.narrativeMarginalContext = NewNarrativeMarginalContext(s)
+	cg.narrativeMarginalContext = NewNarrativeMarginalRenderer(s)
 	cg.narrativeMarginalContext.SetPages(s.NarrativeMarginals())
 
 	cg.GenerateArchivePage()
