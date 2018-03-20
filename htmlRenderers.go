@@ -41,7 +41,7 @@ type renderer struct {
 	site            staticIntf.Site
 }
 
-func (c *renderer) SiteDto() staticIntf.Site {
+func (c *renderer) Site() staticIntf.Site {
 	return c.site
 }
 
@@ -80,15 +80,14 @@ func (c *renderer) FsSetOff(fsSetOff ...string) string {
 	return c.fsSetOff
 }
 
-func (c *renderer) SetPages(pages []staticIntf.Page) {
-	c.pages = pages
-}
-
-func (c *renderer) GetComponents() []staticIntf.Component {
+func (c *renderer) Components() []staticIntf.Component {
 	return c.components
 }
 
-func (c *renderer) GetPages() []staticIntf.Page {
+func (c *renderer) Pages(ps ...staticIntf.Page) []staticIntf.Page {
+	if len(ps) > 0 {
+		c.pages = ps
+	}
 	return c.pages
 }
 
@@ -96,30 +95,30 @@ func (c *renderer) AddPage(p staticIntf.Page) {
 	c.pages = append(c.pages, p)
 }
 
-func (c *renderer) AddComponent(comp staticIntf.Component) {
+func (c *renderer) addComponent(comp staticIntf.Component) {
 	c.components = append(c.components, comp)
 }
 
 func (c *renderer) AddComponents(comps ...staticIntf.Component) {
 	for _, comp := range comps {
 		comp.Renderer(c)
-		c.AddComponent(comp)
+		c.addComponent(comp)
 	}
 }
 
-func (c *renderer) GetDisqusShortname() string {
+func (c *renderer) DisqusShortname() string {
 	return c.disqusShortname
 }
 
-func (c *renderer) GetMainNavigationLocations() []staticIntf.Location {
+func (c *renderer) MainNavigationLocations() []staticIntf.Location {
 	return c.site.Main()
 }
 
-func (c *renderer) GetFooterNavigationLocations() []staticIntf.Location {
+func (c *renderer) FooterNavigationLocations() []staticIntf.Location {
 	return c.site.Marginal()
 }
 
-func (c *renderer) GetCssUrl() string {
+func (c *renderer) CssUrl() string {
 	letterBytes := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	n := 10
 	b := make([]byte, n)
@@ -133,39 +132,39 @@ func (c *renderer) GetCssUrl() string {
 	return c.cssUrl + "?" + pseudoParam
 }
 
-func (c *renderer) GetTwitterPage() string {
+func (c *renderer) TwitterPage() string {
 	return c.twitterPageUrl
 }
 
-func (c *renderer) GetFBPageUrl() string {
+func (c *renderer) FBPageUrl() string {
 	return c.fbPageUrl
 }
 
-func (c *renderer) GetOGType() string {
+func (c *renderer) OGType() string {
 	return c.ogType
 }
 
-func (c *renderer) GetTwitterCardType() string {
+func (c *renderer) TwitterCardType() string {
 	return c.twitterCardType
 }
 
-func (c *renderer) GetTwitterHandle() string {
+func (c *renderer) TwitterHandle() string {
 	return c.twitterHandle
 }
 
-func (c *renderer) GetContentSection() string {
+func (c *renderer) ContentSection() string {
 	return c.contentSection
 }
 
-func (c *renderer) GetContentTags() string {
+func (c *renderer) ContentTags() string {
 	return c.tags
 }
 
-func (c *renderer) GetSiteName() string {
+func (c *renderer) SiteName() string {
 	return c.siteName
 }
 
-func (c *renderer) GetCss() string {
+func (c *renderer) Css() string {
 	css := ""
 	for _, c := range c.components {
 		css += c.GetCss()
@@ -198,7 +197,7 @@ func (c *renderer) minifyCss(txt string) string {
 	return s
 }
 
-func (c *renderer) GetReadNavigationLocations() []staticIntf.Location {
+func (c *renderer) ReadNavigationLocations() []staticIntf.Location {
 	return nil
 }
 

@@ -12,7 +12,7 @@ type abstractContext struct {
 }
 
 func (a *abstractContext) GetComponents() []staticIntf.Component {
-	return a.renderer.GetComponents()
+	return a.renderer.Components()
 }
 
 func (a *abstractContext) RenderPages() []fs.FileContainer {
@@ -22,7 +22,7 @@ func (a *abstractContext) RenderPages() []fs.FileContainer {
 func (a *abstractContext) Domain() string { return a.site.Domain() }
 
 func (b *abstractContext) getLastTenReversedPages() []staticIntf.Page {
-	pages := b.renderer.GetPages()
+	pages := b.renderer.Pages()
 	if len(pages) > 10 {
 		reversed := make([]staticIntf.Page, 10)
 		for i := 0; i < 10; i++ {

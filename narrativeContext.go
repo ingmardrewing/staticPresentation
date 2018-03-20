@@ -12,12 +12,12 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
 	cg.site = s
 
 	cg.renderer = NewNarrativeRenderer(s)
-	cg.renderer.SetPages(s.Narratives())
+	cg.renderer.Pages(s.Narratives()...)
 
 	cg.narrativeArchiveContext = NewNarrativeArchiveRename(s)
 
 	cg.narrativeMarginalContext = NewNarrativeMarginalRenderer(s)
-	cg.narrativeMarginalContext.SetPages(s.NarrativeMarginals())
+	cg.narrativeMarginalContext.Pages(s.NarrativeMarginals()...)
 
 	cg.GenerateArchivePage()
 
@@ -31,18 +31,18 @@ type narrativeContext struct {
 }
 
 func (a *narrativeContext) GetComponents() []staticIntf.Component {
-	cmps := a.renderer.GetComponents()
-	cmps = append(cmps, a.narrativeArchiveContext.GetComponents()...)
-	return append(cmps, a.narrativeMarginalContext.GetComponents()...)
+	cmps := a.renderer.Components()
+	cmps = append(cmps, a.narrativeArchiveContext.Components()...)
+	return append(cmps, a.narrativeMarginalContext.Components()...)
 }
 
 func (a *narrativeContext) GenerateArchivePage() {
 	np := staticModel.NewEmptyNaviPage(a.site.Domain())
-	np.NavigatedPages(a.renderer.GetPages()...)
+	np.NavigatedPages(a.renderer.Pages()...)
 	np.Title("Archive")
 	np.HtmlFilename("archive.html")
 	np.PathFromDocRoot("")
-	a.narrativeArchiveContext.SetPages([]staticIntf.Page{np})
+	a.narrativeArchiveContext.Pages(np)
 	a.site.AddMarginal(np)
 
 	for _, n := range a.site.NarrativeMarginals() {
