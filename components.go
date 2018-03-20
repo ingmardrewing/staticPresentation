@@ -12,11 +12,14 @@ import (
 // abstractComponent implementing default functions
 // for implementing components
 type abstractComponent struct {
-	context staticIntf.Renderer
+	renderer staticIntf.Renderer
 }
 
-func (ac *abstractComponent) SetRenderer(context staticIntf.Renderer) {
-	ac.context = context
+func (ac *abstractComponent) Renderer(r ...staticIntf.Renderer) staticIntf.Renderer {
+	if len(r) == 1 {
+		ac.renderer = r[0]
+	}
+	return ac.renderer
 }
 
 func (ac *abstractComponent) GetCss() string { return "" }
@@ -26,7 +29,7 @@ func (ac *abstractComponent) GetJs() string { return "" }
 func (ac *abstractComponent) VisitPage(p staticIntf.Page) {}
 
 func (b *abstractComponent) getIndexOfPage(p staticIntf.Page) int {
-	for i, l := range b.context.GetPages() {
+	for i, l := range b.renderer.GetPages() {
 		lurl := l.PathFromDocRoot() + l.HtmlFilename()
 		purl := p.PathFromDocRoot() + p.HtmlFilename()
 		if lurl == purl {
@@ -37,7 +40,7 @@ func (b *abstractComponent) getIndexOfPage(p staticIntf.Page) int {
 }
 
 func (b *abstractComponent) getFirstPage() staticIntf.Page {
-	pages := b.context.GetPages()
+	pages := b.renderer.GetPages()
 	if len(pages) > 0 {
 		return pages[0]
 	}
@@ -45,7 +48,7 @@ func (b *abstractComponent) getFirstPage() staticIntf.Page {
 }
 
 func (b *abstractComponent) getLastPage() staticIntf.Page {
-	pages := b.context.GetPages()
+	pages := b.renderer.GetPages()
 	if len(pages) > 0 {
 		return pages[len(pages)-1]
 	}
@@ -54,7 +57,7 @@ func (b *abstractComponent) getLastPage() staticIntf.Page {
 
 func (b *abstractComponent) getPageBefore(p staticIntf.Page) staticIntf.Page {
 	index := b.getIndexOfPage(p)
-	pages := b.context.GetPages()
+	pages := b.renderer.GetPages()
 	if index > 0 {
 		return pages[index-1]
 	}
@@ -63,7 +66,7 @@ func (b *abstractComponent) getPageBefore(p staticIntf.Page) staticIntf.Page {
 
 func (b *abstractComponent) getPageAfter(p staticIntf.Page) staticIntf.Page {
 	index := b.getIndexOfPage(p)
-	pages := b.context.GetPages()
+	pages := b.renderer.GetPages()
 	if index+1 < len(pages) {
 		return pages[index+1]
 	}
@@ -179,12 +182,12 @@ func (fbc *FBComponent) VisitPage(p staticIntf.Page) {
 		htmlDoc.NewNode("meta", "", "property", "og:url", "content", p.PathFromDocRoot()+p.HtmlFilename()),
 		htmlDoc.NewNode("meta", "", "property", "og:image", "content", p.ImageUrl()),
 		htmlDoc.NewNode("meta", "", "property", "og:description", "content", p.Description()),
-		htmlDoc.NewNode("meta", "", "property", "og:site_name", "content", fbc.abstractComponent.context.GetSiteName()),
-		htmlDoc.NewNode("meta", "", "property", "og:type", "content", fbc.abstractComponent.context.GetOGType()),
+		htmlDoc.NewNode("meta", "", "property", "og:site_name", "content", fbc.abstractComponent.renderer.GetSiteName()),
+		htmlDoc.NewNode("meta", "", "property", "og:type", "content", fbc.abstractComponent.renderer.GetOGType()),
 		htmlDoc.NewNode("meta", "", "property", "article:published_time", "content", p.PublishedTime()),
 		htmlDoc.NewNode("meta", "", "property", "article:modified_time", "content", p.PublishedTime()),
-		htmlDoc.NewNode("meta", "", "property", "article:section", "content", fbc.abstractComponent.context.GetContentSection()),
-		htmlDoc.NewNode("meta", "", "property", "article:tag", "content", fbc.abstractComponent.context.GetContentTags())}
+		htmlDoc.NewNode("meta", "", "property", "article:section", "content", fbc.abstractComponent.renderer.GetContentSection()),
+		htmlDoc.NewNode("meta", "", "property", "article:tag", "content", fbc.abstractComponent.renderer.GetContentTags())}
 
 	p.AddHeaderNodes(m)
 }
@@ -223,10 +226,10 @@ func (tw *TwitterComponent) VisitPage(p staticIntf.Page) {
 	m := []*htmlDoc.Node{
 		htmlDoc.NewNode("meta", "",
 			"name", "t:card",
-			"content", tw.abstractComponent.context.GetTwitterCardType()),
+			"content", tw.abstractComponent.renderer.GetTwitterCardType()),
 		htmlDoc.NewNode("meta", "",
 			"name", "t:site",
-			"content", tw.abstractComponent.context.GetTwitterHandle()),
+			"content", tw.abstractComponent.renderer.GetTwitterHandle()),
 		htmlDoc.NewNode("meta", "",
 			"name", "t:title",
 			"content", p.Title()),
@@ -235,7 +238,7 @@ func (tw *TwitterComponent) VisitPage(p staticIntf.Page) {
 			"content", p.Description()),
 		htmlDoc.NewNode("meta", "",
 			"name", "t:creator",
-			"content", tw.abstractComponent.context.GetTwitterHandle()),
+			"content", tw.abstractComponent.renderer.GetTwitterHandle()),
 		htmlDoc.NewNode("meta", "",
 			"name", "t:image",
 			"content", p.ImageUrl())}
@@ -268,7 +271,7 @@ func NewCssLinkComponent() *CssLinkComponent {
 }
 
 func (clc *CssLinkComponent) VisitPage(p staticIntf.Page) {
-	link := htmlDoc.NewNode("link", "", "href", clc.abstractComponent.context.GetCssUrl(), "rel", "stylesheet", "type", "text/css")
+	link := htmlDoc.NewNode("link", "", "href", clc.abstractComponent.renderer.GetCssUrl(), "rel", "stylesheet", "type", "text/css")
 	p.AddHeaderNodes([]*htmlDoc.Node{link})
 }
 
@@ -320,7 +323,7 @@ func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
 }
 
 func (b *BlogNaviComponent) VisitPage(p staticIntf.Page) {
-	if len(b.abstractComponent.context.GetPages()) < 3 {
+	if len(b.abstractComponent.renderer.GetPages()) < 3 {
 		return
 	}
 	b.addBodyNodes(p)
@@ -374,7 +377,7 @@ type MainNaviComponent struct {
 func (nv *MainNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "mainnavi")
-	for _, l := range nv.abstractComponent.context.GetMainNavigationLocations() {
+	for _, l := range nv.abstractComponent.renderer.GetMainNavigationLocations() {
 		if len(p.ExternalLink()) > 0 {
 			a := htmlDoc.NewNode("a", l.Title(),
 				"href", l.ExternalLink(),
@@ -447,7 +450,7 @@ type FooterNaviComponent struct {
 func (f *FooterNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "footernavi")
-	for _, l := range f.abstractComponent.context.GetFooterNavigationLocations() {
+	for _, l := range f.abstractComponent.renderer.GetFooterNavigationLocations() {
 
 		if len(l.ExternalLink()) > 0 {
 			a := htmlDoc.NewNode("a", l.Title(),
@@ -529,7 +532,7 @@ func (dc *DisqusComponent) GetJs() string {
 
 func (dc *DisqusComponent) VisitPage(p staticIntf.Page) {
 	dc.configuredJs = fmt.Sprintf(`var disqus_config = function () { this.page.title= "%s"; this.page.url = '%s'; this.page.identifier =  '%s'; }; (function() { var d = document, s = d.createElement('script'); s.src = 'https://%s.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();`, p.Title(),
-		p.Url(), p.DisqusId(), dc.abstractComponent.context.GetDisqusShortname())
+		p.Url(), p.DisqusId(), dc.abstractComponent.renderer.GetDisqusShortname())
 	n := htmlDoc.NewNode("div", " ", "id", "disqus_thread", "class", "disqus")
 	js := htmlDoc.NewNode("script", dc.configuredJs)
 	wn := dc.wrap(n)
@@ -550,7 +553,7 @@ func NewMainHeaderComponent() *MainHeaderComponent {
 
 func (mhc *MainHeaderComponent) VisitPage(p staticIntf.Page) {
 	logo := htmlDoc.NewNode("a", "<!-- logo -->",
-		"href", "https://"+mhc.abstractComponent.context.GetSiteName(),
+		"href", "https://"+mhc.abstractComponent.renderer.GetSiteName(),
 		"class", "headerbar__logo")
 	logocontainer := htmlDoc.NewNode("div", "",
 		"class", "headerbar__logocontainer")
@@ -1365,4 +1368,23 @@ h1 ,
 	margin-left: 10px;
 }
 `
+}
+
+// main entry page content
+func NewEntryPageComponent() *EntryPageComponent {
+	return new(EntryPageComponent)
+}
+
+type EntryPageComponent struct {
+	abstractComponent
+	wrapper
+}
+
+func (cc *EntryPageComponent) VisitPage(p staticIntf.Page) {
+
+	//	n.abstractComponent.
+	n := htmlDoc.NewNode("main", p.Content(),
+		"class", "narrativemarginal")
+	wn := cc.wrap(n)
+	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }

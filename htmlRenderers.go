@@ -102,7 +102,7 @@ func (c *renderer) AddComponent(comp staticIntf.Component) {
 
 func (c *renderer) AddComponents(comps ...staticIntf.Component) {
 	for _, comp := range comps {
-		comp.SetRenderer(c)
+		comp.Renderer(c)
 		c.AddComponent(comp)
 	}
 }
@@ -220,8 +220,8 @@ func NewRenderer(site staticIntf.Site) staticIntf.Renderer {
 	return c
 }
 
-// Create Narrrative Renderer
-// used for graphic novels
+// Create Narrrative Margina Renderer
+// used for marginal pages of graphic novels
 func NewNarrativeMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
 	c := NewRenderer(cd)
@@ -340,6 +340,24 @@ func NewMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 		NewContentComponent(),
 		NewMainHeaderComponent(),
 		NewMainNaviComponent(),
+		NewCopyRightComponent(),
+		NewFooterNaviComponent())
+
+	return c
+}
+
+// Entry page renderer
+func NewEntryPageRenderer(cd staticIntf.Site) staticIntf.Renderer {
+
+	c := NewRenderer(cd)
+
+	c.AddComponents(headerComponents...)
+	c.AddComponents(
+		NewTitleComponent(),
+		NewContentComponent(),
+		NewMainHeaderComponent(),
+		NewMainNaviComponent(),
+		NewEntryPageComponent(),
 		NewCopyRightComponent(),
 		NewFooterNaviComponent())
 
