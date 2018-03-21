@@ -949,7 +949,7 @@ type BlogNaviPageContentComponent struct {
 func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
 	n := htmlDoc.NewNode("div", "", "class", "blognavicomponent")
 
-	for _, page := range p.(staticIntf.NaviPage).NavigatedPages() {
+	for _, page := range p.NavigatedPages() {
 
 		ta := page.ThumbnailUrl()
 		if ta == "" {
@@ -1110,7 +1110,7 @@ func (na *NarrativeArchiveComponent) VisitPage(p staticIntf.Page) {
 	div := htmlDoc.NewNode("div", " ", "style", "text-align:left;")
 
 	categories := make(map[string][]staticIntf.Page)
-	for _, page := range p.(staticIntf.NaviPage).NavigatedPages() {
+	for _, page := range p.NavigatedPages() {
 		c := page.Category()
 		if len(c) == 0 {
 			c = "-"

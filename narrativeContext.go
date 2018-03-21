@@ -4,6 +4,7 @@ import (
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticModel"
+	"github.com/ingmardrewing/staticPersistence"
 )
 
 func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
@@ -37,11 +38,15 @@ func (a *narrativeContext) GetComponents() []staticIntf.Component {
 }
 
 func (a *narrativeContext) GenerateArchivePage() {
-	np := staticModel.NewEmptyNaviPage(a.site.Domain())
+	dto := staticPersistence.NewFilledDto(0,
+		"Archive", "Archive", "",
+		"", "", "",
+		"", "", "", "",
+		"", "", "archive.html", "")
+	np := staticModel.NewNaviPage(dto, a.site.Domain())
+
 	np.NavigatedPages(a.renderer.Pages()...)
-	np.Title("Archive")
-	np.HtmlFilename("archive.html")
-	np.PathFromDocRoot("")
+
 	a.narrativeArchiveContext.Pages(np)
 	a.site.AddMarginal(np)
 
