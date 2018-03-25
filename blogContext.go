@@ -12,10 +12,10 @@ func NewBlogContext(s staticIntf.Site) staticIntf.Context {
 	cg.site = s
 
 	cg.renderer = NewBlogRenderer(s)
-	cg.renderer.SetPages(s.Posts())
+	cg.renderer.Pages(s.Posts()...)
 
 	cg.naviRenderer = NewBlogNaviRenderer(s)
-	cg.naviRenderer.SetPages(s.PostNaviPages())
+	cg.naviRenderer.Pages(s.PostNaviPages()...)
 
 	return cg
 }
@@ -26,8 +26,8 @@ type blogContext struct {
 }
 
 func (b *blogContext) GetComponents() []staticIntf.Component {
-	components := b.renderer.GetComponents()
-	return append(components, b.naviRenderer.GetComponents()...)
+	components := b.renderer.Components()
+	return append(components, b.naviRenderer.Components()...)
 }
 
 func (b *blogContext) RenderPages() []fs.FileContainer {

@@ -9,7 +9,7 @@ func NewMarginalContextGroup(s staticIntf.Site) staticIntf.Context {
 	cg := new(marginalContext)
 	cg.site = s
 	cg.marginalContext = NewMarginalRenderer(s)
-	cg.marginalContext.SetPages(s.Marginals())
+	cg.marginalContext.Pages(s.Marginals()...)
 	return cg
 }
 
@@ -19,7 +19,7 @@ type marginalContext struct {
 }
 
 func (s *marginalContext) GetComponents() []staticIntf.Component {
-	return s.marginalContext.GetComponents()
+	return s.marginalContext.Components()
 }
 
 func (s *marginalContext) RenderPages() []fs.FileContainer {

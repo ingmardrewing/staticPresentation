@@ -4,6 +4,7 @@ import (
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticModel"
+	"github.com/ingmardrewing/staticPersistence"
 )
 
 func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
@@ -11,13 +12,13 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
 	cg := new(narrativeContext)
 	cg.site = s
 
-	cg.renderer = NewNarrativeContext(s)
-	cg.renderer.SetPages(s.Narratives())
+	cg.renderer = NewNarrativeRenderer(s)
+	cg.renderer.Pages(s.Narratives()...)
 
-	cg.narrativeArchiveContext = NewNarrativeArchiveContext(s)
+	cg.narrativeArchiveContext = NewNarrativeArchiveRename(s)
 
-	cg.narrativeMarginalContext = NewNarrativeMarginalContext(s)
-	cg.narrativeMarginalContext.SetPages(s.NarrativeMarginals())
+	cg.narrativeMarginalContext = NewNarrativeMarginalRenderer(s)
+	cg.narrativeMarginalContext.Pages(s.NarrativeMarginals()...)
 
 	cg.GenerateArchivePage()
 
@@ -31,18 +32,22 @@ type narrativeContext struct {
 }
 
 func (a *narrativeContext) GetComponents() []staticIntf.Component {
-	cmps := a.renderer.GetComponents()
-	cmps = append(cmps, a.narrativeArchiveContext.GetComponents()...)
-	return append(cmps, a.narrativeMarginalContext.GetComponents()...)
+	cmps := a.renderer.Components()
+	cmps = append(cmps, a.narrativeArchiveContext.Components()...)
+	return append(cmps, a.narrativeMarginalContext.Components()...)
 }
 
 func (a *narrativeContext) GenerateArchivePage() {
-	np := staticModel.NewEmptyNaviPage(a.site.Domain())
-	np.NavigatedPages(a.renderer.GetPages()...)
-	np.Title("Archive")
-	np.HtmlFilename("archive.html")
-	np.PathFromDocRoot("")
-	a.narrativeArchiveContext.SetPages([]staticIntf.Page{np})
+	dto := staticPersistence.NewFilledDto(0,
+		"Archive", "Archive", "",
+		"", "", "",
+		"", "", "", "",
+		"", "", "archive.html", "")
+	np := staticModel.NewPage(dto, a.site.Domain())
+
+	np.NavigatedPages(a.renderer.Pages()...)
+
+	a.narrativeArchiveContext.Pages(np)
 	a.site.AddMarginal(np)
 
 	for _, n := range a.site.NarrativeMarginals() {
