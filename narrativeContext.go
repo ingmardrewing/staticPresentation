@@ -34,7 +34,8 @@ type narrativeContext struct {
 func (a *narrativeContext) GetComponents() []staticIntf.Component {
 	cmps := a.renderer.Components()
 	cmps = append(cmps, a.narrativeArchiveContext.Components()...)
-	return append(cmps, a.narrativeMarginalContext.Components()...)
+	cmps = append(cmps, a.narrativeMarginalContext.Components()...)
+	return cmps
 }
 
 func (a *narrativeContext) GenerateArchivePage() {
@@ -56,9 +57,9 @@ func (a *narrativeContext) GenerateArchivePage() {
 }
 
 func (a *narrativeContext) RenderPages() []fs.FileContainer {
-	fcs := a.renderer.Render()
-	fcs = append(fcs, a.narrativeArchiveContext.Render()...)
+	fcs := a.narrativeArchiveContext.Render()
 	fcs = append(fcs, a.narrativeMarginalContext.Render()...)
+	fcs = append(fcs, a.renderer.Render()...)
 
 	if len(fcs) > 1 {
 		// copy the content of the last page
