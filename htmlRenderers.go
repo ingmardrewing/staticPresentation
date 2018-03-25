@@ -25,6 +25,7 @@ var headerComponents []staticIntf.Component = []staticIntf.Component{
 /* Global Renderer */
 
 type renderer struct {
+	rendererName    string
 	twitterHandle   string
 	contentSection  string
 	tags            string
@@ -50,6 +51,7 @@ func (c *renderer) GetPagesObsolete() []staticIntf.Page {
 }
 
 func (c *renderer) Render() []fs.FileContainer {
+	fmt.Printf("Called Render() on %s\n", c.rendererName)
 	targetDir := c.site.TargetDir()
 	fcs := []fs.FileContainer{}
 	for _, p := range c.pages {
@@ -201,9 +203,10 @@ func (c *renderer) ReadNavigationLocations() []staticIntf.Location {
 	return nil
 }
 
-func NewRenderer(site staticIntf.Site) staticIntf.Renderer {
+func NewRenderer(site staticIntf.Site, rendererName string) staticIntf.Renderer {
 	c := new(renderer)
 	c.site = site
+	c.rendererName = rendererName
 
 	c.twitterHandle = site.TwitterHandle()
 	c.contentSection = site.Topic()
@@ -223,7 +226,7 @@ func NewRenderer(site staticIntf.Site) staticIntf.Renderer {
 // used for marginal pages of graphic novels
 func NewNarrativeMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd)
+	c := NewRenderer(cd, "Narrative Marginal Renderer")
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -240,7 +243,7 @@ func NewNarrativeMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 // used for graphic novels
 func NewNarrativeRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd)
+	c := NewRenderer(cd, "Narrative Renderer")
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -259,7 +262,7 @@ func NewNarrativeRenderer(cd staticIntf.Site) staticIntf.Renderer {
 // used for graphic novels
 func NewNarrativeArchiveRename(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd)
+	c := NewRenderer(cd, "Narrative Archive Renderer")
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -276,7 +279,7 @@ func NewNarrativeArchiveRename(cd staticIntf.Site) staticIntf.Renderer {
 // of a site, featuring separate subjects
 func NewPagesRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd)
+	c := NewRenderer(cd, "Pages Renderer")
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -293,7 +296,7 @@ func NewPagesRenderer(cd staticIntf.Site) staticIntf.Renderer {
 // Blog context, used for blog pages
 func NewBlogRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd)
+	c := NewRenderer(cd, "Blog Renderer")
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -312,7 +315,7 @@ func NewBlogRenderer(cd staticIntf.Site) staticIntf.Renderer {
 // of blog pages
 func NewBlogNaviRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd)
+	c := NewRenderer(cd, "Blog Navi Renderer")
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -331,7 +334,7 @@ func NewBlogNaviRenderer(cd staticIntf.Site) staticIntf.Renderer {
 // within the marginal navigation (imprint, terms of use, etc.)
 func NewMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd)
+	c := NewRenderer(cd, "Marginal Renderer")
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
@@ -348,7 +351,7 @@ func NewMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 // Entry page renderer
 func NewEntryPageRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd)
+	c := NewRenderer(cd, "Entry Page Renderer")
 
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
