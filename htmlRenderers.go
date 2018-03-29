@@ -10,7 +10,6 @@ import (
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/tdewolff/minify"
 	"github.com/tdewolff/minify/css"
-	"github.com/tdewolff/minify/js"
 )
 
 var headerComponents []staticIntf.Component = []staticIntf.Component{
@@ -36,18 +35,9 @@ type renderer struct {
 	twitterPageUrl  string
 	cssUrl          string
 	disqusShortname string
-	fsSetOff        string
 	pages           []staticIntf.Page
 	components      []staticIntf.Component
 	site            staticIntf.Site
-}
-
-func (c *renderer) Site() staticIntf.Site {
-	return c.site
-}
-
-func (c *renderer) GetPagesObsolete() []staticIntf.Page {
-	return c.pages
 }
 
 func (c *renderer) Render() []fs.FileContainer {
@@ -73,13 +63,6 @@ func (c *renderer) Render() []fs.FileContainer {
 		fcs = append(fcs, fc)
 	}
 	return fcs
-}
-
-func (c *renderer) FsSetOff(fsSetOff ...string) string {
-	if len(fsSetOff) > 0 {
-		c.fsSetOff = fsSetOff[0]
-	}
-	return c.fsSetOff
 }
 
 func (c *renderer) Components() []staticIntf.Component {
@@ -167,40 +150,17 @@ func (c *renderer) SiteName() string {
 }
 
 func (c *renderer) Css() string {
-	css := ""
+	cssString := ""
 	for _, c := range c.components {
-		css += c.GetCss()
+		cssString += c.GetCss()
 	}
-	return c.minifyCss(css)
-}
-
-func (c *renderer) GetJs() string {
-	jsCode := ""
-	for _, c := range c.components {
-		jsCode += c.GetJs()
-	}
-
-	m := minify.New()
-	m.AddFunc("text/javascript", js.Minify)
-	s, err := m.String("text/javascript", jsCode)
-	if err != nil {
-		panic(err)
-	}
-	return fmt.Sprintf(`<script>%s</script>`, s)
-}
-
-func (c *renderer) minifyCss(txt string) string {
 	m := minify.New()
 	m.AddFunc("text/css", css.Minify)
-	s, err := m.String("text/css", txt)
+	s, err := m.String("text/css", cssString)
 	if err != nil {
 		panic(err)
 	}
 	return s
-}
-
-func (c *renderer) ReadNavigationLocations() []staticIntf.Location {
-	return nil
 }
 
 func NewRenderer(site staticIntf.Site, rendererName string) staticIntf.Renderer {
