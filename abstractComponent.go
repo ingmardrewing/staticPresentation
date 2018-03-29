@@ -68,32 +68,27 @@ func (a *abstractComponent) previous(
 	label, class string) *htmlDoc.Node {
 
 	pageBefore := a.getPageBefore(p)
-	if pageBefore == nil {
-		return htmlDoc.NewNode("span", label,
-			"class", class)
-	}
-	href := path.Join(pageBefore.PathFromDocRoot(),
-		pageBefore.HtmlFilename())
-	return htmlDoc.NewNode("a", label,
-		"href", href,
-		"rel", "prev",
-		"class", class)
+	return a.rel(pageBefore, label, class, "prev")
 }
 
 func (a *abstractComponent) next(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
 
-	pageBefore := a.getPageBefore(p)
-	if pageBefore == nil {
+	pageBefore := a.getPageAfter(p)
+	return a.rel(pageBefore, label, class, "next")
+}
+
+func (a *abstractComponent) rel(relativePage staticIntf.Page, label, class, rel string) *htmlDoc.Node {
+	if relativePage == nil {
 		return htmlDoc.NewNode("span", label,
 			"class", class)
 	}
-	href := path.Join(pageBefore.PathFromDocRoot(),
-		pageBefore.HtmlFilename())
+	href := path.Join(relativePage.PathFromDocRoot(),
+		relativePage.HtmlFilename())
 	return htmlDoc.NewNode("a", label,
 		"href", href,
-		"rel", "next",
+		"rel", rel,
 		"class", class)
 }
 
