@@ -51,8 +51,61 @@ func (r *rssRenderer) renderRssContent() string {
 		rss = append(rss, r.renderSingleRssEntry(p))
 	}
 	itemsRss := strings.Join(rss, "\n")
+	domain := r.pages[0].Domain()
+	title := domain
+	favUrl := "https://" + domain + "/favicon-32x32.png"
+	favTitle := domain
+	favLink := "https://" + domain
+	atomLink := "https://" + domain + r.pathFromDocRoot + r.rssFilename
+	link := "https://" + domain + r.pathFromDocRoot + r.rssFilename
+	description := ""
 
-	rssTemplate := `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	lastbuilddate := r.pages[0].PublishedTime()
+
+	return fmt.Sprintf(
+		rssTemplate,
+		title,
+		favUrl,
+		favTitle,
+		favLink,
+		atomLink,
+		link,
+		description,
+		lastbuilddate,
+		itemsRss)
+}
+
+func (r *rssRenderer) renderSingleRssEntry(p staticIntf.Page) string {
+	return fmt.Sprintf(rssItemTemplate,
+		p.Title(),
+		p.Url(),
+		p.PublishedTime(),
+		p.Url(),
+		p.Description(),
+		p.Content(),
+		p.ImageUrl(),
+		p.ImageUrl(),
+		p.ImageUrl(),
+		p.ImageUrl())
+}
+
+var rssItemTemplate string = `  <item>
+	<title>%s</title>
+	<link>%s</link>
+	<pubDate>%s</pubDate>
+	<dc:creator><![CDATA[Ingmar Drewing]]></dc:creator>
+	<guid>%s/index.html</guid>
+	<description><![CDATA[%s]]></description>
+	<content:encoded><![CDATA[%s]]></content:encoded>
+
+	<media:thumbnail url="%s" />
+	<media:content url="%s" medium="image">
+	  <media:title type="html">%s</media:title>
+	  <media:thumbnail url="%s" />
+	</media:content>
+  </item>`
+
+var rssTemplate string = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
 	xmlns:content="http://purl.org/rss/1.0/modules/content/"
 	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
 	xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -84,46 +137,3 @@ func (r *rssRenderer) renderRssContent() string {
 	</channel>
 </rss>
 `
-	domain := r.pages[0].Domain()
-	title := domain
-	favUrl := "https://" + domain + "/favicon-32x32.png"
-	favTitle := domain
-	favLink := "https://" + domain
-	atomLink := "https://" + domain + r.pathFromDocRoot + r.rssFilename
-	link := "https://" + domain + r.pathFromDocRoot + r.rssFilename
-	description := ""
-
-	lastbuilddate := r.pages[0].PublishedTime()
-
-	return fmt.Sprintf(
-		rssTemplate,
-		title,
-		favUrl,
-		favTitle,
-		favLink,
-		atomLink,
-		link,
-		description,
-		lastbuilddate,
-		itemsRss)
-}
-
-func (r *rssRenderer) renderSingleRssEntry(p staticIntf.Page) string {
-	rssItem := `  <item>
-	<title>%s</title>
-	<link>%s</link>
-	<pubDate>%s</pubDate>
-	<dc:creator><![CDATA[Ingmar Drewing]]></dc:creator>
-	<guid>%s/index.html</guid>
-	<description><![CDATA[%s]]></description>
-	<content:encoded><![CDATA[%s]]></content:encoded>
-
-	<media:thumbnail url="%s" />
-	<media:content url="%s" medium="image">
-	  <media:title type="html">%s</media:title>
-	  <media:thumbnail url="%s" />
-	</media:content>
-  </item>`
-	return fmt.Sprintf(rssItem, p.Title(), p.Url(), p.PublishedTime(), p.Url(), p.Description(), p.Content(), p.ImageUrl(), p.ImageUrl(), p.ImageUrl(), p.ImageUrl())
-
-}

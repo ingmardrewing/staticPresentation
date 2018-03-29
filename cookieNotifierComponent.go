@@ -9,7 +9,10 @@ func NewCookieNotifierComponent() *CookieNotifierComponent {
 type CookieNotifierComponent struct{}
 
 func (cnc *CookieNotifierComponent) getJs() string {
-	return `
+	return cookieNotifierJson
+}
+
+var cookieNotifierJson string = `
 function cli_show_cookiebar(p) {
 	var Cookie = {
 		set: function(name,value,days) {
@@ -182,4 +185,3 @@ cli_show_cookiebar({
 });
 
 `
-}
