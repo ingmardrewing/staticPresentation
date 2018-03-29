@@ -1,6 +1,7 @@
 package staticPresentation
 
 import (
+	"path"
 	"strings"
 
 	"github.com/ingmardrewing/htmlDoc"
@@ -60,6 +61,40 @@ func (a *abstractComponent) getPageBefore(p staticIntf.Page) staticIntf.Page {
 		return pages[index-1]
 	}
 	return nil
+}
+
+func (a *abstractComponent) previous(
+	p staticIntf.Page,
+	label, class string) *htmlDoc.Node {
+
+	pageBefore := a.getPageBefore(p)
+	if pageBefore == nil {
+		return htmlDoc.NewNode("span", label,
+			"class", class)
+	}
+	href := path.Join(pageBefore.PathFromDocRoot(),
+		pageBefore.HtmlFilename())
+	return htmlDoc.NewNode("a", label,
+		"href", href,
+		"rel", "prev",
+		"class", class)
+}
+
+func (a *abstractComponent) next(
+	p staticIntf.Page,
+	label, class string) *htmlDoc.Node {
+
+	pageBefore := a.getPageBefore(p)
+	if pageBefore == nil {
+		return htmlDoc.NewNode("span", label,
+			"class", class)
+	}
+	href := path.Join(pageBefore.PathFromDocRoot(),
+		pageBefore.HtmlFilename())
+	return htmlDoc.NewNode("a", label,
+		"href", href,
+		"rel", "next",
+		"class", class)
 }
 
 func (a *abstractComponent) getPageAfter(p staticIntf.Page) staticIntf.Page {

@@ -21,8 +21,12 @@ type NarrativeNaviComponent struct {
 
 func (nv *NarrativeNaviComponent) VisitPage(p staticIntf.Page) {
 	firstNode := nv.first(p)
-	prevNode := nv.previous(p)
-	nextNode := nv.next(p)
+	prevNode := nv.previous(p,
+		"&lt; previous page",
+		"narrativenavigation__previous narrativenavigation__item narrativenavigation__placeholder")
+	nextNode := nv.next(p,
+		"next page &gt;",
+		"narrativenavigation__next narrativenavigation__item narrativenavigation__placeholder")
 	lastNode := nv.last(p)
 
 	nav := htmlDoc.NewNode("nav", "", "class", "narrativenavigation")
@@ -51,24 +55,6 @@ func (nv *NarrativeNaviComponent) last(p staticIntf.Page) *htmlDoc.Node {
 	}
 	href := path.Join(lPage.PathFromDocRoot(), lPage.HtmlFilename())
 	return htmlDoc.NewNode("a", "last page &gt;&gt;", "href", href, "rel", "last", "class", "narrativenavigation__last narrativenavigation__item")
-}
-
-func (nv *NarrativeNaviComponent) previous(p staticIntf.Page) *htmlDoc.Node {
-	pageB := nv.getPageBefore(p)
-	if pageB == nil {
-		return htmlDoc.NewNode("span", "&lt; previous page", "class", "narrativenavigation__previous narrativenavigation__item narrativenavigation__placeholder")
-	}
-	href := path.Join(pageB.PathFromDocRoot(), pageB.HtmlFilename())
-	return htmlDoc.NewNode("a", "&lt; previous page", "href", href, "rel", "prev", "class", "narrativenavigation__previous narrativenavigation__item")
-}
-
-func (nv *NarrativeNaviComponent) next(p staticIntf.Page) *htmlDoc.Node {
-	pageA := nv.getPageAfter(p)
-	if pageA == nil {
-		return htmlDoc.NewNode("span", "next page &gt;", "class", "narrativenavigation__next narrativenavigation__item narrativenavigation__placeholder")
-	}
-	href := path.Join(pageA.PathFromDocRoot(), pageA.HtmlFilename())
-	return htmlDoc.NewNode("a", "next page &gt;", "href", href, "rel", "next", "class", "narrativenavigation__next narrativenavigation__item")
 }
 
 func (mhc *NarrativeNaviComponent) GetCss() string {
