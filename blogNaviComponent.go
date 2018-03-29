@@ -1,8 +1,6 @@
 package staticPresentation
 
 import (
-	"path"
-
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
 )
@@ -18,32 +16,13 @@ type BlogNaviComponent struct {
 	abstractComponent
 }
 
-func (b *BlogNaviComponent) addPrevious(p staticIntf.Page) *htmlDoc.Node {
-	pageBefore := b.getPageBefore(p)
-	if pageBefore == nil {
-		return htmlDoc.NewNode("span", "< previous posts", "class", "blognavicomponent__previous")
-	}
-	href := path.Join(pageBefore.PathFromDocRoot(), pageBefore.HtmlFilename())
-	return htmlDoc.NewNode("a", "< previous posts", "href", href, "rel", "prev", "class", "blognavicomponent__previous")
-}
-
-func (b *BlogNaviComponent) addNext(p staticIntf.Page) *htmlDoc.Node {
-	pageAfter := b.getPageAfter(p)
-	if pageAfter == nil {
-		return htmlDoc.NewNode("span", "next posts >", "class", "blognavicomponent__next")
-	}
-
-	href := path.Join(pageAfter.PathFromDocRoot(), pageAfter.HtmlFilename())
-	return htmlDoc.NewNode("a", "next posts >", "href", href, "rel", "next", "class", "blognavicomponent__next")
-}
-
 func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "", "class", "blognavicomponent__nav")
 
-	prev := b.addPrevious(p)
+	prev := b.previous(p, "&lt; previous posts", "blognavicomponent__previous")
 	nav.AddChild(prev)
 
-	next := b.addNext(p)
+	next := b.next(p, "next posts &gt;", "blognavicomponent__next")
 	nav.AddChild(next)
 
 	d := htmlDoc.NewNode("div", "", "class", "blognavicomponent meta")
