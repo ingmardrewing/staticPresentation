@@ -1,7 +1,6 @@
 package staticPresentation
 
 import (
-	"fmt"
 	"math/rand"
 	"path"
 	"time"
@@ -41,7 +40,6 @@ type renderer struct {
 }
 
 func (c *renderer) Render() []fs.FileContainer {
-	fmt.Printf("Called Render() on %s\n", c.rendererName)
 	targetDir := c.site.TargetDir()
 	fcs := []fs.FileContainer{}
 	for _, p := range c.pages {
@@ -143,6 +141,10 @@ func (c *renderer) ContentSection() string {
 
 func (c *renderer) ContentTags() string {
 	return c.tags
+}
+
+func (c *renderer) Site() staticIntf.Site {
+	return c.site
 }
 
 func (c *renderer) SiteName() string {
@@ -316,10 +318,9 @@ func NewEntryPageRenderer(cd staticIntf.Site) staticIntf.Renderer {
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
 		NewTitleComponent(),
-		NewContentComponent(),
 		NewMainHeaderComponent(),
-		NewMainNaviComponent(),
 		NewEntryPageComponent(),
+		NewMainNaviComponent(),
 		NewCopyRightComponent(),
 		NewFooterNaviComponent())
 

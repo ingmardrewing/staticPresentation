@@ -15,11 +15,29 @@ type EntryPageComponent struct {
 	wrapper
 }
 
-func (cc *EntryPageComponent) VisitPage(p staticIntf.Page) {
+func (e *EntryPageComponent) VisitPage(p staticIntf.Page) {
+	containers := e.renderer.Site().Containers()
 
-	//	n.Renderer().
-	n := htmlDoc.NewNode("main", p.Content(),
-		"class", "narrativemarginal")
-	wn := cc.wrap(n)
+	div := htmlDoc.NewNode("div", "", "class", "mainpage__content")
+	for _, c := range containers {
+		reps := c.Representationals()
+		if len(reps) > 0 {
+			div.AddChild(htmlDoc.NewNode("p", c.Variant()))
+			for _, r := range reps {
+				div.AddChild(htmlDoc.NewNode("p", r.Title()))
+			}
+		}
+	}
+	wn := e.wrap(div)
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (e *EntryPageComponent) GetCss() string {
+	return `
+.mainpage__content {
+	padding-top: 146px;
+	padding-bottom: 50px;
+	text-align: left;
+}
+`
 }
