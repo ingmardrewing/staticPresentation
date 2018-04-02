@@ -24,7 +24,11 @@ func (e *EntryPageComponent) VisitPage(p staticIntf.Page) {
 		if len(reps) > 0 {
 			div.AddChild(htmlDoc.NewNode("p", c.Variant()))
 			for _, r := range reps {
-				div.AddChild(htmlDoc.NewNode("p", r.Title()))
+				p := htmlDoc.NewNode("p", "")
+				a := htmlDoc.NewNode("a", r.Title(),
+					"href", r.PathFromDocRootWithName())
+				p.AddChild(a)
+				div.AddChild(p)
 			}
 		}
 	}
@@ -38,6 +42,7 @@ func (e *EntryPageComponent) GetCss() string {
 	padding-top: 146px;
 	padding-bottom: 50px;
 	text-align: left;
+	min-height: calc(100vh - 520px);
 }
 `
 }
