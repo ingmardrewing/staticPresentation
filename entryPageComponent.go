@@ -18,21 +18,26 @@ type EntryPageComponent struct {
 func (e *EntryPageComponent) VisitPage(p staticIntf.Page) {
 	containers := e.renderer.Site().Containers()
 
-	div := htmlDoc.NewNode("div", "", "class", "mainpage__content")
+	mainDiv := htmlDoc.NewNode("div", "", "class", "mainpage__content")
 	for _, c := range containers {
 		reps := c.Representationals()
 		if len(reps) > 0 {
-			div.AddChild(htmlDoc.NewNode("p", c.Variant()))
+			block := htmlDoc.NewNode("div", "",
+				"class", "mainpage_block")
+			blockHeadline := htmlDoc.NewNode("h2", c.Variant())
+			block.AddChild(blockHeadline)
 			for _, r := range reps {
-				p := htmlDoc.NewNode("p", "")
-				a := htmlDoc.NewNode("a", r.Title(),
-					"href", r.PathFromDocRootWithName())
-				p.AddChild(a)
-				div.AddChild(p)
+				a := htmlDoc.NewNode("a", "",
+					"href", r.PathFromDocRootWithName(),
+					"title", r.Title(),
+					"class", "mainpage__thumb",
+					"style", "background-image: url("+r.ThumbnailUrl()+")")
+				block.AddChild(a)
 			}
+			mainDiv.AddChild(block)
 		}
 	}
-	wn := e.wrap(div)
+	wn := e.wrap(mainDiv)
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
@@ -43,6 +48,14 @@ func (e *EntryPageComponent) GetCss() string {
 	padding-bottom: 50px;
 	text-align: left;
 	min-height: calc(100vh - 520px);
+}
+.mainpage__thumb {
+	display: block;
+	float: left;
+	width: 200px;
+	height: 200px;
+	background-size: cover;
+	margin: 10px;
 }
 `
 }
