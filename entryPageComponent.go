@@ -27,13 +27,14 @@ func (e *EntryPageComponent) VisitPage(p staticIntf.Page) {
 			blockHeadline := htmlDoc.NewNode("h2", c.Variant())
 			block.AddChild(blockHeadline)
 			for i := len(reps) - 1; i >= 0; i-- {
-				a := htmlDoc.NewNode("a", "",
+				a := htmlDoc.NewNode("a", " ",
 					"href", reps[i].PathFromDocRootWithName(),
 					"title", reps[i].Title(),
 					"class", "mainpage__thumb",
 					"style", "background-image: url("+reps[i].ThumbnailUrl()+")")
 				block.AddChild(a)
 			}
+			block.AddChild(htmlDoc.NewNode("span", " ", "class", "clearfix"))
 			mainDiv.AddChild(block)
 		}
 	}
@@ -52,10 +53,23 @@ func (e *EntryPageComponent) GetCss() string {
 .mainpage__thumb {
 	display: block;
 	float: left;
-	width: 200px;
-	height: 200px;
+	width: 190px;
+	height: 190px;
 	background-size: cover;
-	margin: 10px;
+	margin-left: 0px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.mainpage__thumb + .mainpage__thumb {
+	margin-left: 13px;
+}
+.clearfix {
+	display:block;
+	visibility:hidden;
+	clear:both;
+	height:0;
+	font-size:0;
+	content:" ";
 }
 `
 }
