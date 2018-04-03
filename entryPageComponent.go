@@ -26,12 +26,12 @@ func (e *EntryPageComponent) VisitPage(p staticIntf.Page) {
 				"class", "mainpage_block")
 			blockHeadline := htmlDoc.NewNode("h2", c.Variant())
 			block.AddChild(blockHeadline)
-			for _, r := range reps {
+			for i := len(reps) - 1; i >= 0; i-- {
 				a := htmlDoc.NewNode("a", "",
-					"href", r.PathFromDocRootWithName(),
-					"title", r.Title(),
+					"href", reps[i].PathFromDocRootWithName(),
+					"title", reps[i].Title(),
 					"class", "mainpage__thumb",
-					"style", "background-image: url("+r.ThumbnailUrl()+")")
+					"style", "background-image: url("+reps[i].ThumbnailUrl()+")")
 				block.AddChild(a)
 			}
 			mainDiv.AddChild(block)
