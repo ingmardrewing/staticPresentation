@@ -16,30 +16,61 @@ type EntryPageComponent struct {
 }
 
 func (e *EntryPageComponent) VisitPage(p staticIntf.Page) {
-	containers := e.renderer.Site().Containers()
-
 	mainDiv := htmlDoc.NewNode("div", "", "class", "mainpage__content")
-	for _, c := range containers {
-		reps := c.Representationals()
-		if len(reps) > 0 {
-			block := htmlDoc.NewNode("div", "",
-				"class", "mainpage_block")
-			blockHeadline := htmlDoc.NewNode("h2", c.Variant())
-			block.AddChild(blockHeadline)
-			for i := len(reps) - 1; i >= 0; i-- {
-				a := htmlDoc.NewNode("a", " ",
-					"href", reps[i].PathFromDocRootWithName(),
-					"title", reps[i].Title(),
-					"class", "mainpage__thumb",
-					"style", "background-image: url("+reps[i].ThumbnailUrl()+")")
-				block.AddChild(a)
-			}
-			block.AddChild(htmlDoc.NewNode("span", " ", "class", "clearfix"))
-			mainDiv.AddChild(block)
-		}
+	containers := e.renderer.Site().Containers()
+	for _, block := range e.createBlocksFrom(containers) {
+		mainDiv.AddChild(block)
 	}
 	wn := e.wrap(mainDiv)
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (e *EntryPageComponent) createBlocksFrom(containers []staticIntf.PagesContainer) []*htmlDoc.Node {
+	blocks := []*htmlDoc.Node{}
+	for _, c := range containers {
+		block := e.createBlockFrom(c)
+		if block != nil {
+			blocks = append(blocks, block)
+		}
+	}
+	return blocks
+}
+
+func (e *EntryPageComponent) createBlockFrom(c staticIntf.PagesContainer) *htmlDoc.Node {
+	pages := c.Representationals()
+	if len(pages) > 0 {
+		block := e.createBlockNode(c)
+		for _, l := range e.createLinksFrom(pages) {
+			block.AddChild(l)
+		}
+		block.AddChild(htmlDoc.NewNode("span", " ", "class", "clearfix"))
+		return block
+	}
+	return nil
+}
+
+func (e *EntryPageComponent) createBlockNode(c staticIntf.PagesContainer) *htmlDoc.Node {
+	block := htmlDoc.NewNode("div", "", "class", "mainpage_block")
+	blockHeadline := htmlDoc.NewNode("h2", c.Variant())
+	block.AddChild(blockHeadline)
+	return block
+}
+
+func (e *EntryPageComponent) createLinksFrom(pages []staticIntf.Page) []*htmlDoc.Node {
+	links := []*htmlDoc.Node{}
+	for i := len(pages) - 1; i >= 0; i-- {
+		link := e.getElementLinkingToPages(pages[i])
+		links = append(links, link)
+	}
+	return links
+}
+
+func (e *EntryPageComponent) getElementLinkingToPages(page staticIntf.Page) *htmlDoc.Node {
+	return htmlDoc.NewNode("a", " ",
+		"href", page.PathFromDocRootWithName(),
+		"title", page.Title(),
+		"class", "mainpage__thumb",
+		"style", "background-image: url("+page.ThumbnailUrl()+")")
 }
 
 func (e *EntryPageComponent) GetCss() string {
