@@ -50,8 +50,8 @@ func (e *EntryPageComponent) createBlockFrom(c staticIntf.PagesContainer) *htmlD
 }
 
 func (e *EntryPageComponent) createBlockNode(c staticIntf.PagesContainer) *htmlDoc.Node {
-	block := htmlDoc.NewNode("div", "", "class", "mainpage_block")
-	blockHeadline := htmlDoc.NewNode("h2", c.Variant())
+	block := htmlDoc.NewNode("div", "", "class", "mainpageblock")
+	blockHeadline := htmlDoc.NewNode("h2", c.Variant(), "class", "mainpageblock__headline")
 	block.AddChild(blockHeadline)
 	return block
 }
@@ -75,6 +75,10 @@ func (e *EntryPageComponent) getElementLinkingToPages(page staticIntf.Page) *htm
 
 func (e *EntryPageComponent) GetCss() string {
 	return `
+.mainpageblock__headline {
+	text-transform: uppercase;
+	border-bottom: 1px solid black;
+}
 .mainpage__content {
 	padding-top: 146px;
 	padding-bottom: 50px;
