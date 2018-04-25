@@ -40,8 +40,13 @@ func (e *EntryPageComponent) createBlockFrom(c staticIntf.PagesContainer) *htmlD
 	pages := c.Representationals()
 	if len(pages) > 0 {
 		block := e.createBlockNode(c)
+		ctr := 1
 		for _, l := range e.createLinksFrom(pages) {
 			block.AddChild(l)
+			if ctr%4 == 0 {
+				block.AddChild(htmlDoc.NewNode("br", ""))
+			}
+			ctr++
 		}
 		block.AddChild(htmlDoc.NewNode("span", " ", "class", "clearfix"))
 		return block
@@ -76,6 +81,7 @@ func (e *EntryPageComponent) getElementLinkingToPages(page staticIntf.Page) *htm
 func (e *EntryPageComponent) GetCss() string {
 	return `
 .mainpageblock__headline {
+	font-family: Arial Black;
 	text-transform: uppercase;
 	border-bottom: 1px solid black;
 }

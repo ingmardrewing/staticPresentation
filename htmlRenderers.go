@@ -272,6 +272,22 @@ func NewBlogRenderer(cd staticIntf.Site) staticIntf.Renderer {
 	return c
 }
 
+// Blog context, used for blog pages
+func NewPortfolioRenderer(cd staticIntf.Site) staticIntf.Renderer {
+
+	c := NewRenderer(cd, "Portfolio Renderer")
+
+	c.AddComponents(headerComponents...)
+	c.AddComponents(
+		NewTitleComponent(),
+		NewContentComponent(),
+		NewMainHeaderComponent(),
+		NewMainNaviComponent(),
+		NewCopyRightComponent(),
+		NewFooterNaviComponent())
+	return c
+}
+
 // Blog navigation context
 // creates pages containing a navigations overview
 // of blog pages
