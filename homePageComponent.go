@@ -3,10 +3,12 @@ package staticPresentation
 import (
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
+	log "github.com/sirupsen/logrus"
 )
 
 // Creates a new EntryPageComponent
 func NewHomePageComponent() *HomePageComponent {
+	log.Debug("Creating NewHomePageComponent")
 	return new(HomePageComponent)
 }
 
@@ -16,9 +18,13 @@ type HomePageComponent struct {
 }
 
 func (e *HomePageComponent) VisitPage(p staticIntf.Page) {
+	log.Debug("HomePageComponent.VisitPage")
 	mainDiv := htmlDoc.NewNode("div", "", "class", "mainpage__content")
 	containers := e.renderer.Site().ContainersOrderedByVariants("blog", "portfolio")
+
+	log.Debug("HomePageComponent.VisitPage - number of variant containers:", len(containers))
 	for _, block := range e.createBlocksFrom(containers) {
+		log.Debug("HomePageComponent.VisitPage - creating block ...")
 		mainDiv.AddChild(block)
 	}
 	wn := e.wrap(mainDiv)
