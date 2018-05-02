@@ -327,7 +327,7 @@ func NewMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 }
 
 // Entry page renderer
-func NewEntryPageRenderer(cd staticIntf.Site) staticIntf.Renderer {
+func NewHomePageRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
 	c := NewRenderer(cd, "Entry Page Renderer")
 
@@ -335,7 +335,7 @@ func NewEntryPageRenderer(cd staticIntf.Site) staticIntf.Renderer {
 	c.AddComponents(
 		NewTitleComponent(),
 		NewMainHeaderComponent(),
-		NewEntryPageComponent(),
+		NewHomePageComponent(),
 		NewMainNaviComponent(),
 		NewCopyRightComponent(),
 		NewFooterNaviComponent())

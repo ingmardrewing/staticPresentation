@@ -6,18 +6,18 @@ import (
 )
 
 // Creates a new EntryPageComponent
-func NewEntryPageComponent() *EntryPageComponent {
-	return new(EntryPageComponent)
+func NewHomePageComponent() *HomePageComponent {
+	return new(HomePageComponent)
 }
 
-type EntryPageComponent struct {
+type HomePageComponent struct {
 	abstractComponent
 	wrapper
 }
 
-func (e *EntryPageComponent) VisitPage(p staticIntf.Page) {
+func (e *HomePageComponent) VisitPage(p staticIntf.Page) {
 	mainDiv := htmlDoc.NewNode("div", "", "class", "mainpage__content")
-	containers := e.renderer.Site().Containers()
+	containers := e.renderer.Site().ContainersOrderedByVariants("blog", "portfolio")
 	for _, block := range e.createBlocksFrom(containers) {
 		mainDiv.AddChild(block)
 	}
@@ -25,7 +25,7 @@ func (e *EntryPageComponent) VisitPage(p staticIntf.Page) {
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
-func (e *EntryPageComponent) createBlocksFrom(containers []staticIntf.PagesContainer) []*htmlDoc.Node {
+func (e *HomePageComponent) createBlocksFrom(containers []staticIntf.PagesContainer) []*htmlDoc.Node {
 	blocks := []*htmlDoc.Node{}
 	for _, c := range containers {
 		block := e.createBlockFrom(c)
@@ -36,7 +36,7 @@ func (e *EntryPageComponent) createBlocksFrom(containers []staticIntf.PagesConta
 	return blocks
 }
 
-func (e *EntryPageComponent) createBlockFrom(c staticIntf.PagesContainer) *htmlDoc.Node {
+func (e *HomePageComponent) createBlockFrom(c staticIntf.PagesContainer) *htmlDoc.Node {
 	pages := c.Representationals()
 	if len(pages) > 0 {
 		block := e.createBlockNode(c)
@@ -54,14 +54,14 @@ func (e *EntryPageComponent) createBlockFrom(c staticIntf.PagesContainer) *htmlD
 	return nil
 }
 
-func (e *EntryPageComponent) createBlockNode(c staticIntf.PagesContainer) *htmlDoc.Node {
+func (e *HomePageComponent) createBlockNode(c staticIntf.PagesContainer) *htmlDoc.Node {
 	block := htmlDoc.NewNode("div", "", "class", "mainpageblock")
 	blockHeadline := htmlDoc.NewNode("h2", c.Variant(), "class", "mainpageblock__headline")
 	block.AddChild(blockHeadline)
 	return block
 }
 
-func (e *EntryPageComponent) createLinksFrom(pages []staticIntf.Page) []*htmlDoc.Node {
+func (e *HomePageComponent) createLinksFrom(pages []staticIntf.Page) []*htmlDoc.Node {
 	links := []*htmlDoc.Node{}
 	for i := len(pages) - 1; i >= 0; i-- {
 		link := e.getElementLinkingToPages(pages[i])
@@ -70,7 +70,7 @@ func (e *EntryPageComponent) createLinksFrom(pages []staticIntf.Page) []*htmlDoc
 	return links
 }
 
-func (e *EntryPageComponent) getElementLinkingToPages(page staticIntf.Page) *htmlDoc.Node {
+func (e *HomePageComponent) getElementLinkingToPages(page staticIntf.Page) *htmlDoc.Node {
 	return htmlDoc.NewNode("a", " ",
 		"href", page.PathFromDocRootWithName(),
 		"title", page.Title(),
@@ -78,7 +78,7 @@ func (e *EntryPageComponent) getElementLinkingToPages(page staticIntf.Page) *htm
 		"style", "background-image: url("+page.ThumbnailUrl()+")")
 }
 
-func (e *EntryPageComponent) GetCss() string {
+func (e *HomePageComponent) GetCss() string {
 	return `
 .mainpageblock__headline {
 	font-family: Arial Black;
