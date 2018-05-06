@@ -8,6 +8,7 @@ import (
 )
 
 func NewBlogContext(s staticIntf.Site) staticIntf.Context {
+
 	cg := new(blogContext)
 	cg.site = s
 

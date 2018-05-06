@@ -7,13 +7,13 @@ import (
 	"github.com/ingmardrewing/staticPersistence"
 )
 
-func NewNarrativeContextGroup(s staticIntf.Site, pages []staticIntf.Page) staticIntf.Context {
+func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
 
 	cg := new(narrativeContext)
 	cg.site = s
 
 	cg.renderer = NewNarrativeRenderer(s)
-	cg.renderer.Pages(pages...)
+	cg.renderer.Pages(s.Narratives()...)
 
 	cg.narrativeArchiveContext = NewNarrativeArchiveRename(s)
 
