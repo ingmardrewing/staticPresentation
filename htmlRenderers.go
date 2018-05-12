@@ -213,7 +213,6 @@ func NewNarrativeRenderer(cd staticIntf.Site) staticIntf.Renderer {
 		NewNarrativeHeaderComponent(),
 		NewNarrativeComponent(),
 		NewNarrativeNaviComponent(),
-		NewDisqusComponent(),
 		NewNarrativeCopyRightComponent(),
 		NewFooterNaviComponent())
 
@@ -264,7 +263,6 @@ func NewBlogRenderer(cd staticIntf.Site) staticIntf.Renderer {
 	c.AddComponents(
 		NewTitleComponent(),
 		NewContentComponent(),
-		NewDisqusComponent(),
 		NewMainHeaderComponent(),
 		NewMainNaviComponent(),
 		NewCopyRightComponent(),
