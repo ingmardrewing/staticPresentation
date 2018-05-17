@@ -87,7 +87,7 @@ func (e *HomePageComponent) getElementLinkingToPages(page staticIntf.Page) *html
 func (e *HomePageComponent) GetCss() string {
 	return `
 .mainpageblock__headline {
-	font-family: Arial Black;
+	font-family: Arial Black, Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 	border-bottom: 1px solid black;
 }
