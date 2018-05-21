@@ -21,7 +21,7 @@ func (nv *MainNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "mainnavi")
 	for _, l := range nv.abstractComponent.renderer.MainNavigationLocations() {
-		if len(p.ExternalLink()) > 0 {
+		if len(l.ExternalLink()) > 0 {
 			a := htmlDoc.NewNode("a", l.Title(),
 				"href", l.ExternalLink(),
 				"class", "mainnavi__navelement")
