@@ -40,8 +40,8 @@ func (nv *NarrativeNaviComponent) VisitPage(p staticIntf.Page) {
 }
 
 func (nv *NarrativeNaviComponent) first(p staticIntf.Page) *htmlDoc.Node {
-	return nv.absRel(p, nv.getLastPage(),
-		"last page &gt;&gt;",
+	return nv.absRel(p, nv.getFirstPage(),
+		"&lt; &lt; first page",
 		"narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder", "fist")
 }
 
