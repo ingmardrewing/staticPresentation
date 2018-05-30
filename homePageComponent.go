@@ -15,20 +15,30 @@ func NewHomePageComponent() *HomePageComponent {
 type HomePageComponent struct {
 	abstractComponent
 	wrapper
+	mainDiv *htmlDoc.Node
 }
 
 func (e *HomePageComponent) VisitPage(p staticIntf.Page) {
-	log.Debug("HomePageComponent.VisitPage")
-	mainDiv := htmlDoc.NewNode("div", "", "class", "mainpage__content")
-	containers := e.renderer.Site().ContainersOrderedByVariants("blog", "portfolio")
+	e.mainDiv = htmlDoc.NewNode("div", "", "class", "mainpage__content")
+	e.renderHomeText()
+	e.renderContainers()
+	p.AddBodyNodes([]*htmlDoc.Node{e.wrap(e.mainDiv)})
+}
 
-	log.Debug("HomePageComponent.VisitPage - number of variant containers:", len(containers))
+func (e *HomePageComponent) renderHomeText() {
+	hl := e.renderer.Site().HomeHeadline()
+	txt := e.renderer.Site().HomeText()
+	block := e.createBlockFromTexts(hl, txt)
+	e.mainDiv.AddChild(block)
+}
+
+func (e *HomePageComponent) renderContainers() {
+	containers := e.renderer.Site().ContainersOrderedByVariants("blog", "portfolio")
+	log.Debug("HomePageComponent.renderContainers - number of variant containers:", len(containers))
 	for _, block := range e.createBlocksFrom(containers) {
 		log.Debug("HomePageComponent.VisitPage - creating block ...")
-		mainDiv.AddChild(block)
+		e.mainDiv.AddChild(block)
 	}
-	wn := e.wrap(mainDiv)
-	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
 func (e *HomePageComponent) createBlocksFrom(containers []staticIntf.PagesContainer) []*htmlDoc.Node {
@@ -45,7 +55,7 @@ func (e *HomePageComponent) createBlocksFrom(containers []staticIntf.PagesContai
 func (e *HomePageComponent) createBlockFrom(c staticIntf.PagesContainer) *htmlDoc.Node {
 	pages := c.Representationals()
 	if len(pages) > 0 {
-		block := e.createBlockNode(c)
+		block := e.createBlockNode(c.Variant())
 		ctr := 1
 		for _, l := range e.createLinksFrom(pages) {
 			block.AddChild(l)
@@ -60,9 +70,16 @@ func (e *HomePageComponent) createBlockFrom(c staticIntf.PagesContainer) *htmlDo
 	return nil
 }
 
-func (e *HomePageComponent) createBlockNode(c staticIntf.PagesContainer) *htmlDoc.Node {
+func (e *HomePageComponent) createBlockFromTexts(headlineTxt, bodyCopy string) *htmlDoc.Node {
+	n := e.createBlockNode(headlineTxt)
+	paragraph := htmlDoc.NewNode("p", bodyCopy, "class", "mainpageblock__paragraph")
+	n.AddChild(paragraph)
+	return n
+}
+
+func (e *HomePageComponent) createBlockNode(headlineTxt string) *htmlDoc.Node {
 	block := htmlDoc.NewNode("div", "", "class", "mainpageblock")
-	blockHeadline := htmlDoc.NewNode("h2", c.Variant(), "class", "mainpageblock__headline")
+	blockHeadline := htmlDoc.NewNode("h2", headlineTxt, "class", "mainpageblock__headline")
 	block.AddChild(blockHeadline)
 	return block
 }
@@ -90,6 +107,10 @@ func (e *HomePageComponent) GetCss() string {
 	font-family: Arial Black, Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 	border-bottom: 1px solid black;
+}
+.mainpageblock__paragraph {
+	font-family: Arial, Helvetica, sans-serif;
+	line-height: 2em;
 }
 .mainpage__content {
 	padding-top: 146px;
