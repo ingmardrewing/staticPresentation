@@ -98,7 +98,7 @@ func (e *HomePageComponent) getElementLinkingToPages(page staticIntf.Page) *html
 		"href", page.PathFromDocRootWithName(),
 		"title", page.Title(),
 		"class", "mainpage__thumb",
-		"style", "background-image: url("+page.ThumbnailUrl()+")")
+		"style", "background-image: url("+page.MicroThumbnailUrl()+")")
 }
 
 func (e *HomePageComponent) GetCss() string {
