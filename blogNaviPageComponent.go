@@ -18,7 +18,9 @@ type BlogNaviPageContentComponent struct {
 }
 
 func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
-	n := htmlDoc.NewNode("div", "", "class", "blognavicomponent")
+	n := htmlDoc.NewNode(
+		"div", "",
+		"class", "blognavipagecomponent")
 
 	for _, page := range p.NavigatedPages() {
 
@@ -26,15 +28,18 @@ func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
 		if ta == "" {
 			ta = page.ImageUrl()
 		}
-		a := htmlDoc.NewNode("a", " ",
+		a := htmlDoc.NewNode(
+			"a", " ",
 			"href", page.PathFromDocRootWithName(),
 			"class", "blognavientry__tile")
-		span := htmlDoc.NewNode("span", " ",
-			"style", "background-image: url("+page.ThumbnailUrl()+")",
-			"class", "blognavientry__image")
-		h2 := htmlDoc.NewNode("h2", page.Title())
-		a.AddChild(span)
-		a.AddChild(h2)
+
+		a.AddChild(htmlDoc.NewNode(
+			"h2", page.Title()))
+		a.AddChild(htmlDoc.NewNode(
+			"img", "",
+			"src", page.ThumbnailUrl(),
+			"class", "blognavientry__image"))
+
 		n.AddChild(a)
 	}
 	n.AddChild(htmlDoc.NewNode("div", "", "style", "clear: both"))
@@ -44,35 +49,56 @@ func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
 
 func (b *BlogNaviPageContentComponent) GetCss() string {
 	return `
-a.blognavientry__tile {
+.blognavientry__tile {
 	display: block;
-	position: relative;
-	width: 390px;
-	height: 470px;
-	margin-bottom: 20px;
-	float: left;
-	text-decoration: none;
-}
-
-.blognavientry__tile:nth-child(odd) {
-	margin-right: 20px;
-}
-
-.blognavientry__image {
-	display: block;
-	width: 390px;
-	height: 390px;
-	background-size: cover;
 }
 .blognavientry__tile h2 {
 	font-family: Arial Black, Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 	color: black;
-	margin-top: 4px;
+	margin-bottom: 4px;
 	line-height: 24px;
 }
 .blognavientry__tile:hover h2 {
 	color: grey;
+}
+@media only screen and (max-width: 768px) {
+	.blognavientry__image {
+		width: 390px;
+		height: 390px;
+		max-width: 100%;
+		height: auto;
+	}
+	.blognavientry__tile h2 {
+		text-align: left;
+		padding-left: 10px;
+		font-size: 1.2em;
+	}
+}
+@media only screen and (min-width: 769px) {
+	.blognavipagecomponent {
+		padding-top: 140px;
+	}
+	a.blognavientry__tile {
+		display: block;
+		position: relative;
+		width: 390px;
+		height: 470px;
+		margin-bottom: 20px;
+		float: left;
+		text-decoration: none;
+	}
+	.blognavientry__tile:nth-child(odd) {
+		margin-right: 20px;
+	}
+	.blognavientry__image {
+		width: 390px;
+		height: 390px;
+	}
+	.blognavientry__tile h2 {
+		font-size: 1.2em;
+		text-align: left;
+	}
 }
 `
 }

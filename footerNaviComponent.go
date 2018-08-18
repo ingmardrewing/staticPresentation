@@ -46,30 +46,59 @@ func (f *FooterNaviComponent) VisitPage(p staticIntf.Page) {
 
 func (f *FooterNaviComponent) GetCss() string {
 	return `
-.footernavi {
-	border-top: 1px solid black;
+@media only screen and (max-width: 768px) {
+	.footernavi {
+		border-top: 1px solid black;
+	}
+	.footernavi__wrapper {
+		width: 100%;
+		background-color: white;
+		border-top: 1px solid black;
+		border-bottom: 1px solid black;
+	}
+	.footernavi__navelement--current ,
+	a.footernavi__navelement {
+		display: inline-block;
+		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		font-weight: 900;
+		font-size: 16px;
+		line-height: 20px;
+		text-transform: uppercase;
+		text-decoration: none;
+		color: black;
+		padding: 10px 15px;
+	}
+	a.footernavi__navelement:hover,
+	.footernavi__navelement--current {
+		color: gray;
+	}
 }
-.footernavi__wrapper {
-	position: fixed;
-	width: 100%;
-	bottom: 0;
-	background-color: white;
-}
-.footernavi__navelement--current ,
-a.footernavi__navelement {
-	display: inline-block;
-	font-family: Arial Black, Arial, Helvetica, sans-serif;
-	font-weight: 900;
-	font-size: 16px;
-	line-height: 20px;
-	text-transform: uppercase;
-	text-decoration: none;
-	color: black;
-	padding: 10px 15px;
-}
-a.footernavi__navelement:hover,
-.footernavi__navelement--current {
-	color: gray;
+@media only screen and (min-width: 769px) {
+	.footernavi {
+		border-top: 1px solid black;
+	}
+	.footernavi__wrapper {
+		position: fixed;
+		width: 100%;
+		bottom: 0;
+		background-color: white;
+	}
+	.footernavi__navelement--current ,
+	a.footernavi__navelement {
+		display: inline-block;
+		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		font-weight: 900;
+		font-size: 16px;
+		line-height: 20px;
+		text-transform: uppercase;
+		text-decoration: none;
+		color: black;
+		padding: 10px 15px;
+	}
+	a.footernavi__navelement:hover,
+	.footernavi__navelement--current {
+		color: gray;
+	}
 }
 `
 }

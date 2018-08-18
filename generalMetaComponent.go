@@ -15,14 +15,33 @@ type GeneralMetaComponent struct {
 }
 
 func (g *GeneralMetaComponent) VisitPage(p staticIntf.Page) {
+	//viewport := "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1"
+	viewport := "initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+	subject := "storytelling, illustration, drawing, web comic, comic, cartoon, caricatures"
+	author := "Ingmar Drewing"
 	m := []*htmlDoc.Node{
-		htmlDoc.NewNode("meta", "", "name", "viewport", "content", "width=device-width, initial-scale=1.0"),
-		htmlDoc.NewNode("meta", "", "name", "robots", "content", "index,follow"),
-		htmlDoc.NewNode("meta", "", "name", "author", "content", "Ingmar Drewing"),
-		htmlDoc.NewNode("meta", "", "name", "publisher", "content", "Ingmar Drewing"),
-		htmlDoc.NewNode("meta", "", "name", "keywords", "content", "storytelling, illustration, drawing, web comic, comic, cartoon, caricatures"),
-		htmlDoc.NewNode("meta", "", "name", "DC.subject", "content", "storytelling, illustration, drawing, web comic, comic, cartoon, caricatures"),
-		htmlDoc.NewNode("meta", "", "name", "page-topic", "content", "art"),
-		htmlDoc.NewNode("meta", "", "charset", "UTF-8")}
+		htmlDoc.NewNode("meta", "",
+			"name", "viewport",
+			"content", viewport),
+		htmlDoc.NewNode("meta", "",
+			"name", "robots",
+			"content", "index,follow"),
+		htmlDoc.NewNode("meta", "",
+			"name", "author",
+			"content", author),
+		htmlDoc.NewNode("meta", "",
+			"name", "publisher",
+			"content", author),
+		htmlDoc.NewNode("meta", "",
+			"name", "keywords",
+			"content", subject),
+		htmlDoc.NewNode("meta", "",
+			"name", "DC.subject",
+			"content", subject),
+		htmlDoc.NewNode("meta", "",
+			"name", "page-topic",
+			"content", "art"),
+		htmlDoc.NewNode("meta", "",
+			"charset", "UTF-8")}
 	p.AddHeaderNodes(m)
 }
