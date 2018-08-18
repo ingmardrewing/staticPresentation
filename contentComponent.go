@@ -40,6 +40,10 @@ func (cc *ContentComponent) GetCss() string {
 	.maincontent p {
 		line-height: 30px;
 	}
+	.maincontent p {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
 	.maincontent__h1,
 	.maincontent__h2 {
 		text-transform: uppercase;
