@@ -29,7 +29,7 @@ a:hover {
 
 .wrapperInner {
 	margin: 0 auto;
-	width: 800px;
+	max-width: 800px;
 }
 p + p {
 	margin-top: 10px;

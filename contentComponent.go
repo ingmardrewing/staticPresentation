@@ -30,36 +30,79 @@ func (cc *ContentComponent) VisitPage(p staticIntf.Page) {
 
 func (cc *ContentComponent) GetCss() string {
 	return `
-.maincontent{
-	padding-top: 126px;
-	padding-bottom: 50px;
-	text-align: left;
-	line-height: 20px;
+@media only screen and (max-width: 768px) {
+	.maincontent{
+		padding-bottom: 50px;
+		text-align: left;
+		line-height: 20px;
+	}
+	.maincontent li,
+	.maincontent p {
+		line-height: 30px;
+	}
+	.maincontent__h1,
+	.maincontent__h2 {
+		text-transform: uppercase;
+		display: inline-block;
+		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		text-transform: uppercase;
+		font-size: 18px;
+		line-height: 20px;
+		text-transform: uppercase;
+	}
+	.maincontent__h1 {
+		margin-left: 10px;
+		margin-bottom: 0;
+	}
+	.maincontent__h1 + .maincontent__h2 {
+		color: grey;
+		margin-top: 0;
+		margin-left: 10px;
+	}
+	.maincontent__h2 + p ,
+	.maincontent__h2 + dl {
+		margin-top: 0;
+	}
+	dd + dt {
+		margin-top: 10px;
+	}
+	.maincontent img {
+		max-width: 100%;
+		width: auto;
+	}
 }
-.maincontent li,
-.maincontent p {
-	line-height: 30px;
-}
-.maincontent__h1,
-.maincontent__h2 {
-	text-transform: uppercase;
-	display: inline-block;
-	font-family: Arial Black, Arial, Helvetica, sans-serif;
-	text-transform: uppercase;
-	font-size: 18px;
-	line-height: 20px;
-	text-transform: uppercase;
-}
-.maincontent__h1 + .maincontent__h2 {
-	color: grey;
-	margin-left: 10px;
-}
-.maincontent__h2 + p ,
-.maincontent__h2 + dl {
-	margin-top: 0;
-}
-dd + dt {
-	margin-top: 10px;
+@media only screen and (min-width: 769px) {
+	.maincontent{
+		padding-top: 126px;
+		padding-bottom: 50px;
+		text-align: left;
+		line-height: 20px;
+	}
+	.maincontent li,
+	.maincontent p {
+		line-height: 30px;
+	}
+	.maincontent__h1,
+	.maincontent__h2 {
+		text-transform: uppercase;
+		display: inline-block;
+		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		text-transform: uppercase;
+		font-size: 18px;
+		line-height: 20px;
+		text-transform: uppercase;
+	}
+	.maincontent__h1 + .maincontent__h2 {
+		color: grey;
+		margin-left: 10px;
+	}
+	.maincontent__h2 + p ,
+	.maincontent__h2 + dl {
+		margin-top: 0;
+	}
+	dd + dt {
+		margin-top: 10px;
+	}
 }
 `
 }

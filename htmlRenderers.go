@@ -262,9 +262,9 @@ func NewBlogRenderer(cd staticIntf.Site) staticIntf.Renderer {
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
 		NewTitleComponent(),
-		NewContentComponent(),
 		NewMainHeaderComponent(),
 		NewMainNaviComponent(),
+		NewContentComponent(),
 		NewCopyRightComponent(),
 		NewFooterNaviComponent())
 	return c
@@ -278,9 +278,9 @@ func NewPortfolioRenderer(cd staticIntf.Site) staticIntf.Renderer {
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
 		NewTitleComponent(),
-		NewContentComponent(),
 		NewMainHeaderComponent(),
 		NewMainNaviComponent(),
+		NewContentComponent(),
 		NewCopyRightComponent(),
 		NewFooterNaviComponent())
 	return c
@@ -296,10 +296,10 @@ func NewBlogNaviRenderer(cd staticIntf.Site) staticIntf.Renderer {
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
 		NewTitleComponent(),
-		NewBlogNaviPageContentComponent(),
-		NewBlogNaviComponent(),
 		NewMainHeaderComponent(),
 		NewMainNaviComponent(),
+		NewBlogNaviPageContentComponent(),
+		NewBlogNaviComponent(),
 		NewCopyRightComponent(),
 		NewFooterNaviComponent())
 
@@ -315,9 +315,9 @@ func NewMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 	c.AddComponents(headerComponents...)
 	c.AddComponents(
 		NewTitleComponent(),
-		NewContentComponent(),
 		NewMainHeaderComponent(),
 		NewMainNaviComponent(),
+		NewContentComponent(),
 		NewCopyRightComponent(),
 		NewFooterNaviComponent())
 
@@ -333,8 +333,8 @@ func NewHomePageRenderer(cd staticIntf.Site) staticIntf.Renderer {
 	c.AddComponents(
 		NewTitleComponent(),
 		NewMainHeaderComponent(),
-		NewHomePageComponent(),
 		NewMainNaviComponent(),
+		NewHomePageComponent(),
 		NewCopyRightComponent(),
 		NewFooterNaviComponent())
 

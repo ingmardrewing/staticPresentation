@@ -28,7 +28,7 @@ func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
 	d := htmlDoc.NewNode("div", "", "class", "blognavicomponent meta")
 	d.AddChild(htmlDoc.NewNode("div", p.Content()))
 	d.AddChild(nav)
-	wn := b.wrap(d)
+	wn := b.wrap(d, "blognavi__wrapper")
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
@@ -41,33 +41,78 @@ func (b *BlogNaviComponent) VisitPage(p staticIntf.Page) {
 
 func (b *BlogNaviComponent) GetCss() string {
 	return `
-.blognavicomponent {
-	text-align: left;
-	padding-top: 123px;
+@media only screen and (max-width: 768px) {
+	.blognavi__wrapper {
+		padding-top: 10px;
+		padding-bottom: 12px;
+		border-top: 1px solid black;
+		border-bottom: 1px solid black;
+		margin-top: 30px;
+	}
+	.blognavicomponent {
+		text-align: left;
+		padding-top: 123px;
+	}
+	.blognavicomponent.meta {
+		padding-top: 0;
+	}
+	.blognavicomponent__nav {
+		text-align: center;
+		color: lightgrey;
+	}
+	.blognavicomponent__nav span {
+		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		color: lightgrey;
+		font-weight: 900;
+	}
+	.blognavicomponent__next {
+		margin-left: 10px;
+	}
+	.blognavicomponent__previous,
+	.blognavicomponent__next {
+		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		color: grey;
+		text-transform: uppercase;
+		font-weight: 900;
+		font-size: 16px;
+	}
+	.blognavientry__tile h2{
+		padding: 10px;
+		margin: 0;
+	}
+	.blognavientry__tile + .blognavientry__tile h2{
+		border-top: 1px solid black;
+	}
 }
-.blognavicomponent.meta {
-	padding-top: 0;
-}
-.blognavicomponent__nav {
-	text-align: center;
-	color: lightgrey;
-	margin-bottom: 50px;
-}
-.blognavicomponent__nav span {
-	font-family: Arial Black, Arial, Helvetica, sans-serif;
-	color: lightgrey;
-	font-weight: 900;
-}
-.blognavicomponent__next {
-	margin-left: 10px;
-}
-.blognavicomponent__previous,
-.blognavicomponent__next {
-	font-family: Arial Black, Arial, Helvetica, sans-serif;
-	color: grey;
-	text-transform: uppercase;
-	font-weight: 900;
-	font-size: 16px;
+@media only screen and (min-width: 769px) {
+	.blognavicomponent {
+		text-align: left;
+		padding-top: 123px;
+	}
+	.blognavicomponent.meta {
+		padding-top: 0;
+	}
+	.blognavicomponent__nav {
+		text-align: center;
+		color: lightgrey;
+		margin-bottom: 50px;
+	}
+	.blognavicomponent__nav span {
+		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		color: lightgrey;
+		font-weight: 900;
+	}
+	.blognavicomponent__next {
+		margin-left: 10px;
+	}
+	.blognavicomponent__previous,
+	.blognavicomponent__next {
+		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		color: grey;
+		text-transform: uppercase;
+		font-weight: 900;
+		font-size: 16px;
+	}
 }
 `
 }
