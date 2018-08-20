@@ -129,10 +129,10 @@ func (b *BlogNaviComponent) GetCss() string {
 		display: none;
 	}
 	.blognavicomponent__next {
-		right: 10px;
+		right: calc(50vw - 520px);
 	}
 	.blognavicomponent__previous {
-		left: 10px;
+		left: calc(50vw - 520px);
 	}
 	.blognavicomponent__item .label {
 		display: none;
