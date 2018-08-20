@@ -81,12 +81,14 @@ func (a *abstractComponent) nextFromDocRoot(
 
 func (a *abstractComponent) abs(relativePage staticIntf.Page, label, class, rel string) *htmlDoc.Node {
 	if relativePage == nil {
-		return htmlDoc.NewNode("span", label,
+		return htmlDoc.NewNode(
+			"span", label,
 			"class", class)
 	}
 	href := "/" + path.Join(relativePage.PathFromDocRoot(),
 		relativePage.HtmlFilename())
-	return htmlDoc.NewNode("a", label,
+	return htmlDoc.NewNode(
+		"a", label,
 		"href", href,
 		"rel", rel,
 		"class", class)
@@ -110,12 +112,14 @@ func (a *abstractComponent) next(
 
 func (a *abstractComponent) rel(relativePage staticIntf.Page, label, class, rel string) *htmlDoc.Node {
 	if relativePage == nil {
-		return htmlDoc.NewNode("span", label,
+		return htmlDoc.NewNode(
+			"span", label,
 			"class", class)
 	}
 	href := path.Join(relativePage.PathFromDocRoot(),
 		relativePage.HtmlFilename())
-	return htmlDoc.NewNode("a", label,
+	return htmlDoc.NewNode(
+		"a", label,
 		"href", href,
 		"rel", rel,
 		"class", class)
