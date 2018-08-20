@@ -265,6 +265,7 @@ func NewBlogRenderer(cd staticIntf.Site) staticIntf.Renderer {
 		NewMainHeaderComponent(),
 		NewMainNaviComponent(),
 		NewContentComponent(),
+		NewBlogPrevNextNaviComponent(),
 		NewCopyRightComponent(),
 		NewFooterNaviComponent())
 	return c
