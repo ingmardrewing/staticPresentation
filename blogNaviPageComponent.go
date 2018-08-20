@@ -64,8 +64,6 @@ func (b *BlogNaviPageContentComponent) GetCss() string {
 }
 @media only screen and (max-width: 768px) {
 	.blognavientry__image {
-		width: 390px;
-		height: 390px;
 		max-width: 100%;
 		height: auto;
 	}

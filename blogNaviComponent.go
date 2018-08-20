@@ -17,17 +17,35 @@ type BlogNaviComponent struct {
 }
 
 func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
+
+	prevLabel := htmlDoc.NewNode(
+		"span", "previous posts",
+		"class", "label")
+	prevIcon := htmlDoc.NewNode(
+		"span", "◀",
+		"class", "icon")
+	prev := b.previous(p, "", "blognavicomponent__previous blognavicomponent__item")
+	prev.AddChild(prevIcon)
+	prev.AddChild(prevLabel)
+
+	nextLabel := htmlDoc.NewNode(
+		"span", "next posts",
+		"class", "label")
+	nextIcon := htmlDoc.NewNode(
+		"span", "▶",
+		"class", "icon")
+	next := b.next(p, " ", "blognavicomponent__next blognavicomponent__item")
+	next.AddChild(nextLabel)
+	next.AddChild(nextIcon)
+
 	nav := htmlDoc.NewNode("nav", "", "class", "blognavicomponent__nav")
-
-	prev := b.previous(p, "&lt; previous posts", "blognavicomponent__previous")
 	nav.AddChild(prev)
-
-	next := b.next(p, "next posts &gt;", "blognavicomponent__next")
 	nav.AddChild(next)
 
 	d := htmlDoc.NewNode("div", "", "class", "blognavicomponent meta")
 	d.AddChild(htmlDoc.NewNode("div", p.Content()))
 	d.AddChild(nav)
+
 	wn := b.wrap(d, "blognavi__wrapper")
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
@@ -41,26 +59,23 @@ func (b *BlogNaviComponent) VisitPage(p staticIntf.Page) {
 
 func (b *BlogNaviComponent) GetCss() string {
 	return `
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 1080px) {
 	.blognavi__wrapper {
 		padding-top: 10px;
 		padding-bottom: 12px;
-		border-top: 1px solid black;
-		border-bottom: 1px solid black;
 		margin-top: 30px;
 	}
 	.blognavicomponent {
-		text-align: left;
 		padding-top: 123px;
 	}
 	.blognavicomponent.meta {
 		padding-top: 0;
 	}
 	.blognavicomponent__nav {
-		text-align: center;
+		text-align: right;
 		color: lightgrey;
 	}
-	.blognavicomponent__nav span {
+	.blognavicomponent__nav span.blognavicomponent__item {
 		font-family: Arial Black, Arial, Helvetica, sans-serif;
 		color: lightgrey;
 		font-weight: 900;
@@ -80,38 +95,47 @@ func (b *BlogNaviComponent) GetCss() string {
 		padding: 10px;
 		margin: 0;
 	}
+	.blognavicomponent__item .label {
+		display: inline-block ;
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+}
+@media only screen and (max-width: 768px) {
+	.blognavi__wrapper {
+		border-top: 1px solid black;
+		border-bottom: 1px solid black;
+	}
 	.blognavientry__tile + .blognavientry__tile h2{
 		border-top: 1px solid black;
 	}
-}
-@media only screen and (min-width: 769px) {
-	.blognavicomponent {
-		text-align: left;
-		padding-top: 123px;
-	}
-	.blognavicomponent.meta {
-		padding-top: 0;
-	}
 	.blognavicomponent__nav {
 		text-align: center;
-		color: lightgrey;
-		margin-bottom: 50px;
 	}
-	.blognavicomponent__nav span {
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
-		color: lightgrey;
+}
+@media only screen and (min-width: 1081px) {
+	.blognavicomponent__item {
+		position: fixed;
+		top: calc(50vh - 50px);
+		font-size: 100px;
 		font-weight: 900;
+		color: lightgrey;
+	}
+	.blognavicomponent__item:hover {
+		color: black;
+		text-decoration: none;
+	}
+	span.blognavicomponent__item {
+		display: none;
 	}
 	.blognavicomponent__next {
-		margin-left: 10px;
+		right: 10px;
 	}
-	.blognavicomponent__previous,
-	.blognavicomponent__next {
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
-		color: grey;
-		text-transform: uppercase;
-		font-weight: 900;
-		font-size: 16px;
+	.blognavicomponent__previous {
+		left: 10px;
+	}
+	.blognavicomponent__item .label {
+		display: none;
 	}
 }
 `
