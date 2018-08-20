@@ -77,6 +77,15 @@ func (b *BlogPrevNextNaviComponent) GetCss() string {
 		margin-left: 10px;
 	}
 }
+@media only screen and (max-width: 768px) {
+	.blogprevnextnavigation{
+		padding-top: 10px;
+		padding-bottom: 10px;
+		border-top: 1px solid black;
+		border-bottom: 1px solid black;
+		text-align: center;
+	}
+}
 @media only screen and (min-width: 1081px) {
 	.blogprevnextnavigation__wrapper {
 		position: absolute;
@@ -102,10 +111,10 @@ func (b *BlogPrevNextNaviComponent) GetCss() string {
 		text-decoration: none;
 	}
 	.blogprevnextnavigation__previous {
-		left: 10px;
+		left: calc(50vw - 520px);
 	}
 	.blogprevnextnavigation__next{
-		right : 10px;
+		right: calc(50vw - 520px);
 	}
 }
 `
