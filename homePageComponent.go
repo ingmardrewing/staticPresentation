@@ -126,7 +126,7 @@ func (e *HomePageComponent) GetCss() string {
 	}
 	.homepageblock__paragraph {
 		font-family: Arial, Helvetica, sans-serif;
-		line-height: 2em;
+		line-height: 1.4em;
 	}
 	.homepage__content {
 		padding-bottom: 50px;
