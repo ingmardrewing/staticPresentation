@@ -107,7 +107,7 @@ func (b *BlogPrevNextNaviComponent) GetCss() string {
 		display: none;
 	}
 	.blogprevnextnavigation__item:hover {
-		color: grey;
+		color: black;
 		text-decoration: none;
 	}
 	.blogprevnextnavigation__previous {
