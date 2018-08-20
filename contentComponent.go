@@ -34,11 +34,11 @@ func (cc *ContentComponent) GetCss() string {
 	.maincontent{
 		padding-bottom: 50px;
 		text-align: left;
-		line-height: 20px;
+		line-height: 1.2em;
 	}
 	.maincontent li,
 	.maincontent p {
-		line-height: 30px;
+		line-height: 1.4em;
 	}
 	.maincontent p {
 		padding-left: 10px;
