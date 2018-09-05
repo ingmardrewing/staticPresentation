@@ -1,7 +1,10 @@
 package staticPresentation
 
 import (
+	"log"
+
 	"github.com/ingmardrewing/htmlDoc"
+	"github.com/ingmardrewing/rx"
 	"github.com/ingmardrewing/staticIntf"
 )
 
@@ -18,7 +21,8 @@ type ContentComponent struct {
 func (cc *ContentComponent) VisitPage(p staticIntf.Page) {
 	h1 := htmlDoc.NewNode("h1", p.Title(),
 		"class", "maincontent__h1")
-	h2 := htmlDoc.NewNode("h2", p.PublishedTime(),
+	date := cc.getDateFromPublishedTime(p.PublishedTime())
+	h2 := htmlDoc.NewNode("h2", date,
 		"class", "maincontent__h2")
 	n := htmlDoc.NewNode("main", p.Content(),
 		"class", "maincontent")
@@ -26,6 +30,14 @@ func (cc *ContentComponent) VisitPage(p staticIntf.Page) {
 	n.AddChild(h2)
 	wn := cc.wrap(n)
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (cc *ContentComponent) getDateFromPublishedTime(publishedTime string) string {
+	rgx, err := rx.NewRx(" [0-9]{2}:[0-9]{2}:[0-9]{2}.*$")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return rgx.SubstituteAllOccurences(publishedTime, "")
 }
 
 func (cc *ContentComponent) GetCss() string {

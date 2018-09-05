@@ -19,27 +19,31 @@ type HomePageComponent struct {
 }
 
 func (e *HomePageComponent) VisitPage(p staticIntf.Page) {
+	containerBlocks := e.getBlocksFromContainers()
+	textBlock := e.getHomeTextBlock()
+
 	e.mainDiv = htmlDoc.NewNode("div", "", "class", "homepage__content")
-	e.renderHomeText()
-	e.renderContainers()
+	if len(containerBlocks) > 1 {
+		e.mainDiv.AddChild(containerBlocks[1])
+	}
+	e.mainDiv.AddChild(textBlock)
+
+	if len(containerBlocks) > 0 {
+		e.mainDiv.AddChild(containerBlocks[0])
+	}
 	w := e.wrap(e.mainDiv, "homepage__wrapperouter")
 	p.AddBodyNodes([]*htmlDoc.Node{w})
 }
 
-func (e *HomePageComponent) renderHomeText() {
+func (e *HomePageComponent) getHomeTextBlock() *htmlDoc.Node {
 	hl := e.renderer.Site().HomeHeadline()
 	txt := e.renderer.Site().HomeText()
-	block := e.createBlockFromTexts(hl, txt)
-	e.mainDiv.AddChild(block)
+	return e.createBlockFromTexts(hl, txt)
 }
 
-func (e *HomePageComponent) renderContainers() {
+func (e *HomePageComponent) getBlocksFromContainers() []*htmlDoc.Node {
 	containers := e.renderer.Site().ContainersOrderedByVariants("blog", "portfolio")
-	log.Debug("HomePageComponent.renderContainers - number of variant containers:", len(containers))
-	for _, block := range e.createBlocksFrom(containers) {
-		log.Debug("HomePageComponent.VisitPage - creating block ...")
-		e.mainDiv.AddChild(block)
-	}
+	return e.createBlocksFrom(containers)
 }
 
 func (e *HomePageComponent) createBlocksFrom(containers []staticIntf.PagesContainer) []*htmlDoc.Node {
