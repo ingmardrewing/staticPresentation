@@ -23,14 +23,14 @@ func (e *HomePageComponent) VisitPage(p staticIntf.Page) {
 	textBlock := e.getHomeTextBlock()
 
 	e.mainDiv = htmlDoc.NewNode("div", "", "class", "homepage__content")
-	if len(containerBlocks) > 0 {
-		e.mainDiv.AddChild(containerBlocks[0])
-	}
-	e.mainDiv.AddChild(textBlock)
 	if len(containerBlocks) > 1 {
 		e.mainDiv.AddChild(containerBlocks[1])
 	}
+	e.mainDiv.AddChild(textBlock)
 
+	if len(containerBlocks) > 0 {
+		e.mainDiv.AddChild(containerBlocks[0])
+	}
 	w := e.wrap(e.mainDiv, "homepage__wrapperouter")
 	p.AddBodyNodes([]*htmlDoc.Node{w})
 }
