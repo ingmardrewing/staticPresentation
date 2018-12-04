@@ -9,8 +9,10 @@ import (
 )
 
 // Creates a new ContentComponent
-func NewContentComponent() *ContentComponent {
-	return new(ContentComponent)
+func NewContentComponent(r staticIntf.Renderer) *ContentComponent {
+	c := new(ContentComponent)
+	c.abstractComponent.Renderer(r)
+	return c
 }
 
 type ContentComponent struct {

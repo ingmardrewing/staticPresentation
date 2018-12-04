@@ -6,8 +6,9 @@ import (
 )
 
 // Creates a new BlogNaviComponent
-func NewBlogNaviComponent() *BlogNaviComponent {
+func NewBlogNaviComponent(r staticIntf.Renderer) *BlogNaviComponent {
 	bnc := new(BlogNaviComponent)
+	bnc.abstractComponent.Renderer(r)
 	return bnc
 }
 

@@ -6,8 +6,10 @@ import (
 )
 
 // Creates a new NarrativeArchiveComponent
-func NewNarrativeArchiveComponent() *NarrativeArchiveComponent {
-	return new(NarrativeArchiveComponent)
+func NewNarrativeArchiveComponent(r staticIntf.Renderer) *NarrativeArchiveComponent {
+	n := new(NarrativeArchiveComponent)
+	n.abstractComponent.Renderer(r)
+	return n
 }
 
 type NarrativeArchiveComponent struct {

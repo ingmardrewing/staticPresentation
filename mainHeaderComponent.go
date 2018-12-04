@@ -6,8 +6,9 @@ import (
 )
 
 // Creates a new MainHeaderComponent
-func NewMainHeaderComponent() *MainHeaderComponent {
+func NewMainHeaderComponent(r staticIntf.Renderer) *MainHeaderComponent {
 	mhc := new(MainHeaderComponent)
+	mhc.abstractComponent.Renderer(r)
 	return mhc
 }
 

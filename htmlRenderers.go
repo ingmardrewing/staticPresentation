@@ -11,14 +11,16 @@ import (
 	"github.com/tdewolff/minify/css"
 )
 
-var headerComponents []staticIntf.Component = []staticIntf.Component{
-	NewGeneralMetaComponent(),
-	NewFaviconComponent(),
-	NewGlobalCssComponent(),
-	NewGoogleComponent(),
-	NewTwitterComponent(),
-	NewFBComponent(),
-	NewCssLinkComponent()}
+func getHeaderComponents(r staticIntf.Renderer) []staticIntf.Component {
+	return []staticIntf.Component{
+		NewGeneralMetaComponent(r),
+		NewFaviconComponent(r),
+		NewGlobalCssComponent(r),
+		NewGoogleComponent(r),
+		NewTwitterComponent(r),
+		NewFBComponent(r),
+		NewCssLinkComponent(r)}
+}
 
 /* Global Renderer */
 
@@ -39,12 +41,12 @@ type renderer struct {
 	site            staticIntf.Site
 }
 
-func (c *renderer) Render() []fs.FileContainer {
-	targetDir := c.site.TargetDir()
+func (r *renderer) Render() []fs.FileContainer {
+	targetDir := r.site.TargetDir()
 	fcs := []fs.FileContainer{}
-	for _, p := range c.pages {
+	for _, p := range r.pages {
 
-		for _, comp := range c.components {
+		for _, comp := range r.components {
 			p.AcceptVisitor(comp)
 		}
 		doc := p.GetDoc()
@@ -63,98 +65,97 @@ func (c *renderer) Render() []fs.FileContainer {
 	return fcs
 }
 
-func (c *renderer) Components() []staticIntf.Component {
-	return c.components
+func (r *renderer) Components() []staticIntf.Component {
+	return r.components
 }
 
-func (c *renderer) Pages(ps ...staticIntf.Page) []staticIntf.Page {
+func (r *renderer) Pages(ps ...staticIntf.Page) []staticIntf.Page {
 	if len(ps) > 0 {
-		c.pages = ps
+		r.pages = ps
 	}
-	return c.pages
+	return r.pages
 }
 
-func (c *renderer) AddPage(p staticIntf.Page) {
-	c.pages = append(c.pages, p)
+func (r *renderer) AddPage(p staticIntf.Page) {
+	r.pages = append(r.pages, p)
 }
 
-func (c *renderer) addComponent(comp staticIntf.Component) {
-	c.components = append(c.components, comp)
+func (r *renderer) addComponent(comp staticIntf.Component) {
+	r.components = append(r.components, comp)
 }
 
-func (c *renderer) AddComponents(comps ...staticIntf.Component) {
+func (r *renderer) AddComponents(comps ...staticIntf.Component) {
 	for _, comp := range comps {
-		comp.Renderer(c)
-		c.addComponent(comp)
+		r.addComponent(comp)
 	}
 }
 
-func (c *renderer) DisqusShortname() string {
-	return c.disqusShortname
+func (r *renderer) DisqusShortname() string {
+	return r.disqusShortname
 }
 
-func (c *renderer) MainNavigationLocations() []staticIntf.Location {
-	return c.site.Main()
+func (r *renderer) MainNavigationLocations() []staticIntf.Location {
+	return r.site.Main()
 }
 
-func (c *renderer) FooterNavigationLocations() []staticIntf.Location {
-	return c.site.Marginal()
+func (r *renderer) FooterNavigationLocations() []staticIntf.Location {
+	return r.site.Marginal()
 }
 
-func (c *renderer) CssUrl() string {
+func (r *renderer) CssUrl() string {
 	letterBytes := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	n := 10
 	b := make([]byte, n)
 
 	s := rand.NewSource(time.Now().UnixNano())
-	r := rand.New(s)
+	rnd := rand.New(s)
 	for i := range b {
-		b[i] = letterBytes[r.Intn(len(letterBytes))]
+		b[i] = letterBytes[rnd.Intn(len(letterBytes))]
 	}
 	pseudoParam := string(b)
-	return c.cssUrl + "?" + pseudoParam
+	return r.cssUrl + "?" + pseudoParam
 }
 
-func (c *renderer) TwitterPage() string {
-	return c.twitterPageUrl
+func (r *renderer) TwitterPage() string {
+	return r.twitterPageUrl
 }
 
-func (c *renderer) FBPageUrl() string {
-	return c.fbPageUrl
+func (r *renderer) FBPageUrl() string {
+	return r.fbPageUrl
 }
 
-func (c *renderer) OGType() string {
-	return c.ogType
+func (r *renderer) OGType() string {
+	return r.ogType
 }
 
-func (c *renderer) TwitterCardType() string {
-	return c.twitterCardType
+func (r *renderer) TwitterCardType() string {
+	return r.twitterCardType
 }
 
-func (c *renderer) TwitterHandle() string {
-	return c.twitterHandle
+func (r *renderer) TwitterHandle() string {
+	return r.twitterHandle
 }
 
-func (c *renderer) ContentSection() string {
-	return c.contentSection
+func (r *renderer) ContentSection() string {
+	return r.contentSection
 }
 
-func (c *renderer) ContentTags() string {
-	return c.tags
+func (r *renderer) ContentTags() string {
+	return r.tags
 }
 
-func (c *renderer) Site() staticIntf.Site {
-	return c.site
+func (r *renderer) Site() staticIntf.Site {
+	return r.site
 }
 
-func (c *renderer) SiteName() string {
-	return c.siteName
+func (r *renderer) SiteName() string {
+	return r.siteName
 }
 
-func (c *renderer) Css() string {
+func (r *renderer) Css() string {
 	cssString := ""
-	for _, c := range c.components {
-		cssString += c.GetCss()
+	for _, r := range r.components {
+		cssString += r.GetCss()
 	}
 	m := minify.New()
 	m.AddFunc("text/css", css.Minify)
@@ -166,125 +167,125 @@ func (c *renderer) Css() string {
 }
 
 func NewRenderer(site staticIntf.Site, rendererName string) staticIntf.Renderer {
-	c := new(renderer)
-	c.site = site
-	c.rendererName = rendererName
+	r := new(renderer)
+	r.site = site
+	r.rendererName = rendererName
 
-	c.twitterHandle = site.TwitterHandle()
-	c.contentSection = site.Topic()
-	c.tags = site.Tags()
-	c.siteName = site.Site()
-	c.twitterCardType = site.CardType()
-	c.ogType = site.Section()
-	c.fbPageUrl = site.FBPage()
-	c.twitterPageUrl = site.TwitterPage()
-	c.cssUrl = site.Css()
-	c.disqusShortname = site.DisqusId()
+	r.twitterHandle = site.TwitterHandle()
+	r.contentSection = site.Topic()
+	r.tags = site.Tags()
+	r.siteName = site.Site()
+	r.twitterCardType = site.CardType()
+	r.ogType = site.Section()
+	r.fbPageUrl = site.FBPage()
+	r.twitterPageUrl = site.TwitterPage()
+	r.cssUrl = site.Css()
+	r.disqusShortname = site.DisqusId()
 
-	return c
+	return r
 }
 
 // Create Narrrative Margina Renderer
 // used for marginal pages of graphic novels
 func NewNarrativeMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd, "Narrative Marginal Renderer")
+	r := NewRenderer(cd, "Narrative Marginal Renderer")
 
-	c.AddComponents(headerComponents...)
-	c.AddComponents(
-		NewTitleComponent(),
-		NewNarrativeHeaderComponent(),
-		NewPlainContentComponent(),
-		NewNarrativeCopyRightComponent(),
-		NewFooterNaviComponent())
+	r.AddComponents(getHeaderComponents(r)...)
+	r.AddComponents(
+		NewTitleComponent(r),
+		NewNarrativeHeaderComponent(r),
+		NewPlainContentComponent(r),
+		NewNarrativeCopyRightComponent(r),
+		NewFooterNaviComponent(r))
 
-	return c
+	return r
 }
 
 // Create Narrrative Renderer
 // used for graphic novels
 func NewNarrativeRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd, "Narrative Renderer")
+	r := NewRenderer(cd, "Narrative Renderer")
 
-	c.AddComponents(headerComponents...)
-	c.AddComponents(
-		NewTitleComponent(),
-		NewNarrativeHeaderComponent(),
-		NewNarrativeComponent(),
-		NewNarrativeNaviComponent(),
-		NewNarrativeCopyRightComponent(),
-		NewFooterNaviComponent())
+	r.AddComponents(getHeaderComponents(r)...)
+	r.AddComponents(
+		NewTitleComponent(r),
+		NewNarrativeHeaderComponent(r),
+		NewNarrativeComponent(r),
+		NewNarrativeNaviComponent(r),
+		NewNarrativeCopyRightComponent(r),
+		NewFooterNaviComponent(r))
 
-	return c
+	return r
 }
 
 // Create Narrrative Renderer
 // used for graphic novels
 func NewNarrativeArchiveRename(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd, "Narrative Archive Renderer")
+	r := NewRenderer(cd, "Narrative Archive Renderer")
 
-	c.AddComponents(headerComponents...)
-	c.AddComponents(
-		NewTitleComponent(),
-		NewNarrativeHeaderComponent(),
-		NewNarrativeArchiveComponent(),
-		NewNarrativeCopyRightComponent(),
-		NewFooterNaviComponent())
+	r.AddComponents(getHeaderComponents(r)...)
+	r.AddComponents(
+		NewTitleComponent(r),
+		NewNarrativeHeaderComponent(r),
+		NewNarrativeArchiveComponent(r),
+		NewNarrativeCopyRightComponent(r),
+		NewFooterNaviComponent(r))
 
-	return c
+	return r
 }
 
 // Pages context, used for static pages
 // of a site, featuring separate subjects
 func NewPagesRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd, "Pages Renderer")
+	r := NewRenderer(cd, "Pages Renderer")
 
-	c.AddComponents(headerComponents...)
-	c.AddComponents(
-		NewTitleComponent(),
-		NewStartPageComponent(),
-		NewMainHeaderComponent(),
-		NewMainNaviComponent(),
-		NewCopyRightComponent(),
-		NewFooterNaviComponent())
+	r.AddComponents(getHeaderComponents(r)...)
+	r.AddComponents(
+		NewTitleComponent(r),
+		NewStartPageComponent(r),
+		NewMainHeaderComponent(r),
+		NewMainNaviComponent(r),
+		NewCopyRightComponent(r),
+		NewFooterNaviComponent(r))
 
-	return c
+	return r
 }
 
 // Blog context, used for blog pages
 func NewBlogRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd, "Blog Renderer")
+	r := NewRenderer(cd, "Blog Renderer")
 
-	c.AddComponents(headerComponents...)
-	c.AddComponents(
-		NewTitleComponent(),
-		NewMainHeaderComponent(),
-		NewMainNaviComponent(),
-		NewContentComponent(),
-		NewBlogPrevNextNaviComponent(),
-		NewCopyRightComponent(),
-		NewFooterNaviComponent())
-	return c
+	r.AddComponents(getHeaderComponents(r)...)
+	r.AddComponents(
+		NewTitleComponent(r),
+		NewMainHeaderComponent(r),
+		NewMainNaviComponent(r),
+		NewContentComponent(r),
+		NewBlogPrevNextNaviComponent(r),
+		NewCopyRightComponent(r),
+		NewFooterNaviComponent(r))
+	return r
 }
 
 // Blog context, used for blog pages
 func NewPortfolioRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd, "Portfolio Renderer")
+	r := NewRenderer(cd, "Portfolio Renderer")
 
-	c.AddComponents(headerComponents...)
-	c.AddComponents(
-		NewTitleComponent(),
-		NewMainHeaderComponent(),
-		NewMainNaviComponent(),
-		NewContentComponent(),
-		NewCopyRightComponent(),
-		NewFooterNaviComponent())
-	return c
+	r.AddComponents(getHeaderComponents(r)...)
+	r.AddComponents(
+		NewTitleComponent(r),
+		NewMainHeaderComponent(r),
+		NewMainNaviComponent(r),
+		NewContentComponent(r),
+		NewCopyRightComponent(r),
+		NewFooterNaviComponent(r))
+	return r
 }
 
 // Blog navigation context
@@ -292,52 +293,52 @@ func NewPortfolioRenderer(cd staticIntf.Site) staticIntf.Renderer {
 // of blog pages
 func NewBlogNaviRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd, "Blog Navi Renderer")
+	r := NewRenderer(cd, "Blog Navi Renderer")
 
-	c.AddComponents(headerComponents...)
-	c.AddComponents(
-		NewTitleComponent(),
-		NewMainHeaderComponent(),
-		NewMainNaviComponent(),
-		NewBlogNaviPageContentComponent(),
-		NewBlogNaviComponent(),
-		NewCopyRightComponent(),
-		NewFooterNaviComponent())
+	r.AddComponents(getHeaderComponents(r)...)
+	r.AddComponents(
+		NewTitleComponent(r),
+		NewMainHeaderComponent(r),
+		NewMainNaviComponent(r),
+		NewBlogNaviPageContentComponent(r),
+		NewBlogNaviComponent(r),
+		NewCopyRightComponent(r),
+		NewFooterNaviComponent(r))
 
-	return c
+	return r
 }
 
 // Marginal context use for pages contained
 // within the marginal navigation (imprint, terms of use, etc.)
 func NewMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd, "Marginal Renderer")
+	r := NewRenderer(cd, "Marginal Renderer")
 
-	c.AddComponents(headerComponents...)
-	c.AddComponents(
-		NewTitleComponent(),
-		NewMainHeaderComponent(),
-		NewMainNaviComponent(),
-		NewContentComponent(),
-		NewCopyRightComponent(),
-		NewFooterNaviComponent())
+	r.AddComponents(getHeaderComponents(r)...)
+	r.AddComponents(
+		NewTitleComponent(r),
+		NewMainHeaderComponent(r),
+		NewMainNaviComponent(r),
+		NewContentComponent(r),
+		NewCopyRightComponent(r),
+		NewFooterNaviComponent(r))
 
-	return c
+	return r
 }
 
 // Entry page renderer
 func NewHomePageRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
-	c := NewRenderer(cd, "Entry Page Renderer")
+	r := NewRenderer(cd, "Entry Page Renderer")
 
-	c.AddComponents(headerComponents...)
-	c.AddComponents(
-		NewTitleComponent(),
-		NewMainHeaderComponent(),
-		NewMainNaviComponent(),
-		NewHomePageComponent(),
-		NewCopyRightComponent(),
-		NewFooterNaviComponent())
+	r.AddComponents(getHeaderComponents(r)...)
+	r.AddComponents(
+		NewTitleComponent(r),
+		NewMainHeaderComponent(r),
+		NewMainNaviComponent(r),
+		NewHomePageComponent(r),
+		NewCopyRightComponent(r),
+		NewFooterNaviComponent(r))
 
-	return c
+	return r
 }

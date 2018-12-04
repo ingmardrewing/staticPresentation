@@ -6,8 +6,9 @@ import (
 )
 
 // Creates a new NarrativeHeaderComponent
-func NewNarrativeHeaderComponent() *NarrativeHeaderComponent {
+func NewNarrativeHeaderComponent(r staticIntf.Renderer) *NarrativeHeaderComponent {
 	nc := new(NarrativeHeaderComponent)
+	nc.abstractComponent.Renderer(r)
 	return nc
 }
 

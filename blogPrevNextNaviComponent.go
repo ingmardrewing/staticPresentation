@@ -6,8 +6,9 @@ import (
 )
 
 // Creates anew BlogPrevNextNaviComponent
-func NewBlogPrevNextNaviComponent() *BlogPrevNextNaviComponent {
+func NewBlogPrevNextNaviComponent(r staticIntf.Renderer) *BlogPrevNextNaviComponent {
 	nc := new(BlogPrevNextNaviComponent)
+	nc.abstractComponent.Renderer(r)
 	return nc
 }
 

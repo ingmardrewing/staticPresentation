@@ -3,13 +3,13 @@ package staticPresentation
 import (
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
-	log "github.com/sirupsen/logrus"
 )
 
 // Creates a new EntryPageComponent
-func NewHomePageComponent() *HomePageComponent {
-	log.Debug("Creating NewHomePageComponent")
-	return new(HomePageComponent)
+func NewHomePageComponent(r staticIntf.Renderer) *HomePageComponent {
+	h := new(HomePageComponent)
+	h.abstractComponent.Renderer(r)
+	return h
 }
 
 type HomePageComponent struct {

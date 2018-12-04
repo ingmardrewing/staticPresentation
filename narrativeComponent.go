@@ -6,7 +6,9 @@ import (
 )
 
 // Creates a new NarrativeComponent
-func NewNarrativeComponent() *NarrativeComponent {
+func NewNarrativeComponent(r staticIntf.Renderer) *NarrativeComponent {
+	n := new(NarrativeComponent)
+	n.abstractComponent.Renderer(r)
 	return new(NarrativeComponent)
 }
 

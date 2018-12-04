@@ -6,8 +6,9 @@ import (
 )
 
 // Creates a new CssLinkComponent
-func NewCssLinkComponent() *CssLinkComponent {
+func NewCssLinkComponent(r staticIntf.Renderer) *CssLinkComponent {
 	clc := new(CssLinkComponent)
+	clc.abstractComponent.Renderer(r)
 	return clc
 }
 

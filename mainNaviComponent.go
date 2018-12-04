@@ -6,8 +6,9 @@ import (
 )
 
 // Creates a new MainNaviComponent
-func NewMainNaviComponent() *MainNaviComponent {
+func NewMainNaviComponent(r staticIntf.Renderer) *MainNaviComponent {
 	nc := new(MainNaviComponent)
+	nc.abstractComponent.Renderer(r)
 	return nc
 }
 

@@ -6,8 +6,10 @@ import (
 )
 
 // Create new  FaviconComponent
-func NewFaviconComponent() *FaviconComponent {
-	return new(FaviconComponent)
+func NewFaviconComponent(r staticIntf.Renderer) *FaviconComponent {
+	f := new(FaviconComponent)
+	f.abstractComponent.Renderer(r)
+	return f
 }
 
 type FaviconComponent struct {

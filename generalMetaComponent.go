@@ -6,8 +6,10 @@ import (
 )
 
 // Creates a new GeneralMetaComponent
-func NewGeneralMetaComponent() *GeneralMetaComponent {
-	return new(GeneralMetaComponent)
+func NewGeneralMetaComponent(r staticIntf.Renderer) *GeneralMetaComponent {
+	g := new(GeneralMetaComponent)
+	g.abstractComponent.Renderer(r)
+	return g
 }
 
 type GeneralMetaComponent struct {

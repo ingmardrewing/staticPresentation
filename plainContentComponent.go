@@ -6,8 +6,10 @@ import (
 )
 
 // Creates a new PlainContentComponent
-func NewPlainContentComponent() *PlainContentComponent {
-	return new(PlainContentComponent)
+func NewPlainContentComponent(r staticIntf.Renderer) *PlainContentComponent {
+	p := new(PlainContentComponent)
+	p.abstractComponent.Renderer(r)
+	return p
 }
 
 type PlainContentComponent struct {

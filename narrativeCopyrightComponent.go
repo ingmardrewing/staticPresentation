@@ -7,8 +7,9 @@ import (
 
 // TODO: Separate content from implementation
 // Creates a new NarrativeCopyRightComponent
-func NewNarrativeCopyRightComponent() *NarrativeCopyRightComponent {
+func NewNarrativeCopyRightComponent(r staticIntf.Renderer) *NarrativeCopyRightComponent {
 	c := new(NarrativeCopyRightComponent)
+	c.abstractComponent.Renderer(r)
 	return c
 }
 

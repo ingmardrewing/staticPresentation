@@ -14,11 +14,8 @@ type abstractComponent struct {
 	renderer staticIntf.Renderer
 }
 
-func (ac *abstractComponent) Renderer(r ...staticIntf.Renderer) staticIntf.Renderer {
-	if len(r) == 1 {
-		ac.renderer = r[0]
-	}
-	return ac.renderer
+func (ac *abstractComponent) Renderer(r staticIntf.Renderer) {
+	ac.renderer = r
 }
 
 func (a *abstractComponent) GetCss() string { return "" }
@@ -28,6 +25,9 @@ func (a *abstractComponent) GetJs() string { return "" }
 func (a *abstractComponent) VisitPage(p staticIntf.Page) {}
 
 func (a *abstractComponent) getIndexOfPage(p staticIntf.Page) int {
+	if a.renderer == nil {
+		return -1
+	}
 	for i, l := range a.renderer.Pages() {
 		lurl := l.PathFromDocRoot() + l.HtmlFilename()
 		purl := p.PathFromDocRoot() + p.HtmlFilename()
@@ -127,6 +127,9 @@ func (a *abstractComponent) rel(relativePage staticIntf.Page, label, class, rel 
 
 func (a *abstractComponent) getPageAfter(p staticIntf.Page) staticIntf.Page {
 	index := a.getIndexOfPage(p)
+	if a.renderer == nil {
+		return nil
+	}
 	pages := a.renderer.Pages()
 	if index+1 < len(pages) {
 		return pages[index+1]

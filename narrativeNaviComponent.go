@@ -8,8 +8,9 @@ import (
 )
 
 // Creates anew NarrativeNaviComponent
-func NewNarrativeNaviComponent() *NarrativeNaviComponent {
+func NewNarrativeNaviComponent(r staticIntf.Renderer) *NarrativeNaviComponent {
 	nc := new(NarrativeNaviComponent)
+	nc.abstractComponent.Renderer(r)
 	return nc
 }
 

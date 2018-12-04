@@ -6,8 +6,9 @@ import (
 )
 
 // Creates a new TwitterComponent
-func NewTwitterComponent() *TwitterComponent {
+func NewTwitterComponent(r staticIntf.Renderer) *TwitterComponent {
 	t := new(TwitterComponent)
+	t.abstractComponent.Renderer(r)
 	return t
 }
 

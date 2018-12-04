@@ -7,8 +7,9 @@ import (
 
 // Generates navigational overview pages filled
 // with thumbnails
-func NewBlogNaviPageContentComponent() *BlogNaviPageContentComponent {
+func NewBlogNaviPageContentComponent(r staticIntf.Renderer) *BlogNaviPageContentComponent {
 	bnpc := new(BlogNaviPageContentComponent)
+	bnpc.abstractComponent.Renderer(r)
 	return bnpc
 }
 

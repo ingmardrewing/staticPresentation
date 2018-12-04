@@ -10,8 +10,9 @@ type FBComponent struct {
 	abstractComponent
 }
 
-func NewFBComponent() *FBComponent {
+func NewFBComponent(r staticIntf.Renderer) *FBComponent {
 	fb := new(FBComponent)
+	fb.abstractComponent.Renderer(r)
 	return fb
 }
 

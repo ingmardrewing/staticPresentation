@@ -6,8 +6,10 @@ import (
 )
 
 // Creates a new Title component
-func NewTitleComponent() *TitleComponent {
-	return new(TitleComponent)
+func NewTitleComponent(r staticIntf.Renderer) *TitleComponent {
+	t := new(TitleComponent)
+	t.abstractComponent.Renderer(r)
+	return t
 }
 
 type TitleComponent struct {

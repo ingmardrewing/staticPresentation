@@ -8,8 +8,9 @@ import (
 )
 
 // Creates a new DisqusComponent
-func NewDisqusComponent() *DisqusComponent {
+func NewDisqusComponent(r staticIntf.Renderer) *DisqusComponent {
 	d := new(DisqusComponent)
+	d.abstractComponent.Renderer(r)
 	return d
 }
 

@@ -6,8 +6,9 @@ import (
 )
 
 // Creates a new FooterNaviComponent
-func NewFooterNaviComponent() *FooterNaviComponent {
+func NewFooterNaviComponent(r staticIntf.Renderer) *FooterNaviComponent {
 	nc := new(FooterNaviComponent)
+	nc.abstractComponent.Renderer(r)
 	return nc
 }
 

@@ -6,8 +6,10 @@ import (
 )
 
 // Creates a new StartPageComponent
-func NewStartPageComponent() *StartPageComponent {
-	return new(StartPageComponent)
+func NewStartPageComponent(r staticIntf.Renderer) *StartPageComponent {
+	s := new(StartPageComponent)
+	s.abstractComponent.Renderer(r)
+	return s
 }
 
 // start page component
