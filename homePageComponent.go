@@ -19,8 +19,8 @@ type HomePageComponent struct {
 }
 
 func (e *HomePageComponent) VisitPage(p staticIntf.Page) {
-	containerBlocks := e.getBlocksFromContainers()
-	textBlock := e.getHomeTextBlock()
+	containerBlocks := e.getBlocksFromContainers(p.Site())
+	textBlock := e.getHomeTextBlock(p.Site())
 
 	e.mainDiv = htmlDoc.NewNode("div", "", "class", "homepage__content")
 	if len(containerBlocks) > 1 {
@@ -35,14 +35,14 @@ func (e *HomePageComponent) VisitPage(p staticIntf.Page) {
 	p.AddBodyNodes([]*htmlDoc.Node{w})
 }
 
-func (e *HomePageComponent) getHomeTextBlock() *htmlDoc.Node {
-	hl := e.renderer.Site().HomeHeadline()
-	txt := e.renderer.Site().HomeText()
+func (e *HomePageComponent) getHomeTextBlock(site staticIntf.Site) *htmlDoc.Node {
+	hl := site.HomeHeadline()
+	txt := site.HomeText()
 	return e.createBlockFromTexts(hl, txt)
 }
 
-func (e *HomePageComponent) getBlocksFromContainers() []*htmlDoc.Node {
-	containers := e.renderer.Site().ContainersOrderedByVariants("blog", "portfolio")
+func (e *HomePageComponent) getBlocksFromContainers(site staticIntf.Site) []*htmlDoc.Node {
+	containers := site.ContainersOrderedByVariants("blog", "portfolio")
 	return e.createBlocksFrom(containers)
 }
 

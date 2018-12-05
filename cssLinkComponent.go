@@ -17,6 +17,6 @@ type CssLinkComponent struct {
 }
 
 func (clc *CssLinkComponent) VisitPage(p staticIntf.Page) {
-	link := htmlDoc.NewNode("link", "", "href", clc.abstractComponent.renderer.CssUrl(), "rel", "stylesheet", "type", "text/css")
+	link := htmlDoc.NewNode("link", "", "href", p.Site().Css(), "rel", "stylesheet", "type", "text/css")
 	p.AddHeaderNodes([]*htmlDoc.Node{link})
 }

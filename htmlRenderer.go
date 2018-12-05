@@ -170,18 +170,6 @@ func NewRenderer(site staticIntf.Site, rendererName string) staticIntf.Renderer 
 	r := new(renderer)
 	r.site = site
 	r.rendererName = rendererName
-
-	r.twitterHandle = site.TwitterHandle()
-	r.contentSection = site.Topic()
-	r.tags = site.Tags()
-	r.siteName = site.Site()
-	r.twitterCardType = site.CardType()
-	r.ogType = site.Section()
-	r.fbPageUrl = site.FBPage()
-	r.twitterPageUrl = site.TwitterPage()
-	r.cssUrl = site.Css()
-	r.disqusShortname = site.DisqusId()
-
 	return r
 }
 
