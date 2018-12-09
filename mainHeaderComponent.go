@@ -20,7 +20,7 @@ type MainHeaderComponent struct {
 func (mhc *MainHeaderComponent) VisitPage(p staticIntf.Page) {
 	logo := htmlDoc.NewNode(
 		"a", "<!-- logo -->",
-		"href", "https://"+p.Site().SiteName(),
+		"href", "https://"+p.Site().Domain(),
 		"class", "headerbar__logo")
 	logocontainer := htmlDoc.NewNode(
 		"div", "",
