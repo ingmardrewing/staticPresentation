@@ -86,7 +86,7 @@ func (a *abstractComponent) rel(relativePage staticIntf.Page, label, class, rel 
 		"class", class)
 }
 
-// wrapper
+// wrapper struct used to generate extra html nodes
 type wrapper struct{}
 
 func (w *wrapper) wrap(n *htmlDoc.Node, addedclasses ...string) *htmlDoc.Node {
