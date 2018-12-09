@@ -24,50 +24,11 @@ func (a *abstractComponent) GetJs() string { return "" }
 
 func (a *abstractComponent) VisitPage(p staticIntf.Page) {}
 
-func (a *abstractComponent) getIndexOfPage(p staticIntf.Page) int {
-	if a.renderer == nil {
-		return -1
-	}
-	for i, l := range a.renderer.Pages() {
-		lurl := l.PathFromDocRoot() + l.HtmlFilename()
-		purl := p.PathFromDocRoot() + p.HtmlFilename()
-		if lurl == purl {
-			return i
-		}
-	}
-	return -1
-}
-
-func (a *abstractComponent) getFirstPage() staticIntf.Page {
-	pages := a.renderer.Pages()
-	if len(pages) > 0 {
-		return pages[0]
-	}
-	return nil
-}
-
-func (a *abstractComponent) getLastPage() staticIntf.Page {
-	pages := a.renderer.Pages()
-	if len(pages) > 0 {
-		return pages[len(pages)-1]
-	}
-	return nil
-}
-
-func (a *abstractComponent) getPageBefore(p staticIntf.Page) staticIntf.Page {
-	index := a.getIndexOfPage(p)
-	pages := a.renderer.Pages()
-	if index > 0 {
-		return pages[index-1]
-	}
-	return nil
-}
-
 func (a *abstractComponent) previousFromDocRoot(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
 
-	pageBefore := a.getPageBefore(p)
+	pageBefore := a.renderer.GetPageBefore(p)
 	return a.abs(pageBefore, label, class, "prev")
 }
 
@@ -75,7 +36,7 @@ func (a *abstractComponent) nextFromDocRoot(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
 
-	pageBefore := a.getPageAfter(p)
+	pageBefore := a.renderer.GetPageAfter(p)
 	return a.abs(pageBefore, label, class, "next")
 }
 
@@ -98,7 +59,7 @@ func (a *abstractComponent) previous(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
 
-	pageBefore := a.getPageBefore(p)
+	pageBefore := a.renderer.GetPageBefore(p)
 	return a.rel(pageBefore, label, class, "prev")
 }
 
@@ -106,7 +67,7 @@ func (a *abstractComponent) next(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
 
-	pageBefore := a.getPageAfter(p)
+	pageBefore := a.renderer.GetPageAfter(p)
 	return a.rel(pageBefore, label, class, "next")
 }
 
@@ -123,18 +84,6 @@ func (a *abstractComponent) rel(relativePage staticIntf.Page, label, class, rel 
 		"href", href,
 		"rel", rel,
 		"class", class)
-}
-
-func (a *abstractComponent) getPageAfter(p staticIntf.Page) staticIntf.Page {
-	index := a.getIndexOfPage(p)
-	if a.renderer == nil {
-		return nil
-	}
-	pages := a.renderer.Pages()
-	if index+1 < len(pages) {
-		return pages[index+1]
-	}
-	return nil
 }
 
 // wrapper

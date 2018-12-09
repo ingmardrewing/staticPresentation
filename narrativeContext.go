@@ -15,10 +15,10 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
 	cg.renderer = NewNarrativeRenderer(s)
 	cg.renderer.Pages(s.Narratives()...)
 
-	cg.narrativeArchiveContext = NewNarrativeArchiveRename(s)
+	cg.narrativeArchiveRenderer = NewNarrativeArchiveRenderer(s)
 
-	cg.narrativeMarginalContext = NewNarrativeMarginalRenderer(s)
-	cg.narrativeMarginalContext.Pages(s.Marginals()...)
+	cg.narrativeMarginalRenderer = NewNarrativeMarginalRenderer(s)
+	cg.narrativeMarginalRenderer.Pages(s.Marginals()...)
 
 	cg.GenerateArchivePage()
 
@@ -27,14 +27,14 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
 
 type narrativeContext struct {
 	abstractContext
-	narrativeArchiveContext  staticIntf.Renderer
-	narrativeMarginalContext staticIntf.Renderer
+	narrativeArchiveRenderer  staticIntf.Renderer
+	narrativeMarginalRenderer staticIntf.Renderer
 }
 
 func (a *narrativeContext) GetComponents() []staticIntf.Component {
 	cmps := a.renderer.Components()
-	cmps = append(cmps, a.narrativeArchiveContext.Components()...)
-	cmps = append(cmps, a.narrativeMarginalContext.Components()...)
+	cmps = append(cmps, a.narrativeArchiveRenderer.Components()...)
+	cmps = append(cmps, a.narrativeMarginalRenderer.Components()...)
 	return cmps
 }
 
@@ -48,7 +48,7 @@ func (a *narrativeContext) GenerateArchivePage() {
 
 	np.NavigatedPages(a.renderer.Pages()...)
 
-	a.narrativeArchiveContext.Pages(np)
+	a.narrativeArchiveRenderer.Pages(np)
 	a.site.AddMarginal(np)
 
 	for _, n := range a.site.NarrativeMarginals() {
@@ -57,8 +57,8 @@ func (a *narrativeContext) GenerateArchivePage() {
 }
 
 func (a *narrativeContext) RenderPages() []fs.FileContainer {
-	fcs := a.narrativeArchiveContext.Render()
-	fcs = append(fcs, a.narrativeMarginalContext.Render()...)
+	fcs := a.narrativeArchiveRenderer.Render()
+	fcs = append(fcs, a.narrativeMarginalRenderer.Render()...)
 	fcs = append(fcs, a.renderer.Render()...)
 
 	if len(fcs) > 1 {

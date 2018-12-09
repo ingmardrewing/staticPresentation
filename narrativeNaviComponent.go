@@ -41,13 +41,13 @@ func (nv *NarrativeNaviComponent) VisitPage(p staticIntf.Page) {
 }
 
 func (nv *NarrativeNaviComponent) first(p staticIntf.Page) *htmlDoc.Node {
-	return nv.absRel(p, nv.getFirstPage(),
+	return nv.absRel(p, nv.abstractComponent.renderer.GetFirstPage(),
 		"&lt;&lt; first page",
 		"narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder", "fist")
 }
 
 func (nv *NarrativeNaviComponent) last(p staticIntf.Page) *htmlDoc.Node {
-	return nv.absRel(p, nv.getLastPage(),
+	return nv.absRel(p, nv.abstractComponent.renderer.GetLastPage(),
 		"last page &gt;&gt;",
 		"narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder", "last")
 }

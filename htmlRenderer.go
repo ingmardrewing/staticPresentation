@@ -41,28 +41,77 @@ type renderer struct {
 	site            staticIntf.Site
 }
 
+func (r *renderer) getIndexOfPage(p staticIntf.Page) int {
+	for i, l := range r.pages {
+		lurl := l.PathFromDocRoot() + l.HtmlFilename()
+		purl := p.PathFromDocRoot() + p.HtmlFilename()
+		if lurl == purl {
+			return i
+		}
+	}
+	return -1
+}
+
+func (r *renderer) GetLastPage() staticIntf.Page {
+	if len(r.pages) > 0 {
+		return r.pages[len(r.pages)-1]
+	}
+	return nil
+}
+
+func (r *renderer) GetFirstPage() staticIntf.Page {
+	if len(r.pages) > 0 {
+		return r.pages[0]
+	}
+	return nil
+}
+
+func (r *renderer) GetPageBefore(p staticIntf.Page) staticIntf.Page {
+	i := r.getIndexOfPage(p)
+	if i > 0 {
+		return r.pages[i-1]
+	}
+	return nil
+}
+
+func (r *renderer) GetPageAfter(p staticIntf.Page) staticIntf.Page {
+	i := r.getIndexOfPage(p)
+	if i+1 < len(r.pages) {
+		return r.pages[i+1]
+	}
+	return nil
+}
+
 func (r *renderer) Render() []fs.FileContainer {
 	targetDir := r.site.TargetDir()
 	fcs := []fs.FileContainer{}
+
 	for _, p := range r.pages {
-
-		for _, comp := range r.components {
-			p.AcceptVisitor(comp)
-		}
-		doc := p.GetDoc()
-		doc.AddRootAttr("itemscope")
-		doc.AddRootAttr("lang", "en")
-		html := doc.Render()
+		html := r.RenderHtml(p)
 		path := path.Join(targetDir, p.PathFromDocRoot())
-
-		fc := fs.NewFileContainer()
-		fc.SetPath(path)
-		fc.SetFilename(p.HtmlFilename())
-
-		fc.SetDataAsString(html)
+		fc := r.CreateFileContainer(html, path, p.HtmlFilename())
 		fcs = append(fcs, fc)
 	}
+
 	return fcs
+}
+
+func (r *renderer) RenderHtml(p staticIntf.Page) string {
+	for _, comp := range r.components {
+		p.AcceptVisitor(comp)
+	}
+	doc := p.GetDoc()
+	doc.AddRootAttr("itemscope")
+	doc.AddRootAttr("lang", "en")
+	return doc.Render()
+}
+
+func (r *renderer) CreateFileContainer(html, path, filename string) fs.FileContainer {
+	fc := fs.NewFileContainer()
+	fc.SetPath(path)
+	fc.SetFilename(filename)
+	fc.SetDataAsString(html)
+	return fc
 }
 
 func (r *renderer) Components() []staticIntf.Component {
@@ -175,9 +224,9 @@ func NewRenderer(site staticIntf.Site, rendererName string) staticIntf.Renderer 
 
 // Create Narrrative Margina Renderer
 // used for marginal pages of graphic novels
-func NewNarrativeMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
+func NewNarrativeMarginalRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(cd, "Narrative Marginal Renderer")
+	r := NewRenderer(site, "Narrative Marginal Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -192,9 +241,9 @@ func NewNarrativeMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
 // Create Narrrative Renderer
 // used for graphic novels
-func NewNarrativeRenderer(cd staticIntf.Site) staticIntf.Renderer {
+func NewNarrativeRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(cd, "Narrative Renderer")
+	r := NewRenderer(site, "Narrative Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -210,9 +259,8 @@ func NewNarrativeRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
 // Create Narrrative Renderer
 // used for graphic novels
-func NewNarrativeArchiveRename(cd staticIntf.Site) staticIntf.Renderer {
-
-	r := NewRenderer(cd, "Narrative Archive Renderer")
+func NewNarrativeArchiveRenderer(site staticIntf.Site) staticIntf.Renderer {
+	r := NewRenderer(site, "Narrative Archive Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -227,9 +275,9 @@ func NewNarrativeArchiveRename(cd staticIntf.Site) staticIntf.Renderer {
 
 // Pages context, used for static pages
 // of a site, featuring separate subjects
-func NewPagesRenderer(cd staticIntf.Site) staticIntf.Renderer {
+func NewPagesRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(cd, "Pages Renderer")
+	r := NewRenderer(site, "Pages Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -244,9 +292,9 @@ func NewPagesRenderer(cd staticIntf.Site) staticIntf.Renderer {
 }
 
 // Blog context, used for blog pages
-func NewBlogRenderer(cd staticIntf.Site) staticIntf.Renderer {
+func NewBlogRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(cd, "Blog Renderer")
+	r := NewRenderer(site, "Blog Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -261,9 +309,9 @@ func NewBlogRenderer(cd staticIntf.Site) staticIntf.Renderer {
 }
 
 // Blog context, used for blog pages
-func NewPortfolioRenderer(cd staticIntf.Site) staticIntf.Renderer {
+func NewPortfolioRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(cd, "Portfolio Renderer")
+	r := NewRenderer(site, "Portfolio Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -279,9 +327,9 @@ func NewPortfolioRenderer(cd staticIntf.Site) staticIntf.Renderer {
 // Blog navigation context
 // creates pages containing a navigations overview
 // of blog pages
-func NewBlogNaviRenderer(cd staticIntf.Site) staticIntf.Renderer {
+func NewBlogNaviRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(cd, "Blog Navi Renderer")
+	r := NewRenderer(site, "Blog Navi Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -298,9 +346,9 @@ func NewBlogNaviRenderer(cd staticIntf.Site) staticIntf.Renderer {
 
 // Marginal context use for pages contained
 // within the marginal navigation (imprint, terms of use, etc.)
-func NewMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
+func NewMarginalRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(cd, "Marginal Renderer")
+	r := NewRenderer(site, "Marginal Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -315,9 +363,9 @@ func NewMarginalRenderer(cd staticIntf.Site) staticIntf.Renderer {
 }
 
 // Entry page renderer
-func NewHomePageRenderer(cd staticIntf.Site) staticIntf.Renderer {
+func NewHomePageRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(cd, "Entry Page Renderer")
+	r := NewRenderer(site, "Entry Page Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(

@@ -9,7 +9,8 @@ import (
 func NewNarrativeComponent(r staticIntf.Renderer) *NarrativeComponent {
 	n := new(NarrativeComponent)
 	n.abstractComponent.Renderer(r)
-	return new(NarrativeComponent)
+
+	return n
 }
 
 type NarrativeComponent struct {
@@ -23,7 +24,7 @@ func (cc *NarrativeComponent) VisitPage(p staticIntf.Page) {
 	img := htmlDoc.NewNode("img", "",
 		"src", p.ImageUrl(), "width", "800")
 
-	np := cc.getPageAfter(p)
+	np := cc.abstractComponent.renderer.GetPageAfter(p)
 	if np == nil {
 		n.AddChild(img)
 	} else {
