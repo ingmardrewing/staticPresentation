@@ -21,13 +21,14 @@ type HomePageComponent struct {
 func (e *HomePageComponent) VisitPage(p staticIntf.Page) {
 	e.mainDiv = htmlDoc.NewNode("div", "", "class", "homepage__content")
 
+	textBlock := e.getHomeTextBlock(p.Site())
+	e.mainDiv.AddChild(textBlock)
+
 	containerBlocks := e.getBlocksFromContainers(p.Site())
 	for _, cb := range containerBlocks {
 		e.mainDiv.AddChild(cb)
 	}
 
-	textBlock := e.getHomeTextBlock(p.Site())
-	e.mainDiv.AddChild(textBlock)
 	w := e.wrap(e.mainDiv, "homepage__wrapperouter")
 	p.AddBodyNodes([]*htmlDoc.Node{w})
 }
