@@ -19,18 +19,15 @@ type HomePageComponent struct {
 }
 
 func (e *HomePageComponent) VisitPage(p staticIntf.Page) {
-	containerBlocks := e.getBlocksFromContainers(p.Site())
-	textBlock := e.getHomeTextBlock(p.Site())
-
 	e.mainDiv = htmlDoc.NewNode("div", "", "class", "homepage__content")
-	if len(containerBlocks) > 1 {
-		e.mainDiv.AddChild(containerBlocks[1])
-	}
-	e.mainDiv.AddChild(textBlock)
 
-	if len(containerBlocks) > 0 {
-		e.mainDiv.AddChild(containerBlocks[0])
+	containerBlocks := e.getBlocksFromContainers(p.Site())
+	for _, cb := range containerBlocks {
+		e.mainDiv.AddChild(cb)
 	}
+
+	textBlock := e.getHomeTextBlock(p.Site())
+	e.mainDiv.AddChild(textBlock)
 	w := e.wrap(e.mainDiv, "homepage__wrapperouter")
 	p.AddBodyNodes([]*htmlDoc.Node{w})
 }
@@ -60,7 +57,7 @@ func (e *HomePageComponent) createBlocksFrom(containers []staticIntf.PagesContai
 func (e *HomePageComponent) createBlockFrom(c staticIntf.PagesContainer) *htmlDoc.Node {
 	pages := c.Representationals()
 	if len(pages) > 0 {
-		block := e.createBlockNode(c.Variant())
+		block := e.createBlockNode(c.Headline())
 		ctr := 1
 		for _, l := range e.createLinksFrom(pages) {
 			block.AddChild(l)

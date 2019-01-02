@@ -125,10 +125,6 @@ func (r *renderer) Pages(ps ...staticIntf.Page) []staticIntf.Page {
 	return r.pages
 }
 
-func (r *renderer) AddPage(p staticIntf.Page) {
-	r.pages = append(r.pages, p)
-}
-
 func (r *renderer) addComponent(comp staticIntf.Component) {
 	r.components = append(r.components, comp)
 }
@@ -292,6 +288,22 @@ func NewPagesRenderer(site staticIntf.Site) staticIntf.Renderer {
 }
 
 // Blog context, used for blog pages
+func NewPortfolioRenderer(site staticIntf.Site) staticIntf.Renderer {
+
+	r := NewRenderer(site, "Portfolio Renderer")
+
+	r.AddComponents(getHeaderComponents(r)...)
+	r.AddComponents(
+		NewTitleComponent(r),
+		NewMainHeaderComponent(r),
+		NewMainNaviComponent(r),
+		NewContentComponent(r),
+		NewCopyRightComponent(r),
+		NewFooterNaviComponent(r))
+	return r
+}
+
+// Blog context, used for blog pages
 func NewBlogRenderer(site staticIntf.Site) staticIntf.Renderer {
 
 	r := NewRenderer(site, "Blog Renderer")
@@ -303,22 +315,6 @@ func NewBlogRenderer(site staticIntf.Site) staticIntf.Renderer {
 		NewMainNaviComponent(r),
 		NewContentComponent(r),
 		NewBlogPrevNextNaviComponent(r),
-		NewCopyRightComponent(r),
-		NewFooterNaviComponent(r))
-	return r
-}
-
-// Blog context, used for blog pages
-func NewPortfolioRenderer(site staticIntf.Site) staticIntf.Renderer {
-
-	r := NewRenderer(site, "Portfolio Renderer")
-
-	r.AddComponents(getHeaderComponents(r)...)
-	r.AddComponents(
-		NewTitleComponent(r),
-		NewMainHeaderComponent(r),
-		NewMainNaviComponent(r),
-		NewContentComponent(r),
 		NewCopyRightComponent(r),
 		NewFooterNaviComponent(r))
 	return r
