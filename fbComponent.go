@@ -19,7 +19,7 @@ func NewFBComponent(r staticIntf.Renderer) *FBComponent {
 func (fbc *FBComponent) VisitPage(p staticIntf.Page) {
 	m := []*htmlDoc.Node{
 		htmlDoc.NewNode("meta", "", "property", "og:title", "content", p.Title()),
-		htmlDoc.NewNode("meta", "", "property", "og:url", "content", p.PathFromDocRoot()+p.HtmlFilename()),
+		htmlDoc.NewNode("meta", "", "property", "og:url", "content", p.Link()),
 		htmlDoc.NewNode("meta", "", "property", "og:image", "content", p.ImageUrl()),
 		htmlDoc.NewNode("meta", "", "property", "og:description", "content", p.Description()),
 		htmlDoc.NewNode("meta", "", "property", "og:site_name", "content", p.Site().Domain()),

@@ -21,8 +21,7 @@ type FooterNaviComponent struct {
 func (f *FooterNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "footernavi")
-	for _, l := range f.abstractComponent.renderer.FooterNavigationLocations() {
-
+	for _, l := range p.Site().Marginal() {
 		if len(l.ExternalLink()) > 0 {
 			a := htmlDoc.NewNode("a", l.Title(),
 				"href", l.ExternalLink(),

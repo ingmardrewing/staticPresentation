@@ -98,7 +98,7 @@ func (e *HomePageComponent) createLinksFrom(pages []staticIntf.Page) []*htmlDoc.
 
 func (e *HomePageComponent) getElementLinkingToPages(page staticIntf.Page) *htmlDoc.Node {
 	a := htmlDoc.NewNode("a", " ",
-		"href", page.PathFromDocRootWithName(),
+		"href", page.Link(),
 		"title", page.Title(),
 		"class", "homepage__thumb")
 	a.AddChild(htmlDoc.NewNode("img", " ",

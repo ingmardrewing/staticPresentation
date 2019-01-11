@@ -31,7 +31,7 @@ func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
 		}
 		a := htmlDoc.NewNode(
 			"a", " ",
-			"href", page.PathFromDocRootWithName(),
+			"href", page.Link(),
 			"class", "blognavientry__tile")
 
 		a.AddChild(htmlDoc.NewNode(

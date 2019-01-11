@@ -24,14 +24,18 @@ func (cc *NarrativeComponent) VisitPage(p staticIntf.Page) {
 	img := htmlDoc.NewNode("img", "",
 		"src", p.ImageUrl(), "width", "800")
 
-	np := cc.abstractComponent.renderer.GetPageAfter(p)
-	if np == nil {
+	if p.Container() == nil {
 		n.AddChild(img)
 	} else {
-		a := htmlDoc.NewNode("a", "",
-			"href", np.PathFromDocRootWithName())
-		a.AddChild(img)
-		n.AddChild(a)
+		np := p.Container().GetPageAfter(p)
+		if np == nil {
+			n.AddChild(img)
+		} else {
+			a := htmlDoc.NewNode("a", "",
+				"href", np.Link())
+			a.AddChild(img)
+			n.AddChild(a)
+		}
 	}
 
 	wn := cc.wrap(n)

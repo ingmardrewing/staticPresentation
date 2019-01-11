@@ -25,11 +25,10 @@ func getHeaderComponents(r staticIntf.Renderer) []staticIntf.Component {
 /* Global Renderer */
 
 type renderer struct {
-	rendererName    string
+	name            string
 	twitterHandle   string
 	contentSection  string
 	tags            string
-	siteName        string
 	twitterCardType string
 	ogType          string
 	fbPageUrl       string
@@ -38,57 +37,14 @@ type renderer struct {
 	disqusShortname string
 	pages           []staticIntf.Page
 	components      []staticIntf.Component
-	site            staticIntf.Site
-}
-
-func (r *renderer) getIndexOfPage(p staticIntf.Page) int {
-	for i, l := range r.pages {
-		lurl := l.PathFromDocRoot() + l.HtmlFilename()
-		purl := p.PathFromDocRoot() + p.HtmlFilename()
-		if lurl == purl {
-			return i
-		}
-	}
-	return -1
-}
-
-func (r *renderer) GetLastPage() staticIntf.Page {
-	if len(r.pages) > 0 {
-		return r.pages[len(r.pages)-1]
-	}
-	return nil
-}
-
-func (r *renderer) GetFirstPage() staticIntf.Page {
-	if len(r.pages) > 0 {
-		return r.pages[0]
-	}
-	return nil
-}
-
-func (r *renderer) GetPageBefore(p staticIntf.Page) staticIntf.Page {
-	i := r.getIndexOfPage(p)
-	if i > 0 {
-		return r.pages[i-1]
-	}
-	return nil
-}
-
-func (r *renderer) GetPageAfter(p staticIntf.Page) staticIntf.Page {
-	i := r.getIndexOfPage(p)
-	if i+1 < len(r.pages) {
-		return r.pages[i+1]
-	}
-	return nil
 }
 
 func (r *renderer) Render() []fs.FileContainer {
-	targetDir := r.site.TargetDir()
 	fcs := []fs.FileContainer{}
 
 	for _, p := range r.pages {
 		html := r.RenderHtml(p)
-		path := path.Join(targetDir, p.PathFromDocRoot())
+		path := path.Join(p.Site().TargetDir(), p.PathFromDocRoot())
 		fc := r.CreateFileContainer(html, path, p.HtmlFilename())
 		fcs = append(fcs, fc)
 	}
@@ -139,14 +95,6 @@ func (r *renderer) DisqusShortname() string {
 	return r.disqusShortname
 }
 
-func (r *renderer) MainNavigationLocations() []staticIntf.Location {
-	return r.site.Main()
-}
-
-func (r *renderer) FooterNavigationLocations() []staticIntf.Location {
-	return r.site.Marginal()
-}
-
 func (r *renderer) CssUrl() string {
 	letterBytes := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	n := 10
@@ -189,14 +137,6 @@ func (r *renderer) ContentTags() string {
 	return r.tags
 }
 
-func (r *renderer) Site() staticIntf.Site {
-	return r.site
-}
-
-func (r *renderer) SiteName() string {
-	return r.siteName
-}
-
 func (r *renderer) Css() string {
 	cssString := ""
 	for _, r := range r.components {
@@ -211,10 +151,9 @@ func (r *renderer) Css() string {
 	return s
 }
 
-func NewRenderer(site staticIntf.Site, rendererName string) staticIntf.Renderer {
+func NewRenderer(name string) staticIntf.Renderer {
 	r := new(renderer)
-	r.site = site
-	r.rendererName = rendererName
+	r.name = name
 	return r
 }
 
@@ -222,7 +161,7 @@ func NewRenderer(site staticIntf.Site, rendererName string) staticIntf.Renderer 
 // used for marginal pages of graphic novels
 func NewNarrativeMarginalRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(site, "Narrative Marginal Renderer")
+	r := NewRenderer("Narrative Marginal Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -239,7 +178,7 @@ func NewNarrativeMarginalRenderer(site staticIntf.Site) staticIntf.Renderer {
 // used for graphic novels
 func NewNarrativeRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(site, "Narrative Renderer")
+	r := NewRenderer("Narrative Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -256,7 +195,7 @@ func NewNarrativeRenderer(site staticIntf.Site) staticIntf.Renderer {
 // Create Narrrative Renderer
 // used for graphic novels
 func NewNarrativeArchiveRenderer(site staticIntf.Site) staticIntf.Renderer {
-	r := NewRenderer(site, "Narrative Archive Renderer")
+	r := NewRenderer("Narrative Archive Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -273,7 +212,7 @@ func NewNarrativeArchiveRenderer(site staticIntf.Site) staticIntf.Renderer {
 // of a site, featuring separate subjects
 func NewPagesRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(site, "Pages Renderer")
+	r := NewRenderer("Pages Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -290,7 +229,7 @@ func NewPagesRenderer(site staticIntf.Site) staticIntf.Renderer {
 // Blog context, used for blog pages
 func NewPortfolioRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(site, "Portfolio Renderer")
+	r := NewRenderer("Portfolio Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -298,6 +237,7 @@ func NewPortfolioRenderer(site staticIntf.Site) staticIntf.Renderer {
 		NewMainHeaderComponent(r),
 		NewMainNaviComponent(r),
 		NewContentComponent(r),
+		NewBlogPrevNextNaviComponent(r),
 		NewCopyRightComponent(r),
 		NewFooterNaviComponent(r))
 	return r
@@ -306,7 +246,7 @@ func NewPortfolioRenderer(site staticIntf.Site) staticIntf.Renderer {
 // Blog context, used for blog pages
 func NewBlogRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(site, "Blog Renderer")
+	r := NewRenderer("Blog Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -325,7 +265,7 @@ func NewBlogRenderer(site staticIntf.Site) staticIntf.Renderer {
 // of blog pages
 func NewBlogNaviRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(site, "Blog Navi Renderer")
+	r := NewRenderer("Blog Navi Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -344,7 +284,7 @@ func NewBlogNaviRenderer(site staticIntf.Site) staticIntf.Renderer {
 // within the marginal navigation (imprint, terms of use, etc.)
 func NewMarginalRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(site, "Marginal Renderer")
+	r := NewRenderer("Marginal Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(
@@ -361,7 +301,7 @@ func NewMarginalRenderer(site staticIntf.Site) staticIntf.Renderer {
 // Entry page renderer
 func NewHomePageRenderer(site staticIntf.Site) staticIntf.Renderer {
 
-	r := NewRenderer(site, "Entry Page Renderer")
+	r := NewRenderer("Entry Page Renderer")
 
 	r.AddComponents(getHeaderComponents(r)...)
 	r.AddComponents(

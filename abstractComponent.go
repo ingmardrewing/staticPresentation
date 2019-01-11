@@ -1,7 +1,6 @@
 package staticPresentation
 
 import (
-	"path"
 	"strings"
 
 	"github.com/ingmardrewing/htmlDoc"
@@ -28,16 +27,22 @@ func (a *abstractComponent) previousFromDocRoot(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
 
-	pageBefore := a.renderer.GetPageBefore(p)
-	return a.abs(pageBefore, label, class, "prev")
+	if p.Container() != nil {
+		pageBefore := p.Container().GetPageBefore(p)
+		return a.abs(pageBefore, label, class, "prev")
+	}
+	return a.abs(nil, label, class, "prev")
 }
 
 func (a *abstractComponent) nextFromDocRoot(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
 
-	pageBefore := a.renderer.GetPageAfter(p)
-	return a.abs(pageBefore, label, class, "next")
+	if p.Container() != nil {
+		pageBefore := p.Container().GetPageAfter(p)
+		return a.abs(pageBefore, label, class, "next")
+	}
+	return a.abs(nil, label, class, "next")
 }
 
 func (a *abstractComponent) abs(relativePage staticIntf.Page, label, class, rel string) *htmlDoc.Node {
@@ -46,8 +51,7 @@ func (a *abstractComponent) abs(relativePage staticIntf.Page, label, class, rel 
 			"span", label,
 			"class", class)
 	}
-	href := "/" + path.Join(relativePage.PathFromDocRoot(),
-		relativePage.HtmlFilename())
+	href := relativePage.Link()
 	return htmlDoc.NewNode(
 		"a", label,
 		"href", href,
@@ -59,16 +63,22 @@ func (a *abstractComponent) previous(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
 
-	pageBefore := a.renderer.GetPageBefore(p)
-	return a.rel(pageBefore, label, class, "prev")
+	if p.Container() != nil {
+		pageBefore := p.Container().GetPageBefore(p)
+		return a.rel(pageBefore, label, class, "prev")
+	}
+	return a.rel(nil, label, class, "prev")
 }
 
 func (a *abstractComponent) next(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
 
-	pageBefore := a.renderer.GetPageAfter(p)
-	return a.rel(pageBefore, label, class, "next")
+	if p.Container() != nil {
+		pageBefore := p.Container().GetPageAfter(p)
+		return a.rel(pageBefore, label, class, "next")
+	}
+	return a.rel(nil, label, class, "next")
 }
 
 func (a *abstractComponent) rel(relativePage staticIntf.Page, label, class, rel string) *htmlDoc.Node {
@@ -77,8 +87,7 @@ func (a *abstractComponent) rel(relativePage staticIntf.Page, label, class, rel 
 			"span", label,
 			"class", class)
 	}
-	href := path.Join(relativePage.PathFromDocRoot(),
-		relativePage.HtmlFilename())
+	href := relativePage.Link()
 	return htmlDoc.NewNode(
 		"a", label,
 		"href", href,
