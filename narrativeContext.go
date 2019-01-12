@@ -13,12 +13,12 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
 	cg.site = s
 
 	cg.renderer = NewNarrativeRenderer(s)
-	cg.renderer.Pages(s.Narratives()...)
+	cg.renderer.Pages(s.GetPagesByVariant(staticIntf.NARRATIVES)...)
 
 	cg.narrativeArchiveRenderer = NewNarrativeArchiveRenderer(s)
 
 	cg.narrativeMarginalRenderer = NewNarrativeMarginalRenderer(s)
-	cg.narrativeMarginalRenderer.Pages(s.Marginals()...)
+	cg.narrativeMarginalRenderer.Pages(s.GetPagesByVariant(staticIntf.NARRATIVEMARGINALS)...)
 
 	cg.GenerateArchivePage()
 
@@ -51,7 +51,7 @@ func (a *narrativeContext) GenerateArchivePage() {
 	a.narrativeArchiveRenderer.Pages(np)
 	a.site.AddMarginal(np)
 
-	for _, n := range a.site.NarrativeMarginals() {
+	for _, n := range a.site.GetPagesByVariant(staticIntf.NARRATIVEMARGINALS) {
 		a.site.AddMarginal(n)
 	}
 }
@@ -75,7 +75,7 @@ func (a *narrativeContext) RenderPages() []fs.FileContainer {
 	}
 
 	rr := NewRssRenderer(
-		a.site.Narratives(),
+		a.site.GetPagesByVariant(staticIntf.NARRATIVES),
 		a.site.TargetDir(),
 		a.site.RssPath(),
 		a.site.RssFilename())

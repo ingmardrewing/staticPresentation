@@ -1,6 +1,9 @@
 package staticPresentation
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
 )
@@ -20,7 +23,9 @@ type NarrativeCopyRightComponent struct {
 }
 
 func (crc *NarrativeCopyRightComponent) VisitPage(p staticIntf.Page) {
-	n := htmlDoc.NewNode("div", `All content including but not limited to the art, characters, story, website design & graphics are © copyright 2013-2018 Ingmar Drewing unless otherwise stated. All rights reserved. Do not copy, alter or reuse without expressed written permission.`, "class", "copyright")
+	currentYear := time.Now().Year()
+	txt := fmt.Sprintf("All content including but not limited to the art, characters, story, website design & graphics are © copyright 2013-%d Ingmar Drewing unless otherwise stated. All rights reserved. Do not copy, alter or reuse without expressed written permission.", currentYear)
+	n := htmlDoc.NewNode("div", txt, "class", "copyright")
 	wn := crc.wrap(n)
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }

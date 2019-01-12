@@ -13,10 +13,10 @@ func NewBlogContext(s staticIntf.Site) staticIntf.Context {
 	cg.site = s
 
 	cg.renderer = NewBlogRenderer(s)
-	cg.renderer.Pages(s.Posts()...)
+	cg.renderer.Pages(s.GetPagesByVariant(staticIntf.BLOG)...)
 
 	cg.naviRenderer = NewBlogNaviRenderer(s)
-	cg.naviRenderer.Pages(s.PostNaviPages()...)
+	cg.naviRenderer.Pages(s.GetNaviPagesByVariant(staticIntf.BLOG)...)
 
 	return cg
 }

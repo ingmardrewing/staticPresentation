@@ -12,8 +12,7 @@ func NewPortfolioContext(s staticIntf.Site) staticIntf.Context {
 	cg.site = s
 
 	cg.renderer = NewPortfolioRenderer(s)
-	cg.renderer.Pages(s.Portfolio()...)
-
+	cg.renderer.Pages(s.GetPagesByVariant(staticIntf.PORTFOLIO)...)
 	return cg
 }
 
