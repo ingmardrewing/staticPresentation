@@ -6,8 +6,9 @@ import (
 )
 
 // Creates a new GoogleComponent
-func NewGoogleComponent() *GoogleComponent {
+func NewGoogleComponent(r staticIntf.Renderer) *GoogleComponent {
 	gc := new(GoogleComponent)
+	gc.abstractComponent.Renderer(r)
 	return gc
 }
 

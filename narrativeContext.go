@@ -13,12 +13,12 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
 	cg.site = s
 
 	cg.renderer = NewNarrativeRenderer(s)
-	cg.renderer.Pages(s.Narratives()...)
+	cg.renderer.Pages(s.GetPagesByVariant(staticIntf.NARRATIVES)...)
 
-	cg.narrativeArchiveContext = NewNarrativeArchiveRename(s)
+	cg.narrativeArchiveRenderer = NewNarrativeArchiveRenderer(s)
 
-	cg.narrativeMarginalContext = NewNarrativeMarginalRenderer(s)
-	cg.narrativeMarginalContext.Pages(s.Marginals()...)
+	cg.narrativeMarginalRenderer = NewNarrativeMarginalRenderer(s)
+	cg.narrativeMarginalRenderer.Pages(s.GetPagesByVariant(staticIntf.NARRATIVEMARGINALS)...)
 
 	cg.GenerateArchivePage()
 
@@ -27,14 +27,14 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
 
 type narrativeContext struct {
 	abstractContext
-	narrativeArchiveContext  staticIntf.Renderer
-	narrativeMarginalContext staticIntf.Renderer
+	narrativeArchiveRenderer  staticIntf.Renderer
+	narrativeMarginalRenderer staticIntf.Renderer
 }
 
 func (a *narrativeContext) GetComponents() []staticIntf.Component {
 	cmps := a.renderer.Components()
-	cmps = append(cmps, a.narrativeArchiveContext.Components()...)
-	cmps = append(cmps, a.narrativeMarginalContext.Components()...)
+	cmps = append(cmps, a.narrativeArchiveRenderer.Components()...)
+	cmps = append(cmps, a.narrativeMarginalRenderer.Components()...)
 	return cmps
 }
 
@@ -44,21 +44,21 @@ func (a *narrativeContext) GenerateArchivePage() {
 		"", "", "",
 		"", "", "", "",
 		"", "", "archive.html", "", "narrative archive", "")
-	np := staticModel.NewPage(dto, a.site.Domain())
+	np := staticModel.NewPage(dto, a.site.Domain(), a.site)
 
 	np.NavigatedPages(a.renderer.Pages()...)
 
-	a.narrativeArchiveContext.Pages(np)
+	a.narrativeArchiveRenderer.Pages(np)
 	a.site.AddMarginal(np)
 
-	for _, n := range a.site.NarrativeMarginals() {
+	for _, n := range a.site.GetPagesByVariant(staticIntf.NARRATIVEMARGINALS) {
 		a.site.AddMarginal(n)
 	}
 }
 
 func (a *narrativeContext) RenderPages() []fs.FileContainer {
-	fcs := a.narrativeArchiveContext.Render()
-	fcs = append(fcs, a.narrativeMarginalContext.Render()...)
+	fcs := a.narrativeArchiveRenderer.Render()
+	fcs = append(fcs, a.narrativeMarginalRenderer.Render()...)
 	fcs = append(fcs, a.renderer.Render()...)
 
 	if len(fcs) > 1 {
@@ -75,7 +75,7 @@ func (a *narrativeContext) RenderPages() []fs.FileContainer {
 	}
 
 	rr := NewRssRenderer(
-		a.site.Narratives(),
+		a.site.GetPagesByVariant(staticIntf.NARRATIVES),
 		a.site.TargetDir(),
 		a.site.RssPath(),
 		a.site.RssFilename())

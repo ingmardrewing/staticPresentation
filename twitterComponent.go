@@ -6,8 +6,9 @@ import (
 )
 
 // Creates a new TwitterComponent
-func NewTwitterComponent() *TwitterComponent {
+func NewTwitterComponent(r staticIntf.Renderer) *TwitterComponent {
 	t := new(TwitterComponent)
+	t.abstractComponent.Renderer(r)
 	return t
 }
 
@@ -19,10 +20,10 @@ func (tw *TwitterComponent) VisitPage(p staticIntf.Page) {
 	m := []*htmlDoc.Node{
 		htmlDoc.NewNode("meta", "",
 			"name", "t:card",
-			"content", tw.abstractComponent.renderer.TwitterCardType()),
+			"content", p.Site().CardType()),
 		htmlDoc.NewNode("meta", "",
 			"name", "t:site",
-			"content", tw.abstractComponent.renderer.TwitterHandle()),
+			"content", p.Site().TwitterHandle()),
 		htmlDoc.NewNode("meta", "",
 			"name", "t:title",
 			"content", p.Title()),
@@ -31,7 +32,7 @@ func (tw *TwitterComponent) VisitPage(p staticIntf.Page) {
 			"content", p.Description()),
 		htmlDoc.NewNode("meta", "",
 			"name", "t:creator",
-			"content", tw.abstractComponent.renderer.TwitterHandle()),
+			"content", p.Site().TwitterHandle()),
 		htmlDoc.NewNode("meta", "",
 			"name", "t:image",
 			"content", p.ImageUrl())}

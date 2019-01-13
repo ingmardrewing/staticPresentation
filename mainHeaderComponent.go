@@ -6,8 +6,9 @@ import (
 )
 
 // Creates a new MainHeaderComponent
-func NewMainHeaderComponent() *MainHeaderComponent {
+func NewMainHeaderComponent(r staticIntf.Renderer) *MainHeaderComponent {
 	mhc := new(MainHeaderComponent)
+	mhc.abstractComponent.Renderer(r)
 	return mhc
 }
 
@@ -19,7 +20,7 @@ type MainHeaderComponent struct {
 func (mhc *MainHeaderComponent) VisitPage(p staticIntf.Page) {
 	logo := htmlDoc.NewNode(
 		"a", "<!-- logo -->",
-		"href", "https://"+mhc.abstractComponent.renderer.SiteName(),
+		"href", "https://"+p.Site().Domain(),
 		"class", "headerbar__logo")
 	logocontainer := htmlDoc.NewNode(
 		"div", "",

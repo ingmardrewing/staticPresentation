@@ -3,13 +3,13 @@ package staticPresentation
 import (
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
-	log "github.com/sirupsen/logrus"
 )
 
 // Creates a new EntryPageComponent
-func NewHomePageComponent() *HomePageComponent {
-	log.Debug("Creating NewHomePageComponent")
-	return new(HomePageComponent)
+func NewHomePageComponent(r staticIntf.Renderer) *HomePageComponent {
+	h := new(HomePageComponent)
+	h.abstractComponent.Renderer(r)
+	return h
 }
 
 type HomePageComponent struct {
@@ -19,30 +19,28 @@ type HomePageComponent struct {
 }
 
 func (e *HomePageComponent) VisitPage(p staticIntf.Page) {
-	containerBlocks := e.getBlocksFromContainers()
-	textBlock := e.getHomeTextBlock()
-
 	e.mainDiv = htmlDoc.NewNode("div", "", "class", "homepage__content")
-	if len(containerBlocks) > 1 {
-		e.mainDiv.AddChild(containerBlocks[1])
-	}
+
+	textBlock := e.getHomeTextBlock(p.Site())
 	e.mainDiv.AddChild(textBlock)
 
-	if len(containerBlocks) > 0 {
-		e.mainDiv.AddChild(containerBlocks[0])
+	containerBlocks := e.getBlocksFromContainers(p.Site())
+	for _, cb := range containerBlocks {
+		e.mainDiv.AddChild(cb)
 	}
+
 	w := e.wrap(e.mainDiv, "homepage__wrapperouter")
 	p.AddBodyNodes([]*htmlDoc.Node{w})
 }
 
-func (e *HomePageComponent) getHomeTextBlock() *htmlDoc.Node {
-	hl := e.renderer.Site().HomeHeadline()
-	txt := e.renderer.Site().HomeText()
+func (e *HomePageComponent) getHomeTextBlock(site staticIntf.Site) *htmlDoc.Node {
+	hl := site.HomeHeadline()
+	txt := site.HomeText()
 	return e.createBlockFromTexts(hl, txt)
 }
 
-func (e *HomePageComponent) getBlocksFromContainers() []*htmlDoc.Node {
-	containers := e.renderer.Site().ContainersOrderedByVariants("blog", "portfolio")
+func (e *HomePageComponent) getBlocksFromContainers(site staticIntf.Site) []*htmlDoc.Node {
+	containers := site.ContainersOrderedByVariants("blog", "portfolio")
 	return e.createBlocksFrom(containers)
 }
 
@@ -60,7 +58,7 @@ func (e *HomePageComponent) createBlocksFrom(containers []staticIntf.PagesContai
 func (e *HomePageComponent) createBlockFrom(c staticIntf.PagesContainer) *htmlDoc.Node {
 	pages := c.Representationals()
 	if len(pages) > 0 {
-		block := e.createBlockNode(c.Variant())
+		block := e.createBlockNode(c.Headline())
 		ctr := 1
 		for _, l := range e.createLinksFrom(pages) {
 			block.AddChild(l)
@@ -100,7 +98,7 @@ func (e *HomePageComponent) createLinksFrom(pages []staticIntf.Page) []*htmlDoc.
 
 func (e *HomePageComponent) getElementLinkingToPages(page staticIntf.Page) *htmlDoc.Node {
 	a := htmlDoc.NewNode("a", " ",
-		"href", page.PathFromDocRootWithName(),
+		"href", page.Link(),
 		"title", page.Title(),
 		"class", "homepage__thumb")
 	a.AddChild(htmlDoc.NewNode("img", " ",

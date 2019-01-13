@@ -9,8 +9,9 @@ import (
 )
 
 // Creats a new CopyRightComponent
-func NewCopyRightComponent() *CopyRightComponent {
+func NewCopyRightComponent(r staticIntf.Renderer) *CopyRightComponent {
 	c := new(CopyRightComponent)
+	c.abstractComponent.Renderer(r)
 	return c
 }
 

@@ -6,8 +6,10 @@ import (
 )
 
 // Creates a new NarrativeArchiveComponent
-func NewNarrativeArchiveComponent() *NarrativeArchiveComponent {
-	return new(NarrativeArchiveComponent)
+func NewNarrativeArchiveComponent(r staticIntf.Renderer) *NarrativeArchiveComponent {
+	n := new(NarrativeArchiveComponent)
+	n.abstractComponent.Renderer(r)
+	return n
 }
 
 type NarrativeArchiveComponent struct {
@@ -47,7 +49,7 @@ func (na *NarrativeArchiveComponent) VisitPage(p staticIntf.Page) {
 		for _, page := range pages {
 			span := htmlDoc.NewNode("span", page.Title(), "class", "narrativearchive__title")
 			img := htmlDoc.NewNode("img", "", "src", "data:image/png;base64,"+page.ThumbBase64())
-			a := htmlDoc.NewNode("a", "", "href", page.PathFromDocRootWithName(), "class", "narrativearchive__link")
+			a := htmlDoc.NewNode("a", "", "href", page.Link(), "class", "narrativearchive__link")
 			a.AddChild(span)
 			a.AddChild(img)
 			li := htmlDoc.NewNode("li", "", "class", "narrativearchive__tile")

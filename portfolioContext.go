@@ -12,17 +12,20 @@ func NewPortfolioContext(s staticIntf.Site) staticIntf.Context {
 	cg.site = s
 
 	cg.renderer = NewPortfolioRenderer(s)
-	cg.renderer.Pages(s.Portfolio()...)
-
+	cg.renderer.Pages(s.GetPagesByVariant(staticIntf.PORTFOLIO)...)
 	return cg
 }
 
+/*
+ * portfolioContext
+ */
 type portfolioContext struct {
 	abstractContext
 }
 
 func (b *portfolioContext) RenderPages() []fs.FileContainer {
-	fcs := b.renderer.Render()
+	fileContainers := b.renderer.Render()
+
 	rr := NewRssRenderer(
 		b.getLastTenReversedPages(),
 		path.Join(b.site.TargetDir(), "/portfolio/"),
@@ -31,8 +34,8 @@ func (b *portfolioContext) RenderPages() []fs.FileContainer {
 	rssFc := rr.Render()
 
 	if rssFc != nil {
-		fcs = append(fcs, rssFc)
+		fileContainers = append(fileContainers, rssFc)
 	}
 
-	return fcs
+	return fileContainers
 }

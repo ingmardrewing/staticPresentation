@@ -1,15 +1,14 @@
 package staticPresentation
 
 import (
-	"path"
-
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
 )
 
 // Creates anew NarrativeNaviComponent
-func NewNarrativeNaviComponent() *NarrativeNaviComponent {
+func NewNarrativeNaviComponent(r staticIntf.Renderer) *NarrativeNaviComponent {
 	nc := new(NarrativeNaviComponent)
+	nc.abstractComponent.Renderer(r)
 	return nc
 }
 
@@ -40,22 +39,29 @@ func (nv *NarrativeNaviComponent) VisitPage(p staticIntf.Page) {
 }
 
 func (nv *NarrativeNaviComponent) first(p staticIntf.Page) *htmlDoc.Node {
-	return nv.absRel(p, nv.getFirstPage(),
-		"&lt;&lt; first page",
-		"narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder", "fist")
+	if p.Container() != nil {
+		return nv.absRel(p, p.Container().GetFirstPage(p),
+			"&lt;&lt; first page",
+			"narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder", "fist")
+	}
+	return nil
 }
 
 func (nv *NarrativeNaviComponent) last(p staticIntf.Page) *htmlDoc.Node {
-	return nv.absRel(p, nv.getLastPage(),
-		"last page &gt;&gt;",
-		"narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder", "last")
+
+	if p.Container() != nil {
+		return nv.absRel(p, p.Container().GetLastPage(p),
+			"last page &gt;&gt;",
+			"narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder", "last")
+	}
+	return nil
 }
 
 func (nv *NarrativeNaviComponent) absRel(curPage, relPage staticIntf.Page, label, class, rel string) *htmlDoc.Node {
 	if relPage == nil || relPage.Id() == curPage.Id() {
 		return htmlDoc.NewNode("span", label, "class", class)
 	}
-	href := path.Join(relPage.PathFromDocRoot(), relPage.HtmlFilename())
+	href := relPage.Link()
 	return htmlDoc.NewNode("a", label, "href", href, "rel", rel, "class", class)
 }
 

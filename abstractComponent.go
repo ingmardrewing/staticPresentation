@@ -1,7 +1,7 @@
 package staticPresentation
 
 import (
-	"path"
+	"fmt"
 	"strings"
 
 	"github.com/ingmardrewing/htmlDoc"
@@ -14,11 +14,8 @@ type abstractComponent struct {
 	renderer staticIntf.Renderer
 }
 
-func (ac *abstractComponent) Renderer(r ...staticIntf.Renderer) staticIntf.Renderer {
-	if len(r) == 1 {
-		ac.renderer = r[0]
-	}
-	return ac.renderer
+func (ac *abstractComponent) Renderer(r staticIntf.Renderer) {
+	ac.renderer = r
 }
 
 func (a *abstractComponent) GetCss() string { return "" }
@@ -27,56 +24,26 @@ func (a *abstractComponent) GetJs() string { return "" }
 
 func (a *abstractComponent) VisitPage(p staticIntf.Page) {}
 
-func (a *abstractComponent) getIndexOfPage(p staticIntf.Page) int {
-	for i, l := range a.renderer.Pages() {
-		lurl := l.PathFromDocRoot() + l.HtmlFilename()
-		purl := p.PathFromDocRoot() + p.HtmlFilename()
-		if lurl == purl {
-			return i
-		}
-	}
-	return -1
-}
-
-func (a *abstractComponent) getFirstPage() staticIntf.Page {
-	pages := a.renderer.Pages()
-	if len(pages) > 0 {
-		return pages[0]
-	}
-	return nil
-}
-
-func (a *abstractComponent) getLastPage() staticIntf.Page {
-	pages := a.renderer.Pages()
-	if len(pages) > 0 {
-		return pages[len(pages)-1]
-	}
-	return nil
-}
-
-func (a *abstractComponent) getPageBefore(p staticIntf.Page) staticIntf.Page {
-	index := a.getIndexOfPage(p)
-	pages := a.renderer.Pages()
-	if index > 0 {
-		return pages[index-1]
-	}
-	return nil
-}
-
 func (a *abstractComponent) previousFromDocRoot(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
 
-	pageBefore := a.getPageBefore(p)
-	return a.abs(pageBefore, label, class, "prev")
+	if p.Container() != nil {
+		pageBefore := p.Container().GetPageBefore(p)
+		return a.abs(pageBefore, label, class, "prev")
+	}
+	return a.abs(nil, label, class, "prev")
 }
 
 func (a *abstractComponent) nextFromDocRoot(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
 
-	pageBefore := a.getPageAfter(p)
-	return a.abs(pageBefore, label, class, "next")
+	if p.Container() != nil {
+		pageAfter := p.Container().GetPageAfter(p)
+		return a.abs(pageAfter, label, class, "next")
+	}
+	return a.abs(nil, label, class, "next")
 }
 
 func (a *abstractComponent) abs(relativePage staticIntf.Page, label, class, rel string) *htmlDoc.Node {
@@ -85,8 +52,7 @@ func (a *abstractComponent) abs(relativePage staticIntf.Page, label, class, rel 
 			"span", label,
 			"class", class)
 	}
-	href := "/" + path.Join(relativePage.PathFromDocRoot(),
-		relativePage.HtmlFilename())
+	href := relativePage.Link()
 	return htmlDoc.NewNode(
 		"a", label,
 		"href", href,
@@ -98,16 +64,24 @@ func (a *abstractComponent) previous(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
 
-	pageBefore := a.getPageBefore(p)
-	return a.rel(pageBefore, label, class, "prev")
+	if p.Container() != nil {
+		pageBefore := p.Container().GetPageBefore(p)
+		return a.rel(pageBefore, label, class, "prev")
+	} else {
+		fmt.Println("-- container == nil")
+	}
+	return a.rel(nil, label, class, "prev")
 }
 
 func (a *abstractComponent) next(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
 
-	pageBefore := a.getPageAfter(p)
-	return a.rel(pageBefore, label, class, "next")
+	if p.Container() != nil {
+		pageBefore := p.Container().GetPageAfter(p)
+		return a.rel(pageBefore, label, class, "next")
+	}
+	return a.rel(nil, label, class, "next")
 }
 
 func (a *abstractComponent) rel(relativePage staticIntf.Page, label, class, rel string) *htmlDoc.Node {
@@ -116,8 +90,7 @@ func (a *abstractComponent) rel(relativePage staticIntf.Page, label, class, rel 
 			"span", label,
 			"class", class)
 	}
-	href := path.Join(relativePage.PathFromDocRoot(),
-		relativePage.HtmlFilename())
+	href := relativePage.Link()
 	return htmlDoc.NewNode(
 		"a", label,
 		"href", href,
@@ -125,16 +98,7 @@ func (a *abstractComponent) rel(relativePage staticIntf.Page, label, class, rel 
 		"class", class)
 }
 
-func (a *abstractComponent) getPageAfter(p staticIntf.Page) staticIntf.Page {
-	index := a.getIndexOfPage(p)
-	pages := a.renderer.Pages()
-	if index+1 < len(pages) {
-		return pages[index+1]
-	}
-	return nil
-}
-
-// wrapper
+// wrapper struct used to generate extra html nodes
 type wrapper struct{}
 
 func (w *wrapper) wrap(n *htmlDoc.Node, addedclasses ...string) *htmlDoc.Node {

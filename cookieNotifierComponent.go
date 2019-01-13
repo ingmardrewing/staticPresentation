@@ -1,12 +1,18 @@
 package staticPresentation
 
+import "github.com/ingmardrewing/staticIntf"
+
 // TODO: Actually use this within the sites
 // Creates a new CookieNotifierComponent
-func NewCookieNotifierComponent() *CookieNotifierComponent {
-	return new(CookieNotifierComponent)
+func NewCookieNotifierComponent(r staticIntf.Renderer) *CookieNotifierComponent {
+	cnc := new(CookieNotifierComponent)
+	cnc.abstractComponent.Renderer(r)
+	return cnc
 }
 
-type CookieNotifierComponent struct{}
+type CookieNotifierComponent struct {
+	abstractComponent
+}
 
 func (cnc *CookieNotifierComponent) getJs() string {
 	return cookieNotifierJson

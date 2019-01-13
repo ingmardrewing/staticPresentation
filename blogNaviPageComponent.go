@@ -7,8 +7,9 @@ import (
 
 // Generates navigational overview pages filled
 // with thumbnails
-func NewBlogNaviPageContentComponent() *BlogNaviPageContentComponent {
+func NewBlogNaviPageContentComponent(r staticIntf.Renderer) *BlogNaviPageContentComponent {
 	bnpc := new(BlogNaviPageContentComponent)
+	bnpc.abstractComponent.Renderer(r)
 	return bnpc
 }
 
@@ -21,30 +22,28 @@ func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
 	n := htmlDoc.NewNode(
 		"div", "",
 		"class", "blognavipagecomponent")
-
-	for _, page := range p.NavigatedPages() {
-
-		ta := page.ThumbnailUrl()
-		if ta == "" {
-			ta = page.ImageUrl()
-		}
-		a := htmlDoc.NewNode(
-			"a", " ",
-			"href", page.PathFromDocRootWithName(),
-			"class", "blognavientry__tile")
-
-		a.AddChild(htmlDoc.NewNode(
-			"h2", page.Title()))
-		a.AddChild(htmlDoc.NewNode(
-			"img", "",
-			"src", page.ThumbnailUrl(),
-			"class", "blognavientry__image"))
-
-		n.AddChild(a)
+	for _, navigated := range p.NavigatedPages() {
+		n.AddChild(b.renderNavigatedPage(navigated))
 	}
 	n.AddChild(htmlDoc.NewNode("div", "", "style", "clear: both"))
+
 	wn := b.wrap(n)
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (b *BlogNaviPageContentComponent) renderNavigatedPage(n staticIntf.Page) *htmlDoc.Node {
+	a := htmlDoc.NewNode(
+		"a", " ",
+		"href", n.Link(),
+		"class", "blognavientry__tile")
+
+	a.AddChild(htmlDoc.NewNode(
+		"h2", n.Title()))
+	a.AddChild(htmlDoc.NewNode(
+		"img", "",
+		"src", n.ThumbnailUrl(),
+		"class", "blognavientry__image"))
+	return a
 }
 
 func (b *BlogNaviPageContentComponent) GetCss() string {

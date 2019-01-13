@@ -6,8 +6,9 @@ import (
 )
 
 // Creates a new FooterNaviComponent
-func NewFooterNaviComponent() *FooterNaviComponent {
+func NewFooterNaviComponent(r staticIntf.Renderer) *FooterNaviComponent {
 	nc := new(FooterNaviComponent)
+	nc.abstractComponent.Renderer(r)
 	return nc
 }
 
@@ -20,8 +21,7 @@ type FooterNaviComponent struct {
 func (f *FooterNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode("nav", "",
 		"class", "footernavi")
-	for _, l := range f.abstractComponent.renderer.FooterNavigationLocations() {
-
+	for _, l := range p.Site().Marginal() {
 		if len(l.ExternalLink()) > 0 {
 			a := htmlDoc.NewNode("a", l.Title(),
 				"href", l.ExternalLink(),

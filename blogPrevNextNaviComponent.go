@@ -6,8 +6,9 @@ import (
 )
 
 // Creates anew BlogPrevNextNaviComponent
-func NewBlogPrevNextNaviComponent() *BlogPrevNextNaviComponent {
+func NewBlogPrevNextNaviComponent(r staticIntf.Renderer) *BlogPrevNextNaviComponent {
 	nc := new(BlogPrevNextNaviComponent)
+	nc.abstractComponent.Renderer(r)
 	return nc
 }
 
@@ -25,7 +26,7 @@ func (b *BlogPrevNextNaviComponent) VisitPage(p staticIntf.Page) {
 		"span", "◀",
 		"class", "icon")
 	prevNode := b.previousFromDocRoot(p, "",
-		"blogprevnextnavigation__previous blogprevnextnavigation__item blogprevnextnavigation__placeholder")
+		"prevnextnavigation__previous prevnextnavigation__item prevnextnavigation__placeholder")
 	prevNode.AddChild(prevIcon)
 	prevNode.AddChild(prevLabel)
 
@@ -36,49 +37,49 @@ func (b *BlogPrevNextNaviComponent) VisitPage(p staticIntf.Page) {
 		"span", "▶",
 		"class", "icon")
 	nextNode := b.nextFromDocRoot(p, "",
-		"blogprevnextnavigation__next blogprevnextnavigation__item blogprevnextnavigation__placeholder")
+		"prevnextnavigation__next prevnextnavigation__item prevnextnavigation__placeholder")
 	nextNode.AddChild(nextLabel)
 	nextNode.AddChild(nextIcon)
 
-	nav := htmlDoc.NewNode("nav", "", "class", "blogprevnextnavigation")
+	nav := htmlDoc.NewNode("nav", "", "class", "prevnextnavigation")
 	nav.AddChild(prevNode)
 	nav.AddChild(nextNode)
 
-	wn := b.wrap(nav, "blogprevnextnavigation__wrapper")
+	wn := b.wrap(nav, "prevnextnavigation__wrapper")
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
 func (b *BlogPrevNextNaviComponent) GetCss() string {
 	return `
 @media only screen and (max-width: 1080px) {
-	.blogprevnextnavigation{
+	.prevnextnavigation{
 		text-align: right;
 		margin-bottom: 50px;
 	}
-	.blogprevnextnavigation__item {
+	.prevnextnavigation__item {
 		font-family: Arial Black, Arial, Helvetica, sans-serif;
 		color: grey;
 		text-transform: uppercase;
 		font-weight: 900;
 		font-size: 16px;
 	}
-	.blogprevnextnavigation__item .label{
+	.prevnextnavigation__item .label{
 		display: inline-block;
 		margin-left: 5px;
 		margin-right: 5px;
 	}
-	.blogprevnextnavigation__item:hover {
+	.prevnextnavigation__item:hover {
 		text-decoration: none;
 	}
-	span.blogprevnextnavigation__item {
+	span.prevnextnavigation__item {
 		color: lightgrey;
 	}
-	.blogprevnextnavigation__item + .blogprevnextnavigation__item {
+	.prevnextnavigation__item + .prevnextnavigation__item {
 		margin-left: 10px;
 	}
 }
 @media only screen and (max-width: 768px) {
-	.blogprevnextnavigation{
+	.prevnextnavigation{
 		padding-top: 10px;
 		padding-bottom: 10px;
 		border-top: 1px solid black;
@@ -87,12 +88,12 @@ func (b *BlogPrevNextNaviComponent) GetCss() string {
 	}
 }
 @media only screen and (min-width: 1081px) {
-	.blogprevnextnavigation__wrapper {
+	.prevnextnavigation__wrapper {
 		position: absolute;
 		top: -200px;
 		height: 0;
 	}
-	.blogprevnextnavigation__item {
+	.prevnextnavigation__item {
 		position: fixed;
 		top: calc(50vh - 50px);
 		font-family: Arial Black, Arial, Helvetica, sans-serif;
@@ -100,20 +101,20 @@ func (b *BlogPrevNextNaviComponent) GetCss() string {
 		font-weight: 900;
 		font-size: 100px;
 	}
-	.blogprevnextnavigation__item .label {
+	.prevnextnavigation__item .label {
 		display: none;
 	}
-	span.blogprevnextnavigation__item {
+	span.prevnextnavigation__item {
 		display: none;
 	}
-	.blogprevnextnavigation__item:hover {
+	.prevnextnavigation__item:hover {
 		color: black;
 		text-decoration: none;
 	}
-	.blogprevnextnavigation__previous {
+	.prevnextnavigation__previous {
 		left: calc(50vw - 520px);
 	}
-	.blogprevnextnavigation__next{
+	.prevnextnavigation__next{
 		right: calc(50vw - 520px);
 	}
 }

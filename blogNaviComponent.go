@@ -1,13 +1,16 @@
 package staticPresentation
 
 import (
+	"fmt"
+
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
 )
 
 // Creates a new BlogNaviComponent
-func NewBlogNaviComponent() *BlogNaviComponent {
+func NewBlogNaviComponent(r staticIntf.Renderer) *BlogNaviComponent {
 	bnc := new(BlogNaviComponent)
+	bnc.abstractComponent.Renderer(r)
 	return bnc
 }
 
@@ -16,8 +19,15 @@ type BlogNaviComponent struct {
 	abstractComponent
 }
 
-func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
+func (b *BlogNaviComponent) VisitPage(p staticIntf.Page) {
+	if len(p.Container().SiblingPages(p)) < 3 {
+		return
+	}
+	b.addBodyNodes(p)
+}
 
+func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
+	fmt.Println(p.Link())
 	prevLabel := htmlDoc.NewNode(
 		"span", "previous posts",
 		"class", "label")
@@ -48,13 +58,6 @@ func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
 
 	wn := b.wrap(d, "blognavi__wrapper")
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
-}
-
-func (b *BlogNaviComponent) VisitPage(p staticIntf.Page) {
-	if len(b.abstractComponent.renderer.Pages()) < 3 {
-		return
-	}
-	b.addBodyNodes(p)
 }
 
 func (b *BlogNaviComponent) GetCss() string {

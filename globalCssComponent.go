@@ -1,8 +1,12 @@
 package staticPresentation
 
+import "github.com/ingmardrewing/staticIntf"
+
 // Creates a new GlobalCssComponent
-func NewGlobalCssComponent() *GlobalCssComponent {
-	return new(GlobalCssComponent)
+func NewGlobalCssComponent(r staticIntf.Renderer) *GlobalCssComponent {
+	g := new(GlobalCssComponent)
+	g.abstractComponent.Renderer(r)
+	return g
 }
 
 type GlobalCssComponent struct {

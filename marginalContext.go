@@ -9,7 +9,7 @@ func NewMarginalContextGroup(s staticIntf.Site) staticIntf.Context {
 	cg := new(marginalContext)
 	cg.site = s
 	cg.marginalContext = NewMarginalRenderer(s)
-	cg.marginalContext.Pages(s.Marginals()...)
+	cg.marginalContext.Pages(s.GetPagesByVariant(staticIntf.MARGINALS)...)
 	return cg
 }
 

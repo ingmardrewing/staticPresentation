@@ -7,7 +7,7 @@ func NewSiteContextGroup(s staticIntf.Site) staticIntf.Context {
 	cg := new(abstractContext)
 	cg.site = s
 	cg.renderer = NewPagesRenderer(s)
-	cg.renderer.Pages(s.Pages()...)
+	cg.renderer.Pages(s.GetPagesByVariant(staticIntf.PAGES)...)
 
 	return cg
 }

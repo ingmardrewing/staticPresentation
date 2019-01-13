@@ -6,8 +6,9 @@ import (
 )
 
 // Creates a new MainNaviComponent
-func NewMainNaviComponent() *MainNaviComponent {
+func NewMainNaviComponent(r staticIntf.Renderer) *MainNaviComponent {
 	nc := new(MainNaviComponent)
+	nc.abstractComponent.Renderer(r)
 	return nc
 }
 
@@ -21,7 +22,7 @@ func (nv *MainNaviComponent) VisitPage(p staticIntf.Page) {
 	nav := htmlDoc.NewNode(
 		"nav", "",
 		"class", "mainnavi")
-	for _, l := range nv.abstractComponent.renderer.MainNavigationLocations() {
+	for _, l := range p.Site().Main() {
 		if len(l.ExternalLink()) > 0 {
 			a := htmlDoc.NewNode(
 				"a", l.Title(),
