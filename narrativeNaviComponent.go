@@ -40,7 +40,7 @@ func (nv *NarrativeNaviComponent) VisitPage(p staticIntf.Page) {
 
 func (nv *NarrativeNaviComponent) first(p staticIntf.Page) *htmlDoc.Node {
 	if p.Container() != nil {
-		return nv.absRel(p, p.Container().GetFirstPage(),
+		return nv.absRel(p, p.Container().GetFirstPage(p),
 			"&lt;&lt; first page",
 			"narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder", "fist")
 	}
@@ -50,7 +50,7 @@ func (nv *NarrativeNaviComponent) first(p staticIntf.Page) *htmlDoc.Node {
 func (nv *NarrativeNaviComponent) last(p staticIntf.Page) *htmlDoc.Node {
 
 	if p.Container() != nil {
-		return nv.absRel(p, p.Container().GetLastPage(),
+		return nv.absRel(p, p.Container().GetLastPage(p),
 			"last page &gt;&gt;",
 			"narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder", "last")
 	}

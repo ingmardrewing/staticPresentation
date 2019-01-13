@@ -1,6 +1,7 @@
 package staticPresentation
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/ingmardrewing/htmlDoc"
@@ -39,8 +40,8 @@ func (a *abstractComponent) nextFromDocRoot(
 	label, class string) *htmlDoc.Node {
 
 	if p.Container() != nil {
-		pageBefore := p.Container().GetPageAfter(p)
-		return a.abs(pageBefore, label, class, "next")
+		pageAfter := p.Container().GetPageAfter(p)
+		return a.abs(pageAfter, label, class, "next")
 	}
 	return a.abs(nil, label, class, "next")
 }
@@ -66,6 +67,8 @@ func (a *abstractComponent) previous(
 	if p.Container() != nil {
 		pageBefore := p.Container().GetPageBefore(p)
 		return a.rel(pageBefore, label, class, "prev")
+	} else {
+		fmt.Println("-- container == nil")
 	}
 	return a.rel(nil, label, class, "prev")
 }
