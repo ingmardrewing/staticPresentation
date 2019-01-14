@@ -3,6 +3,7 @@ package staticPresentation
 import (
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
+	"github.com/ingmardrewing/staticUtil"
 )
 
 // Creates anew NarrativeNaviComponent
@@ -40,7 +41,8 @@ func (nv *NarrativeNaviComponent) VisitPage(p staticIntf.Page) {
 
 func (nv *NarrativeNaviComponent) first(p staticIntf.Page) *htmlDoc.Node {
 	if p.Container() != nil {
-		return nv.absRel(p, p.Container().GetFirstPage(p),
+		tool := staticUtil.NewPagesContainerTool(p.Container())
+		return nv.absRel(p, tool.GetFirstPage(p),
 			"&lt;&lt; first page",
 			"narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder", "fist")
 	}
@@ -48,9 +50,9 @@ func (nv *NarrativeNaviComponent) first(p staticIntf.Page) *htmlDoc.Node {
 }
 
 func (nv *NarrativeNaviComponent) last(p staticIntf.Page) *htmlDoc.Node {
-
 	if p.Container() != nil {
-		return nv.absRel(p, p.Container().GetLastPage(p),
+		tool := staticUtil.NewPagesContainerTool(p.Container())
+		return nv.absRel(p, tool.GetLastPage(p),
 			"last page &gt;&gt;",
 			"narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder", "last")
 	}

@@ -3,6 +3,7 @@ package staticPresentation
 import (
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
+	"github.com/ingmardrewing/staticUtil"
 )
 
 // Creates a new NarrativeComponent
@@ -27,7 +28,8 @@ func (cc *NarrativeComponent) VisitPage(p staticIntf.Page) {
 	if p.Container() == nil {
 		n.AddChild(img)
 	} else {
-		np := p.Container().GetPageAfter(p)
+		tool := staticUtil.NewPagesContainerTool(p.Container())
+		np := tool.GetPageAfter(p)
 		if np == nil {
 			n.AddChild(img)
 		} else {

@@ -5,20 +5,23 @@ import (
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticModel"
 	"github.com/ingmardrewing/staticPersistence"
+	"github.com/ingmardrewing/staticUtil"
 )
 
 func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
+
+	tool := staticUtil.NewPagesContainerCollectionTool(s)
 
 	cg := new(narrativeContext)
 	cg.site = s
 
 	cg.renderer = NewNarrativeRenderer(s)
-	cg.renderer.Pages(s.GetPagesByVariant(staticIntf.NARRATIVES)...)
+	cg.renderer.Pages(tool.GetPagesByVariant(staticIntf.NARRATIVES)...)
 
 	cg.narrativeArchiveRenderer = NewNarrativeArchiveRenderer(s)
 
 	cg.narrativeMarginalRenderer = NewNarrativeMarginalRenderer(s)
-	cg.narrativeMarginalRenderer.Pages(s.GetPagesByVariant(staticIntf.NARRATIVEMARGINALS)...)
+	cg.narrativeMarginalRenderer.Pages(tool.GetPagesByVariant(staticIntf.NARRATIVEMARGINALS)...)
 
 	cg.GenerateArchivePage()
 
@@ -51,7 +54,8 @@ func (a *narrativeContext) GenerateArchivePage() {
 	a.narrativeArchiveRenderer.Pages(np)
 	a.site.AddMarginal(np)
 
-	for _, n := range a.site.GetPagesByVariant(staticIntf.NARRATIVEMARGINALS) {
+	tool := staticUtil.NewPagesContainerCollectionTool(a.site)
+	for _, n := range tool.GetPagesByVariant(staticIntf.NARRATIVEMARGINALS) {
 		a.site.AddMarginal(n)
 	}
 }
@@ -74,8 +78,9 @@ func (a *narrativeContext) RenderPages() []fs.FileContainer {
 		fcs = append(fcs, index)
 	}
 
+	tool := staticUtil.NewPagesContainerCollectionTool(a.site)
 	rr := NewRssRenderer(
-		a.site.GetPagesByVariant(staticIntf.NARRATIVES),
+		tool.GetPagesByVariant(staticIntf.NARRATIVES),
 		a.site.TargetDir(),
 		a.site.RssPath(),
 		a.site.RssFilename())

@@ -5,6 +5,7 @@ import (
 
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
+	"github.com/ingmardrewing/staticUtil"
 )
 
 // Creates a new BlogNaviComponent
@@ -20,7 +21,8 @@ type BlogNaviComponent struct {
 }
 
 func (b *BlogNaviComponent) VisitPage(p staticIntf.Page) {
-	if len(p.Container().SiblingPages(p)) < 3 {
+	tool := staticUtil.NewPagesContainerTool(p.Container())
+	if len(tool.SiblingPages(p)) < 3 {
 		return
 	}
 	b.addBodyNodes(p)

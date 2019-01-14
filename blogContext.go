@@ -6,18 +6,21 @@ import (
 
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
+	"github.com/ingmardrewing/staticUtil"
 )
 
 func NewBlogContext(s staticIntf.Site) staticIntf.Context {
+
+	tool := staticUtil.NewPagesContainerCollectionTool(s)
 
 	cg := new(blogContext)
 	cg.site = s
 
 	cg.renderer = NewBlogRenderer(s)
-	cg.renderer.Pages(s.GetPagesByVariant(staticIntf.BLOG)...)
+	cg.renderer.Pages(tool.GetPagesByVariant(staticIntf.BLOG)...)
 
 	cg.naviRenderer = NewBlogNaviRenderer(s)
-	cg.naviRenderer.Pages(s.GetNaviPagesByVariant(staticIntf.BLOG)...)
+	cg.naviRenderer.Pages(tool.GetNaviPagesByVariant(staticIntf.BLOG)...)
 
 	return cg
 }

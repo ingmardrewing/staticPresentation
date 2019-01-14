@@ -5,14 +5,18 @@ import (
 
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
+	"github.com/ingmardrewing/staticUtil"
 )
 
 func NewPortfolioContext(s staticIntf.Site) staticIntf.Context {
+
+	tool := staticUtil.NewPagesContainerCollectionTool(s)
+
 	cg := new(portfolioContext)
 	cg.site = s
 
 	cg.renderer = NewPortfolioRenderer(s)
-	cg.renderer.Pages(s.GetPagesByVariant(staticIntf.PORTFOLIO)...)
+	cg.renderer.Pages(tool.GetPagesByVariant(staticIntf.PORTFOLIO)...)
 	return cg
 }
 

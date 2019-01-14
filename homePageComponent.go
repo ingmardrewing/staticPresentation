@@ -3,6 +3,7 @@ package staticPresentation
 import (
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
+	"github.com/ingmardrewing/staticUtil"
 )
 
 // Creates a new EntryPageComponent
@@ -40,7 +41,8 @@ func (e *HomePageComponent) getHomeTextBlock(site staticIntf.Site) *htmlDoc.Node
 }
 
 func (e *HomePageComponent) getBlocksFromContainers(site staticIntf.Site) []*htmlDoc.Node {
-	containers := site.ContainersOrderedByVariants("blog", "portfolio")
+	tool := staticUtil.NewPagesContainerCollectionTool(site)
+	containers := tool.ContainersOrderedByVariants("blog", "portfolio")
 	return e.createBlocksFrom(containers)
 }
 
