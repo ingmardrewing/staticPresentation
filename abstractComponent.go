@@ -6,6 +6,7 @@ import (
 
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
+	"github.com/ingmardrewing/staticUtil"
 )
 
 // abstractComponent implementing default functions
@@ -29,7 +30,8 @@ func (a *abstractComponent) previousFromDocRoot(
 	label, class string) *htmlDoc.Node {
 
 	if p.Container() != nil {
-		pageBefore := p.Container().GetPageBefore(p)
+		tool := staticUtil.NewPagesContainerTool(p.Container())
+		pageBefore := tool.GetPageBefore(p)
 		return a.abs(pageBefore, label, class, "prev")
 	}
 	return a.abs(nil, label, class, "prev")
@@ -40,7 +42,8 @@ func (a *abstractComponent) nextFromDocRoot(
 	label, class string) *htmlDoc.Node {
 
 	if p.Container() != nil {
-		pageAfter := p.Container().GetPageAfter(p)
+		tool := staticUtil.NewPagesContainerTool(p.Container())
+		pageAfter := tool.GetPageAfter(p)
 		return a.abs(pageAfter, label, class, "next")
 	}
 	return a.abs(nil, label, class, "next")
@@ -65,7 +68,8 @@ func (a *abstractComponent) previous(
 	label, class string) *htmlDoc.Node {
 
 	if p.Container() != nil {
-		pageBefore := p.Container().GetPageBefore(p)
+		tool := staticUtil.NewPagesContainerTool(p.Container())
+		pageBefore := tool.GetPageBefore(p)
 		return a.rel(pageBefore, label, class, "prev")
 	} else {
 		fmt.Println("-- container == nil")
@@ -78,7 +82,8 @@ func (a *abstractComponent) next(
 	label, class string) *htmlDoc.Node {
 
 	if p.Container() != nil {
-		pageBefore := p.Container().GetPageAfter(p)
+		tool := staticUtil.NewPagesContainerTool(p.Container())
+		pageBefore := tool.GetPageAfter(p)
 		return a.rel(pageBefore, label, class, "next")
 	}
 	return a.rel(nil, label, class, "next")
