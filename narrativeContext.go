@@ -47,7 +47,7 @@ func (a *narrativeContext) GenerateArchivePage() {
 		"", "", "",
 		"", "", "", "",
 		"", "", "archive.html", "", "narrative archive", "")
-	np := staticModel.NewPage(dto, a.site.Domain(), a.site)
+	np := staticModel.NewPage(dto, a.site.Domain(), a.site, "")
 
 	np.NavigatedPages(a.renderer.Pages()...)
 
