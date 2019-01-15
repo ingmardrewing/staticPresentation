@@ -1,7 +1,6 @@
 package staticPresentation
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/ingmardrewing/htmlDoc"
@@ -71,8 +70,6 @@ func (a *abstractComponent) previous(
 		tool := staticUtil.NewPagesContainerTool(p.Container())
 		pageBefore := tool.GetPageBefore(p)
 		return a.rel(pageBefore, label, class, "prev")
-	} else {
-		fmt.Println("-- container == nil")
 	}
 	return a.rel(nil, label, class, "prev")
 }

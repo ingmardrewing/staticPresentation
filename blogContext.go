@@ -1,7 +1,6 @@
 package staticPresentation
 
 import (
-	"fmt"
 	"path"
 
 	"github.com/ingmardrewing/fs"
@@ -37,10 +36,7 @@ func (b *blogContext) GetComponents() []staticIntf.Component {
 
 func (b *blogContext) RenderPages() []fs.FileContainer {
 	fcs := b.renderer.Render()
-
-	fmt.Println("RENDERING NAVI PAGES -- START")
 	fcs = append(fcs, b.naviRenderer.Render()...)
-	fmt.Println("RENDERING NAVI PAGES -- END")
 
 	rr := NewRssRenderer(
 		b.getLastTenReversedPages(),

@@ -1,8 +1,6 @@
 package staticPresentation
 
 import (
-	"fmt"
-
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticUtil"
@@ -29,7 +27,6 @@ func (b *BlogNaviComponent) VisitPage(p staticIntf.Page) {
 }
 
 func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
-	fmt.Println(p.Link())
 	prevLabel := htmlDoc.NewNode(
 		"span", "previous posts",
 		"class", "label")
