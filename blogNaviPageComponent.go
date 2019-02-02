@@ -3,6 +3,7 @@ package staticPresentation
 import (
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
+	"github.com/ingmardrewing/staticUtil"
 )
 
 // Generates navigational overview pages filled
@@ -42,6 +43,7 @@ func (b *BlogNaviPageContentComponent) renderNavigatedPage(n staticIntf.Page) *h
 	a.AddChild(htmlDoc.NewNode(
 		"img", "",
 		"src", n.ThumbnailUrl(),
+		"srcset", staticUtil.MakeSrcSet(n),
 		"class", "blognavientry__image"))
 	return a
 }
