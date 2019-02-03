@@ -4,6 +4,8 @@ import (
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticUtil"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // Creates a new EntryPageComponent
@@ -59,6 +61,7 @@ func (e *HomePageComponent) createBlocksFrom(containers []staticIntf.PagesContai
 
 func (e *HomePageComponent) createBlockFrom(c staticIntf.PagesContainer) *htmlDoc.Node {
 	pages := c.Representationals()
+	log.Debugf("HomePageComponent.createBlockFrom(), found %d representational pages\n", len(pages))
 	if len(pages) > 0 {
 		block := e.createBlockNode(c.Headline())
 		ctr := 1
@@ -105,6 +108,7 @@ func (e *HomePageComponent) getElementLinkingToPages(page staticIntf.Page) *html
 		"class", "homepage__thumb")
 	a.AddChild(htmlDoc.NewNode("img", " ",
 		"src", page.MicroThumbnailUrl(),
+		"srcset", staticUtil.MakeMicroSrcSet(page),
 		"class", "homepage__thumbimg"))
 	return a
 }
@@ -114,6 +118,7 @@ func (e *HomePageComponent) GetCss() string {
 .homepage__thumbimg {
 	max-width: 100%;
 	height: auto;
+	clip: rect(0px,0px,190px, 190px);
 }
 @media only screen and (max-width: 768px) {
 	.homepageblock__headline {
