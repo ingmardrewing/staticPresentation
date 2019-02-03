@@ -107,8 +107,8 @@ func (e *HomePageComponent) getElementLinkingToPages(page staticIntf.Page) *html
 		"title", page.Title(),
 		"class", "homepage__thumb")
 	a.AddChild(htmlDoc.NewNode("img", " ",
-		"src",set page.MicroThumbnailUrl(),
-		"srcset", staticUtil.MakeSrcSet(page),
+		"src", page.MicroThumbnailUrl(),
+		"srcset", staticUtil.MakeMicroSrcSet(page),
 		"class", "homepage__thumbimg"))
 	return a
 }
@@ -118,6 +118,7 @@ func (e *HomePageComponent) GetCss() string {
 .homepage__thumbimg {
 	max-width: 100%;
 	height: auto;
+	clip: rect(0px,0px,190px, 190px);
 }
 @media only screen and (max-width: 768px) {
 	.homepageblock__headline {

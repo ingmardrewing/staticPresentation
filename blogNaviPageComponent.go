@@ -40,46 +40,74 @@ func (b *BlogNaviPageContentComponent) renderNavigatedPage(n staticIntf.Page) *h
 
 	a.AddChild(htmlDoc.NewNode(
 		"h2", n.Title()))
-	a.AddChild(htmlDoc.NewNode(
-		"img", "",
-		"src", n.ThumbnailUrl(),
-		"srcset", staticUtil.MakeSrcSet(n),
-		"class", "blognavientry__image"))
+	if len(staticUtil.MakeSrcSet(n)) > 5 {
+		a.AddChild(htmlDoc.NewNode(
+			"img", "",
+			"src", n.ThumbnailUrl(),
+			"srcset", staticUtil.MakeSrcSet(n),
+			"class", "blognavientry__image"))
+	} else {
+		a.AddChild(htmlDoc.NewNode(
+			"img", "",
+			"src", n.ThumbnailUrl(),
+			"class", "blognavientry__image"))
+	}
 	return a
 }
 
 func (b *BlogNaviPageContentComponent) GetCss() string {
 	return `
 .blognavientry__tile {
+	box-sizing: border-box;
 	display: block;
+	overflow: hidden;
+	width: 390px;
+	height: 390px;
+	max-height: 390px;
+	position: relative;
 }
+
 .blognavientry__tile h2 {
+	display: none;
+}
+.blognavientry__tile:hover h2 {
+	display: absolute;
+	bottom: 0;
+	right: 0;
 	font-family: Arial Black, Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 	color: black;
 	margin-bottom: 4px;
 	line-height: 24px;
+	background-color: white;
+	text-align: right;
 }
-.blognavientry__tile:hover h2 {
-	color: grey;
-}
+
 @media only screen and (max-width: 768px) {
-	.blognavientry__image {
-		max-width: 100%;
+	.blognavientry__tile  {
+		width: 100%;
 		height: auto;
+		max-height: none;
+		text-align: center;
+	}
+	.blognavientry__image {
+		display: block;
+		margin: 0 auto;
 	}
 	.blognavientry__tile h2 {
 		text-align: left;
 		padding-left: 10px;
 		font-size: 1.2em;
+		text-transform: uppercase;
+		display: block;
 	}
 }
+
 @media only screen and (min-width: 769px) {
 	.blognavipagecomponent {
-		padding-top: 140px;
+		padding-top: 123px;
 	}
 	a.blognavientry__tile {
-		display: block;
 		position: relative;
 		width: 390px;
 		height: 470px;
@@ -92,7 +120,7 @@ func (b *BlogNaviPageContentComponent) GetCss() string {
 	}
 	.blognavientry__image {
 		width: 390px;
-		height: 390px;
+		/* height: 390px; */
 	}
 	.blognavientry__tile h2 {
 		font-size: 1.2em;
