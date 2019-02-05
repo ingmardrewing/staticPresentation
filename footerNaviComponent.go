@@ -59,8 +59,7 @@ func (f *FooterNaviComponent) GetCss() string {
 	.footernavi__navelement--current ,
 	a.footernavi__navelement {
 		display: inline-block;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
-		font-weight: 900;
+		font-weight: 700;
 		font-size: 16px;
 		line-height: 20px;
 		text-transform: uppercase;
@@ -86,8 +85,7 @@ func (f *FooterNaviComponent) GetCss() string {
 	.footernavi__navelement--current ,
 	a.footernavi__navelement {
 		display: inline-block;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
-		font-weight: 900;
+		font-weight: 700;
 		font-size: 16px;
 		line-height: 20px;
 		text-transform: uppercase;

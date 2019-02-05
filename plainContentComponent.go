@@ -32,7 +32,7 @@ func (cc *PlainContentComponent) GetCss() string {
 	.narrativemarginal h2 ,
 	.narrativemarginal h3 {
 		text-transform: uppercase;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		font-weight: 700;
 	}
 	.narrativemarginal{
 		padding-top: 0;
@@ -51,7 +51,7 @@ func (cc *PlainContentComponent) GetCss() string {
 	.narrativemarginal__h1,
 	.narrativemarginal__h2 {
 		display: inline-block;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		font-weight: 700;
 		text-transform: uppercase;
 	}
 	.narrativemarginal__h1 ,
@@ -71,7 +71,7 @@ func (cc *PlainContentComponent) GetCss() string {
 	.narrativemarginal h2 ,
 	.narrativemarginal h3 {
 		text-transform: uppercase;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		font-weight: 700;
 	}
 	.narrativemarginal{
 		padding-top: 0;
@@ -90,7 +90,7 @@ func (cc *PlainContentComponent) GetCss() string {
 	.narrativemarginal__h1,
 	.narrativemarginal__h2 {
 		display: inline-block;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		font-weight: 700;
 		text-transform: uppercase;
 	}
 	.narrativemarginal__h1 ,

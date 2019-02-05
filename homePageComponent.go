@@ -122,7 +122,7 @@ func (e *HomePageComponent) GetCss() string {
 }
 @media only screen and (max-width: 768px) {
 	.homepageblock__headline {
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		font-weight: 700;
 		text-transform: uppercase;
 	}
 	.homepageblock__headline ,
@@ -134,7 +134,7 @@ func (e *HomePageComponent) GetCss() string {
 		border-top: 1px solid black;
 	}
 	.homepageblock__paragraph {
-		font-family: Arial, Helvetica, sans-serif;
+		font-weight: 700;
 		line-height: 1.4em;
 	}
 	.homepage__content {
@@ -167,12 +167,12 @@ func (e *HomePageComponent) GetCss() string {
 		margin-top: 165px;
 	}
 	.homepageblock__headline {
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
+		font-weight: 700;
 		text-transform: uppercase;
 		border-bottom: 1px solid black;
 	}
 	.homepageblock__paragraph {
-		font-family: Arial, Helvetica, sans-serif;
+		font-weight: 400;
 		line-height: 2em;
 	}
 	.homepage__content {

@@ -74,10 +74,9 @@ func (mhc *NarrativeNaviComponent) GetCss() string {
 	margin-bottom: 50px;
 }
 .narrativenavigation__item {
-	font-family: Arial Black, Arial, Helvetica, sans-serif;
 	color: grey;
 	text-transform: uppercase;
-	font-weight: 900;
+	font-weight: 700;
 	font-size: 16px;
 }
 span.narrativenavigation__item {

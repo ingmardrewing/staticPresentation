@@ -54,8 +54,7 @@ func (mhc *MainHeaderComponent) GetCss() string {
 	}
 	.headerbar__navelement {
 		display: block;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
-		font-weight: 900;
+		font-weight: 700;
 		font-size: 1.2em;
 		line-height: 2em;
 		text-transform: uppercase;
@@ -82,8 +81,7 @@ func (mhc *MainHeaderComponent) GetCss() string {
 	}
 	.headerbar__navelement {
 		display: inline-block;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
-		font-weight: 900;
+		font-weight: 700;
 		font-size: 18px;
 		line-height: 20px;
 		text-transform: uppercase;

@@ -74,7 +74,7 @@ func (b *BlogNaviPageContentComponent) GetCss() string {
 	display: absolute;
 	bottom: 0;
 	right: 0;
-	font-family: Arial Black, Arial, Helvetica, sans-serif;
+	font-weight: 700;
 	text-transform: uppercase;
 	color: black;
 	margin-bottom: 4px;

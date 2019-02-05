@@ -1,11 +1,14 @@
 package staticPresentation
 
 import (
+	"fmt"
+
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticModel"
 	"github.com/ingmardrewing/staticPersistence"
 	"github.com/ingmardrewing/staticUtil"
+	log "github.com/sirupsen/logrus"
 )
 
 func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
@@ -16,7 +19,10 @@ func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
 	cg.site = s
 
 	cg.renderer = NewNarrativeRenderer(s)
-	cg.renderer.Pages(tool.GetPagesByVariant(staticIntf.NARRATIVES)...)
+	pages := tool.GetPagesByVariant(staticIntf.NARRATIVES)
+	msg := fmt.Sprintf("narrativeContext, nr of pages: %d", len(pages))
+	log.Debug(msg)
+	cg.renderer.Pages(pages...)
 
 	cg.narrativeArchiveRenderer = NewNarrativeArchiveRenderer(s)
 
@@ -89,6 +95,9 @@ func (a *narrativeContext) RenderPages() []fs.FileContainer {
 	if rssFc != nil {
 		fcs = append(fcs, rssFc)
 	}
+
+	nr := fmt.Sprintf("narrativeContext, files: %d", len(fcs))
+	log.Debug(nr)
 
 	return fcs
 }

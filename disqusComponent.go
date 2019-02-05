@@ -20,15 +20,6 @@ type DisqusComponent struct {
 	configuredJs string
 }
 
-func (dc *DisqusComponent) GetCss() string {
-	return `
-.disqus,
-.disqus p {
-	font-family: Arial, Helvetica, sans-serif;
-}
-`
-}
-
 func (dc *DisqusComponent) GetJs() string {
 	return dc.configuredJs
 }

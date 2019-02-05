@@ -37,7 +37,6 @@ func (crc *CopyRightComponent) GetCss() string {
 	background-color: black;
 	color: white;
 	text-align: left;
-	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;
 	padding: 20px 20px 50px;
 	margin-top: 20px;
