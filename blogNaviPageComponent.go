@@ -76,6 +76,11 @@ func (b *BlogNaviPageContentComponent) GetCss() string {
 	grid-gap: 20px;
 }
 
+.blogNaviPageComponent__image {
+	max-height: 390px;
+	max-width: 390px;
+}
+
 @media only screen and (max-width: 768px) {
 	.blogNaviPageComponent__grid {
 		grid-template-columns: 100%;
@@ -117,11 +122,28 @@ func (b *BlogNaviPageContentComponent) GetCss() string {
 	text-decoration: none;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (min-widht: 411px) and (max-width: 768px) {
 	.blogNaviPageComponent__gridItemTitle{
 		padding-left: calc((100% - 390px) / 2);
 	}
 }
+
+
+@media only screen and (max-width: 410px) {
+	.blogNaviPageComponent__image {
+		max-height: none;
+		max-width: calc(100% - 20px);
+		height: auto;
+	}
+	.blogNaviPageComponent__gridItem {
+		max-height: none;
+	}
+	.blogNaviPageComponent__gridItemTitle {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+}
+
 
 /* BlogNaviPageContentComponent end */
 `

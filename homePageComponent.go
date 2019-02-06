@@ -182,6 +182,33 @@ func (b *HomePageComponent) GetCss() string {
 		padding-right: calc((100% - 400px)/2 );
 	}
 }
+@media only screen and (max-width: 399px) {
+	.homePageComponent__grid {
+		grid-template-columns: 100%;
+		width: 100%;
+		margin: 0 auto;
+	}
+	.homePageComponent__paragraph,
+	.homePageComponent__headline {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	.homePageComponent__tileImg {
+		width: calc(100% - 20px);
+		max-width: calc(100% - 20px);
+		height: auto;
+		max-height: none;
+	}
+	.homePageComponent__tile {
+		max-height: none;
+	}
+	.homePageComponent__grid {
+		grid-gap: 7px;
+	}
+	.homePageComponent__paragraph {
+		line-height: 1.5em;
+	}
+}
 /* HomePageComponent end */
 `
 }
