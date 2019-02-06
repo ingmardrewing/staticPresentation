@@ -47,7 +47,7 @@ func (mhc *MainHeaderComponent) GetCss() string {
 		background-image: url(https://s3.amazonaws.com/drewingdeblog/drewing_de_logo.png);
 		background-repeat: no-repeat;
 		background-position: center center;
-		background-size: 60%;
+		background-size: 220px;
 		display: block;
 		width: 100%;
 		height: 40px;

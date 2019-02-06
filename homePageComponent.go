@@ -63,144 +63,125 @@ func (e *HomePageComponent) createBlockFrom(c staticIntf.PagesContainer) *htmlDo
 	pages := c.Representationals()
 	log.Debugf("HomePageComponent.createBlockFrom(), found %d representational pages\n", len(pages))
 	if len(pages) > 0 {
-		block := e.createBlockNode(c.Headline())
-		ctr := 1
-		for _, l := range e.createLinksFrom(pages) {
-			block.AddChild(l)
-			if ctr%4 == 0 {
-				block.AddChild(htmlDoc.NewNode("br", ""))
-			}
-			ctr++
-		}
-		block.AddChild(htmlDoc.NewNode("span", " ", "class", "clearfix"))
+		block := htmlDoc.NewNode(
+			"div", "",
+			"class", "homepageblock")
+		block.AddChild(htmlDoc.NewNode(
+			"h2", c.Headline(),
+			"class", "homepageblock__headline"))
+		block.AddChild(e.createGridWithLinksFrom(pages))
 		return block
 	}
 	return nil
 }
 
 func (e *HomePageComponent) createBlockFromTexts(headlineTxt, bodyCopy string) *htmlDoc.Node {
-	n := e.createBlockNode(headlineTxt)
-	paragraph := htmlDoc.NewNode("p", bodyCopy, "class", "homepageblock__paragraph")
-	n.AddChild(paragraph)
-	return n
-}
-
-func (e *HomePageComponent) createBlockNode(headlineTxt string) *htmlDoc.Node {
-	block := htmlDoc.NewNode("div", "", "class", "homepageblock")
-	blockHeadline := htmlDoc.NewNode("h2", headlineTxt, "class", "homepageblock__headline")
-	block.AddChild(blockHeadline)
+	block := htmlDoc.NewNode(
+		"div", "",
+		"class", "homepageblock")
+	block.AddChild(htmlDoc.NewNode(
+		"h2", headlineTxt,
+		"class", "homepageblock__headline"))
+	block.AddChild(htmlDoc.NewNode(
+		"p", bodyCopy,
+		"class", "homepageblock__paragraph"))
 	return block
 }
 
-func (e *HomePageComponent) createLinksFrom(pages []staticIntf.Page) []*htmlDoc.Node {
-	links := []*htmlDoc.Node{}
+func (e *HomePageComponent) createGridWithLinksFrom(pages []staticIntf.Page) *htmlDoc.Node {
+	grid := htmlDoc.NewNode(
+		"div", " ",
+		"class", "homepage__grid")
 	for i := len(pages) - 1; i >= 0; i-- {
-		link := e.getElementLinkingToPages(pages[i])
-		links = append(links, link)
+		grid.AddChild(e.getElementLinkingToPages(pages[i]))
 	}
-	return links
+	return grid
 }
 
 func (e *HomePageComponent) getElementLinkingToPages(page staticIntf.Page) *htmlDoc.Node {
-	a := htmlDoc.NewNode("a", " ",
+	a := htmlDoc.NewNode(
+		"a", " ",
 		"href", page.Link(),
 		"title", page.Title(),
-		"class", "homepage__thumb")
-	a.AddChild(htmlDoc.NewNode("img", " ",
+		"class", "homepage__tile")
+	a.AddChild(htmlDoc.NewNode(
+		"img", " ",
 		"src", page.MicroThumbnailUrl(),
 		"srcset", staticUtil.MakeMicroSrcSet(page),
-		"class", "homepage__thumbimg"))
+		"alt", page.Title(),
+		"class", "homepage__tileImg"))
 	return a
 }
 
-func (e *HomePageComponent) GetCss() string {
+func (b *HomePageComponent) GetCss() string {
 	return `
-.homepage__thumbimg {
-	max-width: 100%;
-	height: auto;
-	clip: rect(0px,0px,190px, 190px);
+/* HomePageComponent start */
+.homepageblock {
+	text-align: center;
 }
+.homepage__grid {
+	display: grid;
+	grid-template-columns: 190px 190px 190px 190px;
+	grid-gap: 20px;
+}
+.homepage__tile {
+	display: block;
+	overflow: hidden;
+	max-height: 190px;
+}
+.homepage__tileImg {
+	max-height: 190px;
+	max-width: 190px;
+}
+.homepageblock__headline {
+	font-size: 18px;
+	text-align: left;
+	font-weight: 700;
+	text-transform: uppercase;
+	border-bottom: 1px solid black;
+	margin-top: 20px;
+}
+.homepageblock__paragraph {
+	text-align: left;
+	font-weight: 400;
+	line-height: 2em;
+}
+.homepage__content {
+	margin-top: 145px;
+	padding-bottom: 50px;
+	text-align: left;
+	min-height: calc(100vh - 520px);
+}
+
 @media only screen and (max-width: 768px) {
-	.homepageblock__headline {
-		font-weight: 700;
-		text-transform: uppercase;
-	}
-	.homepageblock__headline ,
-	.homepageblock__paragraph {
-		padding-left: 10px;
-		padding-right: 10px;
-	}
-	.homepageblock + .homepageblock h2 {
-		border-top: 1px solid black;
-	}
-	.homepageblock__paragraph {
-		font-weight: 700;
-		line-height: 1.4em;
-	}
-	.homepage__content {
-		padding-bottom: 50px;
-		text-align: left;
-		min-height: calc(100vh - 520px);
-	}
-	.homepage__thumb {
-		display: block;
-		float: left;
-		width: 50%;
-		height: auto;
-		background-size: cover;
-		margin-left: 0px;
-		margin-right: 0px;
-		margin-top: 10px;
-		margin-bottom: 10px;
-	}
-	.clearfix {
-		display:block;
-		visibility:hidden;
-		clear:both;
-		height:0;
-		font-size:0;
-		content:" ";
+	.homepage__content{
+		margin-top: 0;
 	}
 }
-@media only screen and (min-width: 769px) {
-	.homepage__wrapperouter {
-		margin-top: 165px;
+@media only screen and (min-width: 610px) and (max-width: 819px) {
+	.homepage__grid {
+		grid-template-columns: 190px 190px 190px;
+		width: 610px;
+		margin: 0 auto;
 	}
+	.homepageblock__paragraph ,
 	.homepageblock__headline {
-		font-weight: 700;
-		text-transform: uppercase;
-		border-bottom: 1px solid black;
-	}
-	.homepageblock__paragraph {
-		font-weight: 400;
-		line-height: 2em;
-	}
-	.homepage__content {
-		padding-bottom: 50px;
-		text-align: left;
-		min-height: calc(100vh - 520px);
-	}
-	.homepage__thumb {
-		display: block;
-		float: left;
-		background-size: cover;
-		width: 190px;
-		height: 190px;
-		margin-left: 0px;
-		margin-top: 10px;
-		margin-bottom: 10px;
-	}
-	.homepage__thumb + .homepage__thumb {
-		margin-left: 13px;
-	}
-	.clearfix {
-		display:block;
-		visibility:hidden;
-		clear:both;
-		height:0;
-		font-size:0;
-		content:" ";
+		padding-left: calc((100% - 610px)/2 );
+		padding-right: calc((100% - 610px)/2 );
 	}
 }
+@media only screen and (min-width: 400px) and (max-width: 609px) {
+	.homepage__grid {
+		grid-template-columns: 190px 190px;
+		width: 400px;
+		margin: 0 auto;
+	}
+	.homepageblock__paragraph ,
+	.homepageblock__headline {
+		padding-left: calc((100% - 400px)/2 );
+		padding-right: calc((100% - 400px)/2 );
+	}
+}
+/* HomePageComponent end */
 `
 }
