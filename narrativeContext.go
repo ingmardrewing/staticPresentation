@@ -50,9 +50,8 @@ func (a *narrativeContext) GetComponents() []staticIntf.Component {
 func (a *narrativeContext) GenerateArchivePage() {
 	dto := staticPersistence.NewFilledDto(0,
 		"Archive", "Archive", "",
-		"", "", "",
-		"", "", "", "",
-		"", "", "archive.html", "", "narrative archive", "",
+		"", "", "", "", "", "",
+		"archive.html", "", "narrative archive", "",
 		[]string{}, []staticIntf.Image{})
 	np := staticModel.NewPage(dto, a.site.Domain(), a.site)
 
