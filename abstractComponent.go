@@ -93,6 +93,9 @@ func (a *abstractComponent) rel(relativePage staticIntf.Page, label, class, rel 
 			"class", class)
 	}
 	href := relativePage.Link()
+	if strings.Index(href, "//") == 0 {
+		href = strings.TrimPrefix(href, "/")
+	}
 	return htmlDoc.NewNode(
 		"a", label,
 		"href", href,

@@ -6,8 +6,11 @@ import (
 	"github.com/ingmardrewing/staticUtil"
 )
 
-// Generates navigational overview pages filled
-// with thumbnails
+// Generates navigational overview in the
+// content area of the page. The Component
+// places thumbnail elements into a grid and
+// links them to the pages or posts represented
+// by them.
 func NewBlogNaviPageContentComponent(r staticIntf.Renderer) *BlogNaviPageContentComponent {
 	bnpc := new(BlogNaviPageContentComponent)
 	bnpc.abstractComponent.Renderer(r)
@@ -22,11 +25,10 @@ type BlogNaviPageContentComponent struct {
 func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
 	n := htmlDoc.NewNode(
 		"div", "",
-		"class", "blognavipagecomponent")
+		"class", "blogNaviPageComponent__grid")
 	for _, navigated := range p.NavigatedPages() {
 		n.AddChild(b.renderNavigatedPage(navigated))
 	}
-	n.AddChild(htmlDoc.NewNode("div", "", "style", "clear: both"))
 
 	wn := b.wrap(n)
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
@@ -35,97 +37,114 @@ func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
 func (b *BlogNaviPageContentComponent) renderNavigatedPage(n staticIntf.Page) *htmlDoc.Node {
 	a := htmlDoc.NewNode(
 		"a", " ",
+		"title", n.Title(),
 		"href", n.Link(),
-		"class", "blognavientry__tile")
-
-	a.AddChild(htmlDoc.NewNode(
-		"h2", n.Title()))
-	if len(staticUtil.MakeSrcSet(n)) > 5 {
-		a.AddChild(htmlDoc.NewNode(
-			"img", "",
-			"src", n.ThumbnailUrl(),
-			"srcset", staticUtil.MakeSrcSet(n),
-			"class", "blognavientry__image"))
-	} else {
-		a.AddChild(htmlDoc.NewNode(
-			"img", "",
-			"src", n.ThumbnailUrl(),
-			"class", "blognavientry__image"))
-	}
+		"class", "blogNaviPageComponent__gridItem")
+	a.AddChild(b.createItemLabel(n))
+	a.AddChild(b.createImage(n))
 	return a
+}
+
+func (b *BlogNaviPageContentComponent) createItemLabel(n staticIntf.Page) *htmlDoc.Node {
+	return htmlDoc.NewNode(
+		"h2", n.Title(),
+		"class", "blogNaviPageComponent__gridItemTitle")
+}
+
+func (b *BlogNaviPageContentComponent) createImage(n staticIntf.Page) *htmlDoc.Node {
+	if len(staticUtil.MakeSrcSet(n)) > 5 {
+		return htmlDoc.NewNode(
+			"img", "",
+			"src", n.ThumbnailUrl(),
+			"alt", n.Title(),
+			"srcset", staticUtil.MakeSrcSet(n),
+			"class", "blogNaviPageComponent__image")
+	}
+	return htmlDoc.NewNode(
+		"img", "",
+		"src", n.ThumbnailUrl(),
+		"alt", n.Title(),
+		"class", "blognavientry__image")
 }
 
 func (b *BlogNaviPageContentComponent) GetCss() string {
 	return `
-.blognavientry__tile {
-	box-sizing: border-box;
-	display: block;
-	overflow: hidden;
-	width: 390px;
-	height: 390px;
-	max-height: 390px;
-	position: relative;
+/* BlogNaviPageContentComponent start */
+.blogNaviPageComponent__grid {
+	display: grid;
+	margin-top: 142px;
+	grid-gap: 20px;
 }
 
-.blognavientry__tile h2 {
-	display: none;
-}
-.blognavientry__tile:hover h2 {
-	display: absolute;
-	bottom: 0;
-	right: 0;
-	font-family: Arial Black, Arial, Helvetica, sans-serif;
-	text-transform: uppercase;
-	color: black;
-	margin-bottom: 4px;
-	line-height: 24px;
-	background-color: white;
-	text-align: right;
+.blogNaviPageComponent__image {
+	max-height: 390px;
+	max-width: 390px;
 }
 
 @media only screen and (max-width: 768px) {
-	.blognavientry__tile  {
-		width: 100%;
-		height: auto;
-		max-height: none;
-		text-align: center;
-	}
-	.blognavientry__image {
-		display: block;
-		margin: 0 auto;
-	}
-	.blognavientry__tile h2 {
-		text-align: left;
-		padding-left: 10px;
-		font-size: 1.2em;
-		text-transform: uppercase;
-		display: block;
+	.blogNaviPageComponent__grid {
+		grid-template-columns: 100%;
+		margin-top: 20px;
 	}
 }
 
 @media only screen and (min-width: 769px) {
-	.blognavipagecomponent {
-		padding-top: 123px;
-	}
-	a.blognavientry__tile {
-		position: relative;
-		width: 390px;
-		height: 470px;
-		margin-bottom: 20px;
-		float: left;
-		text-decoration: none;
-	}
-	.blognavientry__tile:nth-child(odd) {
-		margin-right: 20px;
-	}
-	.blognavientry__image {
-		width: 390px;
-		/* height: 390px; */
-	}
-	.blognavientry__tile h2 {
-		font-size: 1.2em;
-		text-align: left;
+	.blogNaviPageComponent__grid {
+		grid-template-columns: 390px 390px;
 	}
 }
+
+.blogNaviPageComponent__gridItem:hover,
+.blogNaviPageComponent__gridItem {
+	text-decoration: none;
+	display: block;
+	position: relative;
+	overflow: hidden;
+	max-height: 390px;
+}
+
+@media only screen and (max-width: 768px) {
+	.blogNaviPageComponent__gridItem {
+		margin-bottom: 0;
+	}
+}
+
+.blogNaviPageComponent__gridItemTitle{
+	background-color:rgba(255, 255, 255, 0.8);
+	text-align: left;
+	font-size: 18px;
+	font-weight: 700;
+	text-transform: uppercase;
+	color: rgb(0,0,0);
+	margin-top: 0;
+	margin-bottom: 0;
+	border-bottom: 1px solid black;
+	text-decoration: none;
+}
+
+@media only screen and (min-widht: 411px) and (max-width: 768px) {
+	.blogNaviPageComponent__gridItemTitle{
+		padding-left: calc((100% - 390px) / 2);
+	}
+}
+
+
+@media only screen and (max-width: 410px) {
+	.blogNaviPageComponent__image {
+		max-height: none;
+		max-width: calc(100% - 20px);
+		height: auto;
+	}
+	.blogNaviPageComponent__gridItem {
+		max-height: none;
+	}
+	.blogNaviPageComponent__gridItemTitle {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+}
+
+
+/* BlogNaviPageContentComponent end */
 `
 }

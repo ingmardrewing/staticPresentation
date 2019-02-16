@@ -15,10 +15,12 @@ type GlobalCssComponent struct {
 
 func (gcc *GlobalCssComponent) GetCss() string {
 	return `
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,700');
+
 body, p, span {
 	margin: 0;
 	padding: 0;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 }
 a {
 	color: grey;

@@ -78,19 +78,17 @@ func (b *BlogNaviComponent) GetCss() string {
 		color: lightgrey;
 	}
 	.blognavicomponent__nav span.blognavicomponent__item {
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
 		color: lightgrey;
-		font-weight: 900;
+		font-weight: 700;
 	}
 	.blognavicomponent__next {
 		margin-left: 10px;
 	}
 	.blognavicomponent__previous,
 	.blognavicomponent__next {
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
 		color: grey;
 		text-transform: uppercase;
-		font-weight: 900;
+		font-weight: 700;
 		font-size: 16px;
 	}
 	.blognavientry__tile h2{

@@ -64,8 +64,7 @@ func (mhc *MainNaviComponent) GetCss() string {
 	.mainnavi__navelement--current,
 	a.mainnavi__navelement {
 		display: block;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
-		font-weight: 900;
+		font-weight: 700;
 		font-size: 18px;
 		line-height: 20px;
 		text-transform: uppercase;
@@ -86,7 +85,7 @@ func (mhc *MainNaviComponent) GetCss() string {
 @media only screen and (min-width: 769px) {
 	.mainnavi {
 		border-top: 1px solid black;
-		border-bottom: 2px solid black;
+		border-bottom: 1px solid black;
 	}
 	.mainnavi__wrapper {
 		z-index: 100;
@@ -98,8 +97,7 @@ func (mhc *MainNaviComponent) GetCss() string {
 	.mainnavi__navelement--current,
 	a.mainnavi__navelement {
 		display: inline-block;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
-		font-weight: 900;
+		font-weight: 700;
 		font-size: 18px;
 		line-height: 20px;
 		text-transform: uppercase;
@@ -112,7 +110,7 @@ func (mhc *MainNaviComponent) GetCss() string {
 		color: gray;
 	}
 	.mainnavi__nav {
-		border-bottom: 2px solid black;
+		border-bottom: 1px solid black;
 	}
 }
 `

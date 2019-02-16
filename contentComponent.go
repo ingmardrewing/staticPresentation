@@ -62,7 +62,6 @@ func (cc *ContentComponent) GetCss() string {
 	.maincontent__h2 {
 		text-transform: uppercase;
 		display: inline-block;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
 		text-transform: uppercase;
 		font-size: 18px;
 		line-height: 20px;
@@ -96,18 +95,17 @@ func (cc *ContentComponent) GetCss() string {
 		text-align: left;
 		line-height: 20px;
 	}
-	.maincontent li,
 	.maincontent p {
 		line-height: 30px;
 	}
+	.maincontent h2,
 	.maincontent__h1,
 	.maincontent__h2 {
 		text-transform: uppercase;
 		display: inline-block;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
 		text-transform: uppercase;
 		font-size: 18px;
-		line-height: 20px;
+		line-height: initial;
 		text-transform: uppercase;
 	}
 	.maincontent__h1 + .maincontent__h2 {

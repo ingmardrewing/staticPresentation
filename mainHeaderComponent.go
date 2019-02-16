@@ -47,15 +47,14 @@ func (mhc *MainHeaderComponent) GetCss() string {
 		background-image: url(https://s3.amazonaws.com/drewingdeblog/drewing_de_logo.png);
 		background-repeat: no-repeat;
 		background-position: center center;
-		background-size: 60%;
+		background-size: 220px;
 		display: block;
 		width: 100%;
 		height: 40px;
 	}
 	.headerbar__navelement {
 		display: block;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
-		font-weight: 900;
+		font-weight: 700;
 		font-size: 1.2em;
 		line-height: 2em;
 		text-transform: uppercase;
@@ -82,8 +81,7 @@ func (mhc *MainHeaderComponent) GetCss() string {
 	}
 	.headerbar__navelement {
 		display: inline-block;
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
-		font-weight: 900;
+		font-weight: 700;
 		font-size: 18px;
 		line-height: 20px;
 		text-transform: uppercase;

@@ -54,7 +54,7 @@ header .orange {
     box-sizing: border-box;
     width: 100%;
     font-size: 24px;
-    font-family: "Arial Black";
+	font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 1rem;
     padding: 0.5em;

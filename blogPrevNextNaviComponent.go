@@ -57,10 +57,9 @@ func (b *BlogPrevNextNaviComponent) GetCss() string {
 		margin-bottom: 50px;
 	}
 	.prevnextnavigation__item {
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
 		color: grey;
 		text-transform: uppercase;
-		font-weight: 900;
+		font-weight: 700;
 		font-size: 16px;
 	}
 	.prevnextnavigation__item .label{
@@ -96,9 +95,8 @@ func (b *BlogPrevNextNaviComponent) GetCss() string {
 	.prevnextnavigation__item {
 		position: fixed;
 		top: calc(50vh - 50px);
-		font-family: Arial Black, Arial, Helvetica, sans-serif;
 		color: lightgrey;
-		font-weight: 900;
+		font-weight: 700;
 		font-size: 100px;
 	}
 	.prevnextnavigation__item .label {
