@@ -20,13 +20,13 @@ func (gcc *GlobalCssComponent) GetCss() string {
 font-family: 'Open Sans';
 font-style: normal;
 font-weight: 300;
-	src: url('https://drewing.de/fonts/open-sans-v15-latin-ext_latin-300.eot'); /* IE9 Compat Modes */
+	src: url('/fonts/open-sans-v15-latin-ext_latin-300.eot'); /* IE9 Compat Modes */
 	src: local('Open Sans Light'), local('OpenSans-Light'),
-		url('https://drewing.de/fonts/open-sans-v15-latin-ext_latin-300.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-		url('https://drewing.de/fonts/open-sans-v15-latin-ext_latin-300.woff2') format('woff2'), /* Super Modern Browsers */
-		url('https://drewing.de/fonts/open-sans-v15-latin-ext_latin-300.woff') format('woff'), /* Modern Browsers */
-		url('https://drewing.de/fonts/open-sans-v15-latin-ext_latin-300.ttf') format('truetype'), /* Safari, Android, iOS */
-		url('https://drewing.de/fonts/open-sans-v15-latin-ext_latin-300.svg#OpenSans') format('svg'); /* Legacy iOS */
+		url('/fonts/open-sans-v15-latin-ext_latin-300.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+		url('/fonts/open-sans-v15-latin-ext_latin-300.woff2') format('woff2'), /* Super Modern Browsers */
+		url('/fonts/open-sans-v15-latin-ext_latin-300.woff') format('woff'), /* Modern Browsers */
+		url('/fonts/open-sans-v15-latin-ext_latin-300.ttf') format('truetype'), /* Safari, Android, iOS */
+		url('/fonts/open-sans-v15-latin-ext_latin-300.svg#OpenSans') format('svg'); /* Legacy iOS */
 }
 
 /* open-sans-700 - latin-ext_latin */
@@ -34,13 +34,13 @@ font-weight: 300;
 font-family: 'Open Sans';
 font-style: normal;
 font-weight: 700;
-	src: url('https://drewing.de/fonts/open-sans-v15-latin-ext_latin-700.eot'); /* IE9 Compat Modes */
+	src: url('/fonts/open-sans-v15-latin-ext_latin-700.eot'); /* IE9 Compat Modes */
 	src: local('Open Sans Bold'), local('OpenSans-Bold'),
-		url('https://drewing.de/fonts/open-sans-v15-latin-ext_latin-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-		url('https://drewing.de/fonts/open-sans-v15-latin-ext_latin-700.woff2') format('woff2'), /* Super Modern Browsers */
-		url('https://drewing.de/fonts/open-sans-v15-latin-ext_latin-700.woff') format('woff'), /* Modern Browsers */
-		url('https://drewing.de/fonts/open-sans-v15-latin-ext_latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
-		url('https://drewing.de/fonts/open-sans-v15-latin-ext_latin-700.svg#OpenSans') format('svg'); /* Legacy iOS */
+		url('/fonts/open-sans-v15-latin-ext_latin-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+		url('/fonts/open-sans-v15-latin-ext_latin-700.woff2') format('woff2'), /* Super Modern Browsers */
+		url('/fonts/open-sans-v15-latin-ext_latin-700.woff') format('woff'), /* Modern Browsers */
+		url('/fonts/open-sans-v15-latin-ext_latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
+		url('/fonts/open-sans-v15-latin-ext_latin-700.svg#OpenSans') format('svg'); /* Legacy iOS */
 }
 
 body, p, span {
