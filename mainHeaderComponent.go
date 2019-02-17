@@ -19,11 +19,12 @@ type MainHeaderComponent struct {
 
 func (mhc *MainHeaderComponent) VisitPage(p staticIntf.Page) {
 	logo := htmlDoc.NewNode(
-		"a", "<!-- logo -->",
-		"href", "https://"+p.Site().Domain(),
+		"img", "",
+		"src", p.Site().SvgLogo(),
 		"class", "headerbar__logo")
 	logocontainer := htmlDoc.NewNode(
-		"div", "",
+		"a", "",
+		"href", "https://"+p.Site().Domain(),
 		"class", "headerbar__logocontainer")
 	logocontainer.AddChild(logo)
 
@@ -38,19 +39,18 @@ func (mhc *MainHeaderComponent) VisitPage(p staticIntf.Page) {
 
 func (mhc *MainHeaderComponent) GetCss() string {
 	return `
+.headerbar__logocontainer {
+	display: block;
+	height: 80px;
+	box-sizing: border-box;
+}
+.headerbar__logo {
+	height: 100%;
+}
 @media only screen and (max-width: 768px) {
 	.headerbar__wrapper {
 		width: 100%;
 		background-color: white;
-	}
-	.headerbar__logo {
-		background-image: url(https://s3.amazonaws.com/drewingdeblog/drewing_de_logo.png);
-		background-repeat: no-repeat;
-		background-position: center center;
-		background-size: 220px;
-		display: block;
-		width: 100%;
-		height: 40px;
 	}
 	.headerbar__navelement {
 		display: block;
@@ -70,14 +70,6 @@ func (mhc *MainHeaderComponent) GetCss() string {
 		width: 100%;
 		top: 0;
 		background-color: white;
-	}
-	.headerbar__logo {
-		background-image: url(https://s3.amazonaws.com/drewingdeblog/drewing_de_logo.png);
-		background-repeat: no-repeat;
-		background-position: center center;
-		display: block;
-		width: 100%;
-		height: 80px;
 	}
 	.headerbar__navelement {
 		display: inline-block;
