@@ -60,7 +60,7 @@ func (nv *NarrativeNaviComponent) last(p staticIntf.Page) *htmlDoc.Node {
 }
 
 func (nv *NarrativeNaviComponent) absRel(curPage, relPage staticIntf.Page, label, class, rel string) *htmlDoc.Node {
-	if relPage == nil || relPage.Id() == curPage.Id() {
+	if relPage == nil || relPage.Link() == curPage.Link() {
 		return htmlDoc.NewNode("span", label, "class", class)
 	}
 	href := relPage.Link()
