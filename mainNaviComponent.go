@@ -63,7 +63,7 @@ func (mhc *MainNaviComponent) GetCss() string {
 	}
 	.mainnavi__navelement--current,
 	a.mainnavi__navelement {
-		display: block;
+		display: inline-block;
 		font-weight: 700;
 		font-size: 18px;
 		line-height: 20px;
@@ -75,11 +75,6 @@ func (mhc *MainNaviComponent) GetCss() string {
 	a.mainnavi__navelement:hover {
 		text-decoration: none;
 		color: gray;
-	}
-	.mainnavi__navelement + .mainnavi__navelement--current,
-	.mainnavi__navelement--current + .mainnavi__navelement,
-	.mainnavi__navelement + .mainnavi__navelement {
-		border-top: 1px solid black;
 	}
 }
 @media only screen and (min-width: 769px) {

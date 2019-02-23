@@ -308,7 +308,9 @@ func NewHomePageRenderer(site staticIntf.Site) staticIntf.Renderer {
 		NewTitleComponent(r),
 		NewMainHeaderComponent(r),
 		NewMainNaviComponent(r),
-		NewHomePageComponent(r),
+		NewHomePageTextComponent(r),
+		NewHomePageBlogComponent(r),
+		NewHomePagePortfolioComponent(r),
 		NewCopyRightComponent(r),
 		NewFooterNaviComponent(r))
 

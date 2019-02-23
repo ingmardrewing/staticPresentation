@@ -121,13 +121,11 @@ func (b *BlogNaviPageContentComponent) GetCss() string {
 	border-bottom: 1px solid black;
 	text-decoration: none;
 }
-
-@media only screen and (min-widht: 411px) and (max-width: 768px) {
+@media only screen and (min-width: 411px) and (max-width: 768px) {
 	.blogNaviPageComponent__gridItemTitle{
 		padding-left: calc((100% - 390px) / 2);
 	}
 }
-
 
 @media only screen and (max-width: 410px) {
 	.blogNaviPageComponent__image {
@@ -143,8 +141,6 @@ func (b *BlogNaviPageContentComponent) GetCss() string {
 		padding-right: 10px;
 	}
 }
-
-
 /* BlogNaviPageContentComponent end */
 `
 }
