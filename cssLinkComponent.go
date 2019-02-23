@@ -3,6 +3,7 @@ package staticPresentation
 import (
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
+	"github.com/ingmardrewing/staticUtil"
 )
 
 // Creates a new CssLinkComponent
@@ -17,6 +18,11 @@ type CssLinkComponent struct {
 }
 
 func (clc *CssLinkComponent) VisitPage(p staticIntf.Page) {
-	link := htmlDoc.NewNode("link", "", "href", p.Site().Css(), "rel", "stylesheet", "type", "text/css")
+	url := p.Site().Css() + "?" + staticUtil.GetDate()
+	link := htmlDoc.NewNode(
+		"link", "",
+		"href", url,
+		"rel", "stylesheet",
+		"type", "text/css")
 	p.AddHeaderNodes([]*htmlDoc.Node{link})
 }
