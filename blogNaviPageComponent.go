@@ -64,7 +64,7 @@ func (b *BlogNaviPageContentComponent) createImage(n staticIntf.Page) *htmlDoc.N
 		"img", "",
 		"src", n.ThumbnailUrl(),
 		"alt", n.Title(),
-		"class", "blognavientry__image")
+		"class", "blogNaviPageComponent__image")
 }
 
 func (b *BlogNaviPageContentComponent) GetCss() string {
@@ -124,6 +124,9 @@ func (b *BlogNaviPageContentComponent) GetCss() string {
 @media only screen and (min-width: 411px) and (max-width: 768px) {
 	.blogNaviPageComponent__gridItemTitle{
 		padding-left: calc((100% - 390px) / 2);
+	}
+	.blogNaviPageComponent__image {
+		max-width: 390px;
 	}
 }
 
