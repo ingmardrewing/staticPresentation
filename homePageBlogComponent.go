@@ -200,6 +200,9 @@ func (b *HomePageBlogComponent) GetCss() string {
 	.homePageBlogComponent__tileText{
 		line-height: 1.3em;
 	}
+	.homePageBlogComponent__grid {
+		max-height: 100px;
+	}
 }
 @media only screen and (min-width: 400px) and (max-width: 609px) {
 	.homePageBlogComponent__grid {
