@@ -48,20 +48,26 @@ func (a *narrativeContext) GetComponents() []staticIntf.Component {
 }
 
 func (a *narrativeContext) GenerateArchivePage() {
-	dto := staticPersistence.NewFilledDto(0,
-		"Archive", "Archive", "",
-		"", "", "", "", "", "",
-		"archive.html", "", "narrative archive", "",
-		[]string{}, []staticIntf.Image{})
+	// TODO Reimplement archive generation
+	dto := staticPersistence.NewFilledDto(
+		"Archive",
+		"An archive overview of pages within "+a.site.Domain(),
+		"",
+		"narrative archive",
+		"",
+		"",
+		"archive.html",
+		[]string{},
+		[]staticIntf.Image{})
 	np := staticModel.NewPage(dto, a.site.Domain(), a.site)
-
 	np.NavigatedPages(a.renderer.Pages()...)
 
 	a.narrativeArchiveRenderer.Pages(np)
 	a.site.AddMarginal(np)
 
 	tool := staticUtil.NewPagesContainerCollectionTool(a.site)
-	for _, n := range tool.GetPagesByVariant(staticIntf.NARRATIVEMARGINALS) {
+	for _, n := range tool.GetPagesByVariant(
+		staticIntf.NARRATIVEMARGINALS) {
 		a.site.AddMarginal(n)
 	}
 }
