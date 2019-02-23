@@ -92,6 +92,9 @@ func (b *HomePageTextComponent) GetCss() string {
 	}
 }
 @media only screen and (min-width: 610px) and (max-width: 819px) {
+	.homePageTextComponent__paragraph {
+		line-height: 1.8em;
+	}
 	.homePageTextComponent__grid {
 		grid-template-columns: 190px 190px 190px;
 		width: 610px;
@@ -113,6 +116,9 @@ func (b *HomePageTextComponent) GetCss() string {
 	.homePageTextComponent__headline {
 		padding-left: calc((100% - 400px)/2 );
 		padding-right: calc((100% - 400px)/2 );
+	}
+	.homePageTextComponent__paragraph {
+		line-height: 1.5em;
 	}
 }
 @media only screen and (max-width: 399px) {
