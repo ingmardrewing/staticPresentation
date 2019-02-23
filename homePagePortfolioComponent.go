@@ -160,6 +160,9 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 		width: 100%;
 		margin: 0 auto;
 	}
+	.homePagePortfolioComponent__grid *:nth-child(n+5){
+		display: none;
+	}
 	.homePagePortfolioComponent__paragraph,
 	.homePagePortfolioComponent__headline {
 		padding-left: 10px;
