@@ -194,11 +194,17 @@ func (b *HomePageBlogComponent) GetCss() string {
 	}
 	.homePageBlogComponent__paragraph ,
 	.homePageBlogComponent__headline {
-		padding-left: calc((100% - 610px)/2 );
-		padding-right: calc((100% - 610px)/2 );
+		width: 610px;
+		max-width: 610px;
+		margin-left: auto;
+		margin-right: auto;
 	}
 	.homePageBlogComponent__tileText{
 		line-height: 1.3em;
+	}
+	.homePageBlogComponent__tile,
+	.homePageBlogComponent__grid {
+		max-height: 100px;
 	}
 }
 @media only screen and (min-width: 400px) and (max-width: 609px) {
@@ -209,8 +215,10 @@ func (b *HomePageBlogComponent) GetCss() string {
 	}
 	.homePageBlogComponent__paragraph,
 	.homePageBlogComponent__headline {
-		padding-left: calc((100% - 400px)/2 );
-		padding-right: calc((100% - 400px)/2 );
+		width: 400px;
+		max-width: 400px;
+		margin-left: auto;
+		margin-right: auto;
 	}
 }
 @media only screen and (max-width: 399px) {
@@ -223,17 +231,9 @@ func (b *HomePageBlogComponent) GetCss() string {
 	}
 	.homePageBlogComponent__paragraph,
 	.homePageBlogComponent__headline {
-		padding-left: 10px;
-		padding-right: 10px;
+		margin-left: 10px;
+		margin-right: 10px;
 	}
-	/*
-	.homePageBlogComponent__tileImg {
-		width: calc(100% - 20px);
-		max-width: calc(100% - 20px);
-		height: auto;
-		max-height: none;
-	}
-	*/
 	.homePageBlogComponent__tile {
 		max-height: none;
 	}

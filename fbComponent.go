@@ -17,11 +17,15 @@ func NewFBComponent(r staticIntf.Renderer) *FBComponent {
 }
 
 func (fbc *FBComponent) VisitPage(p staticIntf.Page) {
+	description := p.Description()
+	if len(description) == 0 {
+		description = p.Site().Description()
+	}
 	m := []*htmlDoc.Node{
 		htmlDoc.NewNode("meta", "", "property", "og:title", "content", p.Title()),
 		htmlDoc.NewNode("meta", "", "property", "og:url", "content", p.Link()),
 		htmlDoc.NewNode("meta", "", "property", "og:image", "content", p.ImageUrl()),
-		htmlDoc.NewNode("meta", "", "property", "og:description", "content", p.Description()),
+		htmlDoc.NewNode("meta", "", "property", "og:description", "content", description),
 		htmlDoc.NewNode("meta", "", "property", "og:site_name", "content", p.Site().Domain()),
 		htmlDoc.NewNode("meta", "", "property", "og:type", "content", p.Site().Section()),
 		htmlDoc.NewNode("meta", "", "property", "article:published_time", "content", p.PublishedTime()),

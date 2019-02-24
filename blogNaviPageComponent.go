@@ -64,7 +64,7 @@ func (b *BlogNaviPageContentComponent) createImage(n staticIntf.Page) *htmlDoc.N
 		"img", "",
 		"src", n.ThumbnailUrl(),
 		"alt", n.Title(),
-		"class", "blognavientry__image")
+		"class", "blogNaviPageComponent__image")
 }
 
 func (b *BlogNaviPageContentComponent) GetCss() string {
@@ -123,7 +123,12 @@ func (b *BlogNaviPageContentComponent) GetCss() string {
 }
 @media only screen and (min-width: 411px) and (max-width: 768px) {
 	.blogNaviPageComponent__gridItemTitle{
-		padding-left: calc((100% - 390px) / 2);
+		max-width: 390px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.blogNaviPageComponent__image {
+		max-width: 390px;
 	}
 }
 
@@ -133,12 +138,13 @@ func (b *BlogNaviPageContentComponent) GetCss() string {
 		max-width: calc(100% - 20px);
 		height: auto;
 	}
+	.blogNaviPageComponent__gridItem:hover,
 	.blogNaviPageComponent__gridItem {
 		max-height: none;
 	}
 	.blogNaviPageComponent__gridItemTitle {
-		padding-left: 10px;
-		padding-right: 10px;
+		margin-left: 10px;
+		margin-right: 10px;
 	}
 }
 /* BlogNaviPageContentComponent end */

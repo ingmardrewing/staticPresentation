@@ -17,10 +17,17 @@ type GeneralMetaComponent struct {
 }
 
 func (g *GeneralMetaComponent) VisitPage(p staticIntf.Page) {
-	//viewport := "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1"
+	description := p.Description()
+	author := p.Site().Author()
+	keyWords := p.Site().KeyWords()
+	subject := p.Site().Subject()
+	topic := p.Site().Topic()
+
+	if len(p.Description()) == 0 {
+		description = p.Site().Description()
+	}
+
 	viewport := "initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
-	subject := "storytelling, illustration, drawing, web comic, comic, cartoon, caricatures"
-	author := "Ingmar Drewing"
 	m := []*htmlDoc.Node{
 		htmlDoc.NewNode("meta", "",
 			"name", "viewport",
@@ -36,13 +43,16 @@ func (g *GeneralMetaComponent) VisitPage(p staticIntf.Page) {
 			"content", author),
 		htmlDoc.NewNode("meta", "",
 			"name", "keywords",
-			"content", subject),
+			"content", keyWords),
+		htmlDoc.NewNode("meta", "",
+			"name", "description",
+			"content", description),
 		htmlDoc.NewNode("meta", "",
 			"name", "DC.subject",
 			"content", subject),
 		htmlDoc.NewNode("meta", "",
 			"name", "page-topic",
-			"content", "art"),
+			"content", topic),
 		htmlDoc.NewNode("meta", "",
 			"charset", "UTF-8")}
 	p.AddHeaderNodes(m)
