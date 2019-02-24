@@ -17,9 +17,13 @@ type GoogleComponent struct {
 }
 
 func (goo *GoogleComponent) VisitPage(p staticIntf.Page) {
+	description := p.Description()
+	if len(description) == 0 {
+		description = p.Site().Description()
+	}
 	m := []*htmlDoc.Node{
 		htmlDoc.NewNode("meta", "", "itemprop", "name", "content", p.Title()),
-		htmlDoc.NewNode("meta", "", "itemprop", "description", "content", p.Description()),
+		htmlDoc.NewNode("meta", "", "itemprop", "description", "content", description),
 		htmlDoc.NewNode("meta", "", "itemprop", "image", "content", p.ImageUrl())}
 	p.AddHeaderNodes(m)
 }

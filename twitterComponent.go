@@ -17,6 +17,10 @@ type TwitterComponent struct {
 }
 
 func (tw *TwitterComponent) VisitPage(p staticIntf.Page) {
+	description := p.Description()
+	if len(description) == 0 {
+		description = p.Site().Description()
+	}
 	m := []*htmlDoc.Node{
 		htmlDoc.NewNode("meta", "",
 			"name", "t:card",
@@ -29,7 +33,7 @@ func (tw *TwitterComponent) VisitPage(p staticIntf.Page) {
 			"content", p.Title()),
 		htmlDoc.NewNode("meta", "",
 			"name", "t:text:description",
-			"content", p.Description()),
+			"content", description),
 		htmlDoc.NewNode("meta", "",
 			"name", "t:creator",
 			"content", p.Site().TwitterHandle()),
