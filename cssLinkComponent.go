@@ -18,7 +18,7 @@ type CssLinkComponent struct {
 }
 
 func (clc *CssLinkComponent) VisitPage(p staticIntf.Page) {
-	url := p.Site().Css() + "?version=" + staticUtil.GetDate()
+	url := p.Site().Css() + "?version=" + staticUtil.GetDateTimeCompressed()
 	link := htmlDoc.NewNode(
 		"link", "",
 		"href", url,
