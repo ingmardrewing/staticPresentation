@@ -1,6 +1,8 @@
 package staticPresentation
 
 import (
+	"bytes"
+	"html/template"
 	"math/rand"
 	"path"
 	"time"
@@ -155,6 +157,51 @@ func NewRenderer(name string) staticIntf.Renderer {
 	r := new(renderer)
 	r.name = name
 	return r
+}
+
+type templatedRenderer struct {
+	renderer
+}
+
+func NewTemplatedRenderer(name string) *templatedRenderer {
+	r := new(templatedRenderer)
+	r.name = name
+	return r
+}
+
+func (r *templatedRenderer) Render() []fs.FileContainer {
+	fcs := []fs.FileContainer{}
+
+	for _, p := range r.pages {
+		html := r.RenderHtml(p)
+		path := path.Join(p.Site().TargetDir(), p.PathFromDocRoot())
+		fc := r.CreateFileContainer(html, path, p.HtmlFilename())
+		fcs = append(fcs, fc)
+	}
+
+	return fcs
+}
+
+type htmlData struct {
+	Head string
+	Body string
+}
+
+func (r *templatedRenderer) RenderHtml(p staticIntf.Page) string {
+	for _, comp := range r.components {
+		p.AcceptVisitor(comp)
+	}
+	doc := p.GetDoc()
+
+	h := new(htmlData)
+	h.Head = doc.RenderHead()
+	h.Body = doc.RenderBody()
+
+	t := template.New("html template")
+	t, _ = t.Parse(`<!doctype html><html itemscope lang="en"><head>{{.Head}}</head><body>{{.Body}}</body></html>`)
+	var output bytes.Buffer
+	t.Execute(&output, h)
+	return output.String()
 }
 
 // Create Narrrative Margina Renderer
