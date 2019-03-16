@@ -127,8 +127,12 @@ func (e *HomePageBlogComponent) getBlogExcerpt(page staticIntf.Page) string {
 		strings.HasPrefix(page.Description(), "A blog containing") {
 		return "Just an image ..."
 	} else if len(page.Description()) > 0 {
+		l := len(page.Description())
+		if l > 80 {
+			l = 80
+		}
 		n := strings.Split(
-			page.Description()[:80], " ")
+			page.Description()[:l], " ")
 		return strings.Join(n[:len(n)-1], " ") + " ..."
 	}
 	return ""
@@ -170,7 +174,7 @@ func (b *HomePageBlogComponent) GetCss() string {
 	font-weight: 700;
 	text-transform: uppercase;
 	border-bottom: 1px solid black;
-	margin-top: 20px;
+	margin-top: 30px;
 }
 .homePageBlogComponent__paragraph {
 	text-align: left;
@@ -179,7 +183,6 @@ func (b *HomePageBlogComponent) GetCss() string {
 }
 .homePageBlogComponent__content {
 	text-align: left;
-	min-height: calc(100vh - 520px);
 }
 @media only screen and (max-width: 768px) {
 	.homePageBlogComponent__content{

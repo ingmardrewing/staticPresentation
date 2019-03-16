@@ -83,7 +83,6 @@ func (b *HomePageTextComponent) GetCss() string {
 .homePageTextComponent__content {
 	margin-top: 145px;
 	text-align: left;
-	min-height: calc(100vh - 520px);
 }
 
 @media only screen and (max-width: 768px) {
