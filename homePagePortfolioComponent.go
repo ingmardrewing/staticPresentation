@@ -77,8 +77,14 @@ func (e *HomePagePortfolioComponent) getElementLinkingToPages(page staticIntf.Pa
 		"href", page.Link(),
 		"title", page.Title(),
 		"class", "homePagePortfolioComponent__tile")
+
+	// TODO: It might make sense to replace
+	// the following linesl the picture tag
+	// to avoid loading huge piles of images on mobile phones
 	a.AddChild(htmlDoc.NewNode(
 		"img", " ",
+		"width", "190",
+		"height", "190",
 		"src", page.MicroThumbnailUrl(),
 		"srcset", staticUtil.MakeMicroSrcSet(page),
 		"alt", page.Title(),

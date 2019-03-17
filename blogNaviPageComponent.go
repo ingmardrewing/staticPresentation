@@ -57,6 +57,8 @@ func (b *BlogNaviPageContentComponent) createImage(n staticIntf.Page) *htmlDoc.N
 			"img", "",
 			"src", n.ThumbnailUrl(),
 			"alt", n.Title(),
+			"width", "390",
+			"height", "390",
 			"srcset", staticUtil.MakeSrcSet(n),
 			"class", "blogNaviPageComponent__image")
 	}
@@ -64,6 +66,8 @@ func (b *BlogNaviPageContentComponent) createImage(n staticIntf.Page) *htmlDoc.N
 		"img", "",
 		"src", n.ThumbnailUrl(),
 		"alt", n.Title(),
+		"width", "390",
+		"height", "390",
 		"class", "blogNaviPageComponent__image")
 }
 
