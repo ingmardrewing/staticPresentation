@@ -81,7 +81,7 @@ func (a *narrativeContext) RenderPages() []fs.FileContainer {
 		// copy the content of the last page
 		// of the narrative and add a page with
 		// this content as index page
-		inx := len(fcs) - 2
+		inx := len(fcs) - 1
 		lastPageFc := fcs[inx]
 		index := fs.NewFileContainer()
 		index.SetData(lastPageFc.GetData())
