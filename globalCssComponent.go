@@ -51,7 +51,7 @@ body, p, span {
 body {
 	padding-top: 122px;
 }
-@media only screen and (max-width: 819px) {
+@media only screen and (max-width: 768px) {
 	body{
 		padding-top: 0;
 	}

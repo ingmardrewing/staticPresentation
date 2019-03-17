@@ -195,8 +195,8 @@ func (b *HomePageSplitComponent) GetCss() string {
 	text-align: left;
 	font-weight: 700;
 	text-transform: uppercase;
-	border-bottom: 1px solid black;
 	margin-top: 0;
+	margin-bottom: 0;
 }
 .homePageSplitComponent__paragraph {
 	text-align: left;
@@ -219,16 +219,13 @@ func (b *HomePageSplitComponent) GetCss() string {
 	}
 	.homePageSplitComponent__paragraph ,
 	.homePageSplitComponent__headline {
-		width: 610px;
-		max-width: 610px;
 		margin-left: auto;
 		margin-right: auto;
 	}
 	.homePageSplitComponent__tileText{
 		line-height: 1.3em;
 	}
-	.homePageSplitComponent__tile,
-	.homePageSplitComponent__grid {
+	.homePageSplitComponent__tile {
 		max-height: 100px;
 	}
 }
