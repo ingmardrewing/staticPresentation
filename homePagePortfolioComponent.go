@@ -112,7 +112,7 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 	font-weight: 700;
 	text-transform: uppercase;
 	border-bottom: 1px solid black;
-	margin-top: 20px;
+	margin-top: 30px;
 }
 .homePagePortfolioComponent__paragraph {
 	text-align: left;
@@ -122,7 +122,6 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 .homePagePortfolioComponent__content {
 	padding-bottom: 50px;
 	text-align: left;
-	min-height: calc(100vh - 520px);
 }
 
 @media only screen and (max-width: 768px) {
