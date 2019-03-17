@@ -22,16 +22,15 @@ type HomePagePortfolioComponent struct {
 }
 
 func (e *HomePagePortfolioComponent) VisitPage(p staticIntf.Page) {
-	e.mainDiv = htmlDoc.NewNode("div", "", "class", "homePagePortfolioComponent__content")
+	nodes := []*htmlDoc.Node{}
 
 	tool := staticUtil.NewPagesContainerCollectionTool(p.Site())
 	containers := tool.ContainersOrderedByVariants("portfolio")
-	for _, cb := range e.createBlocksFrom(containers) {
-		e.mainDiv.AddChild(cb)
+	for _, current := range e.createBlocksFrom(containers) {
+		nodes = append(nodes, e.wrap(current, "homePagePortfolioComponent__wrapperouter"))
 	}
 
-	w := e.wrap(e.mainDiv, "homePagePortfolioComponent__wrapperouter")
-	p.AddBodyNodes([]*htmlDoc.Node{w})
+	p.AddBodyNodes(nodes)
 }
 
 func (e *HomePagePortfolioComponent) createBlocksFrom(containers []staticIntf.PagesContainer) []*htmlDoc.Node {
@@ -49,6 +48,7 @@ func (e *HomePagePortfolioComponent) createBlockFrom(c staticIntf.PagesContainer
 	pages := c.Representationals()
 	log.Debugf("HomePagePortfolioComponent.createBlockFrom(), found %d representational pages\n", len(pages))
 	if len(pages) > 0 {
+
 		block := htmlDoc.NewNode(
 			"div", "",
 			"class", "homePagePortfolioComponent")
@@ -56,7 +56,9 @@ func (e *HomePagePortfolioComponent) createBlockFrom(c staticIntf.PagesContainer
 			"h2", c.Headline(),
 			"class", "homePagePortfolioComponent__headline"))
 		block.AddChild(e.createGridWithLinksFrom(pages))
-		return block
+		mainDiv := htmlDoc.NewNode("div", "", "class", "homePagePortfolioComponent__content")
+		mainDiv.AddChild(block)
+		return mainDiv
 	}
 	return nil
 }
@@ -83,8 +85,8 @@ func (e *HomePagePortfolioComponent) getElementLinkingToPages(page staticIntf.Pa
 	// to avoid loading huge piles of images on mobile phones
 	a.AddChild(htmlDoc.NewNode(
 		"img", " ",
-		"width", "190",
-		"height", "190",
+		"width", "185",
+		"height", "185",
 		"src", page.MicroThumbnailUrl(),
 		"srcset", staticUtil.MakeMicroSrcSet(page),
 		"alt", page.Title(),
@@ -100,17 +102,17 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 }
 .homePagePortfolioComponent__grid {
 	display: grid;
-	grid-template-columns: 190px 190px 190px 190px;
+	grid-template-columns: 185px 185px 185px 185px;
 	grid-gap: 20px;
 }
 .homePagePortfolioComponent__tile {
 	display: block;
 	overflow: hidden;
-	max-height: 190px;
+	max-height: 185px;
 }
 .homePagePortfolioComponent__tileImg {
-	max-height: 190px;
-	max-width: 190px;
+	max-height: 185px;
+	max-width: 185px;
 }
 .homePagePortfolioComponent__headline {
 	font-size: 18px;
@@ -118,7 +120,6 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 	font-weight: 700;
 	text-transform: uppercase;
 	border-bottom: 1px solid black;
-	margin-top: 30px;
 }
 .homePagePortfolioComponent__paragraph {
 	text-align: left;
@@ -126,7 +127,6 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 	line-height: 2em;
 }
 .homePagePortfolioComponent__content {
-	padding-bottom: 50px;
 	text-align: left;
 }
 
@@ -137,7 +137,7 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 }
 @media only screen and (min-width: 610px) and (max-width: 819px) {
 	.homePagePortfolioComponent__grid {
-		grid-template-columns: 190px 190px 190px;
+		grid-template-columns: 185px 185px 185px;
 		width: 610px;
 		margin: 0 auto;
 	}
@@ -151,7 +151,7 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 }
 @media only screen and (min-width: 400px) and (max-width: 609px) {
 	.homePagePortfolioComponent__grid {
-		grid-template-columns: 190px 190px;
+		grid-template-columns: 185px 185px;
 		width: 400px;
 		margin: 0 auto;
 	}

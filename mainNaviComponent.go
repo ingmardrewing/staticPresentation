@@ -52,6 +52,9 @@ func (nv *MainNaviComponent) VisitPage(p staticIntf.Page) {
 
 func (mhc *MainNaviComponent) GetCss() string {
 	return `
+.mainnavi__wrapper {
+	margin-top: 0;
+}
 @media only screen and (max-width: 768px) {
 	.mainnavi {
 		border-bottom: 1px solid black;
