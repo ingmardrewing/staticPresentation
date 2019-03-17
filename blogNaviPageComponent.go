@@ -76,7 +76,6 @@ func (b *BlogNaviPageContentComponent) GetCss() string {
 /* BlogNaviPageContentComponent start */
 .blogNaviPageComponent__grid {
 	display: grid;
-	margin-top: 142px;
 	grid-gap: 20px;
 }
 

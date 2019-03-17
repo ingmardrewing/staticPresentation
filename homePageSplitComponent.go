@@ -59,7 +59,7 @@ func (e *HomePageSplitComponent) createBlockFrom(
 		block := htmlDoc.NewNode(
 			"div", "",
 			"class", "homePageSplitComponent")
-		block.AddChild(e.createGridWithLinksFrom(pages))
+		block.AddChild(e.createGridWithLinksFrom(pages[1:4]))
 		return block
 	}
 	return nil
@@ -72,8 +72,9 @@ func (e *HomePageSplitComponent) createGridWithLinksFrom(
 		"div", " ",
 		"class", "homePageSplitComponent__grid")
 	grid.AddChild(e.getIntroElement(pages[0].Site()))
+	// since go can't reverse a slice in a convenient way ...
 	for i := len(pages) - 1; i >= 0; i-- {
-		grid.AddChild(e.getElementLinkingToPages(pages[i]))
+		grid.AddChild(e.getElementLinkingToPage(pages[i]))
 	}
 	return grid
 }
@@ -88,13 +89,13 @@ func (e *HomePageSplitComponent) getIntroElement(site staticIntf.Site) *htmlDoc.
 		site.HomeText())
 	div := htmlDoc.NewNode(
 		"div", "",
-		"class", "homePageSplitComponent_intro")
+		"class", "homePageSplitComponent__intro")
 	div.AddChild(h2)
 	div.AddChild(txt)
 	return div
 }
 
-func (e *HomePageSplitComponent) getElementLinkingToPages(
+func (e *HomePageSplitComponent) getElementLinkingToPage(
 	page staticIntf.Page) *htmlDoc.Node {
 
 	a := htmlDoc.NewNode(
@@ -165,8 +166,8 @@ func (b *HomePageSplitComponent) GetCss() string {
 	grid-template-columns: 390px 390px;
 	grid-gap: 20px;
 }
-.homePageSplitComponent_intro {
-	grid-row: 1 / span 4;
+.homePageSplitComponent__intro {
+	grid-row: 1 / span 3;
 	text-align: left;
 	line-height: 2em;
 	font-weight: 400;
@@ -183,6 +184,9 @@ func (b *HomePageSplitComponent) GetCss() string {
 	margin-right: 20px;
 	float: left;
 }
+
+.homePageSplitComponent__intro,
+.homePageSplitComponent__intro > *,
 .homePageSplitComponent__tileDate,
 .homePageSplitComponent__tileText{
 	line-height: 1.6em;
@@ -221,6 +225,10 @@ func (b *HomePageSplitComponent) GetCss() string {
 	.homePageSplitComponent__headline {
 		margin-left: auto;
 		margin-right: auto;
+	}
+	.homePageSplitComponent__intro,
+	.homePageSplitComponent__intro > *{
+		line-height: 1.7em;
 	}
 	.homePageSplitComponent__tileText{
 		line-height: 1.3em;
@@ -264,6 +272,17 @@ func (b *HomePageSplitComponent) GetCss() string {
 	}
 	.homePageSplitComponent__paragraph {
 		line-height: 1.5em;
+	}
+	.homePageSplitComponent__intro {
+		padding-bottom: 10px;
+	}
+	.homePageSplitComponent__headline {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.homePageSplitComponent__intro,
+	.homePageSplitComponent__intro > * {
+		line-height: 1.7em;
 	}
 	.homePageSplitComponent__tileText {
 		line-height: 1em;
