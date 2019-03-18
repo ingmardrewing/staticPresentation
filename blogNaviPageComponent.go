@@ -82,8 +82,15 @@ func (b *BlogNaviPageContentComponent) GetCss() string {
 .blogNaviPageComponent__image {
 	max-height: 390px;
 	max-width: 390px;
+	-webkit-transition: opacity 0.5s;
+    -moz-transition: opacity 0.5s;
+    -o-transition: opacity 0.5s;
+    transition: opacity 0.5s;
 }
 
+.blogNaviPageComponent__gridItem:hover .blogNaviPageComponent__image {
+	opacity: 0.3;
+}
 @media only screen and (max-width: 768px) {
 	.blogNaviPageComponent__grid {
 		grid-template-columns: 100%;

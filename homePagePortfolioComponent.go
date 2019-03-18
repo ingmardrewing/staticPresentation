@@ -113,6 +113,13 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 .homePagePortfolioComponent__tileImg {
 	max-height: 185px;
 	max-width: 185px;
+	-webkit-transition: opacity 0.5s;
+    -moz-transition: opacity 0.5s;
+    -o-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+}
+.homePagePortfolioComponent__tile:hover .homePagePortfolioComponent__tileImg {
+	opacity: 0.3;
 }
 .homePagePortfolioComponent__headline {
 	font-size: 18px;

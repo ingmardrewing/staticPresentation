@@ -172,11 +172,33 @@ func (b *HomePageSplitComponent) GetCss() string {
 	line-height: 2em;
 	font-weight: 400;
 }
+.homePageSplitComponent__tile ,
+.homePageSplitComponent__tileText {
+	-webkit-transition: color 0.5s;
+    -moz-transition: color 0.5s;
+    -o-transition: color 0.5s;
+    transition: color 0.5s;
+}
+
+.homePageSplitComponent__tileImg {
+	-webkit-transition: opacity 0.5s;
+    -moz-transition: opacity 0.5s;
+    -o-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+}
 .homePageSplitComponent__tile {
 	text-align: left;
 	display: block;
 	overflow: hidden;
 	max-height: 80px;
+}
+.homePageSplitComponent__tile:hover,
+.homePageSplitComponent__tile:hover .homePageSplitComponent__tileText {
+	text-decoration: none;
+	color: #BBBBBB;
+}
+.homePageSplitComponent__tile:hover .homePageSplitComponent__tileImg{
+	opacity: 0.3;
 }
 .homePageSplitComponent__tileImg {
 	max-height: 80px;
