@@ -199,7 +199,7 @@ func (b *HomePageSplitComponent) GetCss() string {
 	text-align: left;
 	font-weight: 700;
 	text-transform: uppercase;
-	margin-top: 0;
+	margin-top: -6px;
 	margin-bottom: 0;
 }
 .homePageSplitComponent__paragraph {
