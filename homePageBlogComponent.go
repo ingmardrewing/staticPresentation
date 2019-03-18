@@ -189,7 +189,7 @@ func (b *HomePageBlogComponent) GetCss() string {
 		margin-top: 0;
 	}
 }
-@media only screen and (min-width: 610px) and (max-width: 819px) {
+@media only screen and (min-width: 630px) and (max-width: 819px) {
 	.homePageBlogComponent__grid {
 		grid-template-columns: 285px 285px;
 		width: 610px;
@@ -209,7 +209,7 @@ func (b *HomePageBlogComponent) GetCss() string {
 		max-height: 100px;
 	}
 }
-@media only screen and (min-width: 400px) and (max-width: 609px) {
+@media only screen and (min-width: 420px) and (max-width: 629px) {
 	.homePageBlogComponent__grid {
 		grid-template-columns: 400px;
 		width: 400px;
@@ -223,7 +223,7 @@ func (b *HomePageBlogComponent) GetCss() string {
 		margin-right: auto;
 	}
 }
-@media only screen and (max-width: 399px) {
+@media only screen and (max-width: 419px) {
 	.homePageBlogComponent__grid {
 		grid-template-columns: 100%;
 		width: 100%;

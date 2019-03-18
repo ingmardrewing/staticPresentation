@@ -135,7 +135,7 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 		margin-top: 0;
 	}
 }
-@media only screen and (min-width: 610px) and (max-width: 819px) {
+@media only screen and (min-width: 630px) and (max-width: 819px) {
 	.homePagePortfolioComponent__grid {
 		grid-template-columns: 185px 185px 185px;
 		width: 610px;
@@ -149,7 +149,7 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 		margin-right: auto;
 	}
 }
-@media only screen and (min-width: 400px) and (max-width: 609px) {
+@media only screen and (min-width: 420px) and (max-width: 629px) {
 	.homePagePortfolioComponent__grid {
 		grid-template-columns: 185px 185px;
 		width: 400px;
@@ -163,7 +163,7 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 		margin-right: auto;
 	}
 }
-@media only screen and (max-width: 399px) {
+@media only screen and (max-width: 419px) {
 	.homePagePortfolioComponent__grid {
 		grid-template-columns: 100%;
 		width: 100%;
