@@ -77,7 +77,7 @@ func (e *HomePagePortfolioComponent) getElementLinkingToPages(page staticIntf.Pa
 	a := htmlDoc.NewNode(
 		"a", " ",
 		"href", page.Link(),
-		"title", page.Title(),
+		//"title", page.Title(),
 		"class", "homePagePortfolioComponent__tile")
 
 	// TODO: It might make sense to replace
@@ -91,12 +91,47 @@ func (e *HomePagePortfolioComponent) getElementLinkingToPages(page staticIntf.Pa
 		"srcset", staticUtil.MakeMicroSrcSet(page),
 		"alt", page.Title(),
 		"class", "homePagePortfolioComponent__tileImg"))
+	titleContainer := htmlDoc.NewNode(
+		"div", " ",
+		"class", "homePagePortfolioComponent__titleContainer")
+	titleContainer.AddChild(htmlDoc.NewNode(
+		"div", page.Title(),
+		"class", "homePagePortfolioComponent__titleText"))
+	a.AddChild(titleContainer)
 	return a
 }
 
 func (b *HomePagePortfolioComponent) GetCss() string {
 	return `
 /* HomePagePortfolioComponent start */
+.homePagePortfolioComponent__titleContainer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow: hidden;
+	width: 100%;
+	height: 0;
+
+	background-color: #FFFFFFCC;
+
+	-webkit-transition: 0.4s ease;
+    -moz-transition: 0.4s ease;
+    -o-transition: 0.4s ease;
+    transition: 0.4s ease;
+}
+.homePagePortfolioComponent__tile:hover .homePagePortfolioComponent__titleContainer {
+	height: 30%;
+}
+.homePagePortfolioComponent__titleText {
+	box-sizing: border-box;
+	padding: 10px;
+	width: 100%;
+	height: 100%;
+	text-align: left;
+	color: #000;
+}
+
 .homePagePortfolioComponent {
 	text-align: center;
 }
@@ -106,6 +141,7 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 	grid-gap: 20px;
 }
 .homePagePortfolioComponent__tile {
+	position: relative;
 	display: block;
 	overflow: hidden;
 	max-height: 185px;
@@ -113,13 +149,6 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 .homePagePortfolioComponent__tileImg {
 	max-height: 185px;
 	max-width: 185px;
-	-webkit-transition: opacity 0.5s;
-    -moz-transition: opacity 0.5s;
-    -o-transition: opacity 0.5s;
-    transition: opacity 0.5s;
-}
-.homePagePortfolioComponent__tile:hover .homePagePortfolioComponent__tileImg {
-	opacity: 0.3;
 }
 .homePagePortfolioComponent__headline {
 	font-size: 18px;
