@@ -26,8 +26,10 @@ func (c *BlogNaviPageContentComponent) VisitPage(page staticIntf.Page) {
 	div := htmlDoc.NewNode(
 		"div", "",
 		"class", "blogNaviPageComponent__grid")
+
 	for _, navigated := range page.NavigatedPages() {
-		div.AddChild(c.renderNavigatedPage(navigated))
+		nn := c.renderNavigatedPage(navigated)
+		div.AddChild(nn)
 	}
 
 	wrapper := c.wrap(div)
@@ -38,7 +40,9 @@ func (c *BlogNaviPageContentComponent) renderNavigatedPage(page staticIntf.Page)
 	a := c.createLink(page)
 	a.AddChild(c.createItemLabel(page))
 	a.AddChild(c.createImage(page))
-	a.AddChild(c.createDescription(page))
+	if page.Description() != page.Site().Description() && page.Description() != "" {
+		a.AddChild(c.createDescription(page))
+	}
 	return a
 }
 
@@ -80,17 +84,9 @@ func (c *BlogNaviPageContentComponent) createDescription(page staticIntf.Page) *
 		"div", "",
 		"class", "blogNaviPageComponent__descriptionContainer")
 	descriptionContainer.AddChild(htmlDoc.NewNode(
-		"div", c.getDescriptionText(page),
+		"div", page.Description(),
 		"class", "blogNaviPageComponent__description"))
 	return descriptionContainer
-}
-
-func (c *BlogNaviPageContentComponent) getDescriptionText(page staticIntf.Page) string {
-	if page.Description() != page.Site().Description() {
-		return page.Description()
-	}
-	// TODO: Move this to the actual data
-	return "Just an image. I am doing a lot of drawing and painting exercises in order to retain my skills. Sometimes I deem the results blog-worthy ;)"
 }
 
 func (c *BlogNaviPageContentComponent) GetCss() string {
