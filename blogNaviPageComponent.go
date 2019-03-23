@@ -105,7 +105,7 @@ func (c *BlogNaviPageContentComponent) GetCss() string {
 	width: 100%;
 	height: 0;
 
-	background-color: #FFFFFFCC;
+	background-color: #FFFFFFCF;
 
 	-webkit-transition: 0.4s ease;
     -moz-transition: 0.4s ease;
@@ -113,8 +113,10 @@ func (c *BlogNaviPageContentComponent) GetCss() string {
     transition: 0.4s ease;
 
 }
-.blogNaviPageComponent__gridItem:hover .blogNaviPageComponent__descriptionContainer {
-	height: 30%;
+@media (hover) {
+	.blogNaviPageComponent__gridItem:hover .blogNaviPageComponent__descriptionContainer {
+		height: 33%;
+	}
 }
 .blogNaviPageComponent__description {
 	box-sizing: border-box;

@@ -120,8 +120,10 @@ func (b *HomePagePortfolioComponent) GetCss() string {
     -o-transition: 0.4s ease;
     transition: 0.4s ease;
 }
-.homePagePortfolioComponent__tile:hover .homePagePortfolioComponent__titleContainer {
-	height: 30%;
+@media (hover) {
+	.homePagePortfolioComponent__tile:hover .homePagePortfolioComponent__titleContainer {
+		height: 35%;
+	}
 }
 .homePagePortfolioComponent__titleText {
 	box-sizing: border-box;
