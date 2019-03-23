@@ -44,6 +44,10 @@ func (cc *ContentComponent) getDateFromPublishedTime(publishedTime string) strin
 
 func (cc *ContentComponent) GetCss() string {
 	return `
+.maincontent__h1 ,
+.maincontent__h2 {
+	margin-top: 0;
+}
 @media only screen and (max-width: 768px) {
 	.maincontent{
 		padding-bottom: 50px;
@@ -90,7 +94,6 @@ func (cc *ContentComponent) GetCss() string {
 }
 @media only screen and (min-width: 769px) {
 	.maincontent{
-		padding-top: 126px;
 		padding-bottom: 50px;
 		text-align: left;
 		line-height: 20px;

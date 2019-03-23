@@ -48,6 +48,14 @@ body, p, span {
 	padding: 0;
 	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 }
+body {
+	padding-top: 122px;
+}
+@media only screen and (max-width: 768px) {
+	body{
+		padding-top: 0;
+	}
+}
 a {
 	color: grey;
 	text-decoration: none;
@@ -57,6 +65,7 @@ a:hover {
 }
 .wrapperOuter {
 	text-align: center;
+	margin-top: 25px;
 }
 
 .wrapperInner {

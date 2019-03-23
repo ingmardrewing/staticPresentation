@@ -22,60 +22,114 @@ type BlogNaviPageContentComponent struct {
 	wrapper
 }
 
-func (b *BlogNaviPageContentComponent) VisitPage(p staticIntf.Page) {
-	n := htmlDoc.NewNode(
+func (c *BlogNaviPageContentComponent) VisitPage(page staticIntf.Page) {
+	div := htmlDoc.NewNode(
 		"div", "",
 		"class", "blogNaviPageComponent__grid")
-	for _, navigated := range p.NavigatedPages() {
-		n.AddChild(b.renderNavigatedPage(navigated))
+	for _, navigated := range page.NavigatedPages() {
+		div.AddChild(c.renderNavigatedPage(navigated))
 	}
 
-	wn := b.wrap(n)
-	p.AddBodyNodes([]*htmlDoc.Node{wn})
+	wrapper := c.wrap(div)
+	page.AddBodyNodes([]*htmlDoc.Node{wrapper})
 }
 
-func (b *BlogNaviPageContentComponent) renderNavigatedPage(n staticIntf.Page) *htmlDoc.Node {
-	a := htmlDoc.NewNode(
-		"a", " ",
-		"title", n.Title(),
-		"href", n.Link(),
-		"class", "blogNaviPageComponent__gridItem")
-	a.AddChild(b.createItemLabel(n))
-	a.AddChild(b.createImage(n))
+func (c *BlogNaviPageContentComponent) renderNavigatedPage(page staticIntf.Page) *htmlDoc.Node {
+	a := c.createLink(page)
+	a.AddChild(c.createItemLabel(page))
+	a.AddChild(c.createImage(page))
+	a.AddChild(c.createDescription(page))
 	return a
 }
 
-func (b *BlogNaviPageContentComponent) createItemLabel(n staticIntf.Page) *htmlDoc.Node {
+func (c *BlogNaviPageContentComponent) createLink(page staticIntf.Page) *htmlDoc.Node {
 	return htmlDoc.NewNode(
-		"h2", n.Title(),
+		"a", " ",
+		"href", page.Link(),
+		"class", "blogNaviPageComponent__gridItem")
+}
+
+func (c *BlogNaviPageContentComponent) createItemLabel(page staticIntf.Page) *htmlDoc.Node {
+	return htmlDoc.NewNode(
+		"h2", page.Title(),
 		"class", "blogNaviPageComponent__gridItemTitle")
 }
 
-func (b *BlogNaviPageContentComponent) createImage(n staticIntf.Page) *htmlDoc.Node {
-	if len(staticUtil.MakeSrcSet(n)) > 5 {
+func (c *BlogNaviPageContentComponent) createImage(page staticIntf.Page) *htmlDoc.Node {
+	if len(staticUtil.MakeSrcSet(page)) > 5 {
 		return htmlDoc.NewNode(
 			"img", "",
-			"src", n.ThumbnailUrl(),
-			"alt", n.Title(),
-			"srcset", staticUtil.MakeSrcSet(n),
+			"src", page.ThumbnailUrl(),
+			"alt", page.Title(),
+			"width", "390",
+			"height", "390",
+			"srcset", staticUtil.MakeSrcSet(page),
 			"class", "blogNaviPageComponent__image")
 	}
 	return htmlDoc.NewNode(
 		"img", "",
-		"src", n.ThumbnailUrl(),
-		"alt", n.Title(),
+		"src", page.ThumbnailUrl(),
+		"alt", page.Title(),
+		"width", "390",
+		"height", "390",
 		"class", "blogNaviPageComponent__image")
 }
 
-func (b *BlogNaviPageContentComponent) GetCss() string {
-	return `
-/* BlogNaviPageContentComponent start */
-.blogNaviPageComponent__grid {
-	display: grid;
-	margin-top: 142px;
-	grid-gap: 20px;
+func (c *BlogNaviPageContentComponent) createDescription(page staticIntf.Page) *htmlDoc.Node {
+	descriptionContainer := htmlDoc.NewNode(
+		"div", "",
+		"class", "blogNaviPageComponent__descriptionContainer")
+	descriptionContainer.AddChild(htmlDoc.NewNode(
+		"div", c.getDescriptionText(page),
+		"class", "blogNaviPageComponent__description"))
+	return descriptionContainer
 }
 
+func (c *BlogNaviPageContentComponent) getDescriptionText(page staticIntf.Page) string {
+	if page.Description() != page.Site().Description() {
+		return page.Description()
+	}
+	// TODO: Move this to the actual data
+	return "Just an image. I am doing a lot of drawing and painting exercises in order to retain my skills. Sometimes I deem the results blog-worthy ;)"
+}
+
+func (c *BlogNaviPageContentComponent) GetCss() string {
+	return `
+/* BlogNaviPageContentComponent start */
+.blogNaviPageComponent__descriptionContainer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow: hidden;
+	width: 100%;
+	height: 0;
+
+	background-color: #FFFFFFCF;
+
+	-webkit-transition: 0.4s ease;
+    -moz-transition: 0.4s ease;
+    -o-transition: 0.4s ease;
+    transition: 0.4s ease;
+
+}
+@media (hover) {
+	.blogNaviPageComponent__gridItem:hover .blogNaviPageComponent__descriptionContainer {
+		height: 33%;
+	}
+}
+.blogNaviPageComponent__description {
+	box-sizing: border-box;
+	padding: 20px;
+	width: 100%;
+	height: 100%;
+	text-align: left;
+	color: #000;
+}
+.blogNaviPageComponent__grid {
+	display: grid;
+	grid-gap: 20px;
+}
 .blogNaviPageComponent__image {
 	max-height: 390px;
 	max-width: 390px;

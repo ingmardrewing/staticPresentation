@@ -47,6 +47,9 @@ func (mhc *MainHeaderComponent) GetCss() string {
 .headerbar__logo {
 	height: 100%;
 }
+.headerbar__wrapper {
+	margin-top: 0;
+}
 @media only screen and (max-width: 768px) {
 	.headerbar__wrapper {
 		width: 100%;
