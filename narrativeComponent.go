@@ -44,7 +44,7 @@ func (cc *NarrativeComponent) VisitPage(p staticIntf.Page) {
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
 }
 
-func (cc *NarrativeComponent) GetCss() {
+func (cc *NarrativeComponent) GetCss() string {
 	return `.narrativeComponent__wrapper {
 	margin-top: 0;
 }`
