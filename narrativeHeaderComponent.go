@@ -33,7 +33,15 @@ func (nv *NarrativeHeaderComponent) VisitPage(p staticIntf.Page) {
 }
 
 func (mhc *NarrativeHeaderComponent) GetCss() string {
-	return `header .home {
+	return `body {
+	padding-top: 0;
+}
+
+.header__wrapper {
+	margin-top: 0;
+}
+
+header .home {
     display: block;
     line-height: 80px;
     height: 30px;
