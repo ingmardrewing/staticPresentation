@@ -40,6 +40,12 @@ func (cc *NarrativeComponent) VisitPage(p staticIntf.Page) {
 		}
 	}
 
-	wn := cc.wrap(n)
+	wn := cc.wrap(n, "narrativeComponent__wrapper")
 	p.AddBodyNodes([]*htmlDoc.Node{wn})
+}
+
+func (cc *NarrativeComponent) GetCss() string {
+	return `.narrativeComponent__wrapper {
+	margin-top: 0;
+}`
 }
