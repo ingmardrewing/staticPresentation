@@ -362,3 +362,20 @@ func NewHomePageRenderer(site staticIntf.Site) staticIntf.Renderer {
 
 	return r
 }
+
+// Blog Archive Renderer
+func NewBlogArchiveRenderer(site staticIntf.Site) staticIntf.Renderer {
+
+	r := NewRenderer("Blog Archive Renderer")
+
+	r.AddComponents(getHeaderComponents(r)...)
+	r.AddComponents(
+		NewTitleComponent(r),
+		NewMainHeaderComponent(r),
+		NewMainNaviComponent(r),
+		NewBlogHistoryComponent(r),
+		NewCopyRightComponent(r),
+		NewFooterNaviComponent(r))
+
+	return r
+}
