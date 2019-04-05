@@ -1,6 +1,7 @@
 package staticPresentation
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/ingmardrewing/htmlDoc"
@@ -22,22 +23,17 @@ type BlogHistoryComponent struct {
 
 func (e *BlogHistoryComponent) VisitPage(p staticIntf.Page) {
 	e.mainDiv = htmlDoc.NewNode("div", "", "class", "blogHistoryComponent__content")
-	grid := htmlDoc.NewNode(
-		"div", " ",
-		"class", "blogHistoryComponent__grid")
 
 	limit := 100
 	for _, year := range e.getAllYears(p) {
-		grid.AddChild(e.getYearHeadline(year))
+		e.mainDiv.AddChild(e.getYearHeadline(year))
 		for i, p := range e.getBlogPostsReversedByYear(year, p) {
 			if i == limit {
 				break
 			}
-			grid.AddChild(e.getElementLinkingToPages(p))
+			e.mainDiv.AddChild(e.getElementLinkingToPages(p))
 		}
 	}
-
-	e.mainDiv.AddChild(grid)
 
 	w := e.wrap(e.mainDiv, "blogHistoryComponent__wrapperouter")
 	p.AddBodyNodes([]*htmlDoc.Node{w})
@@ -50,11 +46,26 @@ func (e *BlogHistoryComponent) getYearHeadline(year string) *htmlDoc.Node {
 }
 
 func (e *BlogHistoryComponent) getAllYears(p staticIntf.Page) []string {
-	years := []string{}
+	years := make(map[string]string)
 	for _, p := range e.getAllPosts(p) {
-		years = append(years, e.getYear(p))
+		year := e.getYear(p)
+		if len(year) > 0 {
+			years[year] = year
+		}
 	}
-	return years
+
+	keys := []string{}
+	for k, _ := range years {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	for i := len(keys)/2 - 1; i >= 0; i-- {
+		opp := len(keys) - 1 - i
+		keys[i], keys[opp] = keys[opp], keys[i]
+	}
+
+	return keys
 }
 
 func (e *BlogHistoryComponent) getAllPosts(p staticIntf.Page) []staticIntf.Page {
@@ -98,15 +109,21 @@ func (e *BlogHistoryComponent) getElementLinkingToPages(
 	page staticIntf.Page) *htmlDoc.Node {
 
 	return htmlDoc.NewNode(
-		"a", page.PublishedTime(),
+		"a", page.PublishedTime()+": "+page.Title(),
 		"href", page.Link(),
 		"title", page.Title(),
-		"class", "blogHistoryComponent__tile")
+		"class", "blogHistoryComponent__entry")
 }
 
 func (e *BlogHistoryComponent) GetCss() string {
-	return `.blogHistoryComponent__tile {
+	return `.blogHistoryComponent__entry{
 	display: block;
+}
+.blogHistoryComponent__content {
+	text-align: left;
+}
+.blogHistoryComponent__year {
+	border-bottom: 1px solid #000000;
 }
 `
 }
