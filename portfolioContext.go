@@ -8,15 +8,21 @@ import (
 	"github.com/ingmardrewing/staticUtil"
 )
 
-func NewPortfolioContext(s staticIntf.Site) staticIntf.Context {
-
-	tool := staticUtil.NewPagesContainerCollectionTool(s)
+func NewPortfolioContext(site staticIntf.Site) staticIntf.Context {
 
 	cg := new(portfolioContext)
-	cg.site = s
+	cg.site = site
 
-	cg.renderer = NewPortfolioRenderer(s)
+	tool := staticUtil.NewPagesContainerCollectionTool(site)
+	cg.renderer = NewPortfolioRenderer(site)
 	cg.renderer.Pages(tool.GetPagesByVariant(staticIntf.PORTFOLIO)...)
+
+	cg.rssRenderer = NewRssRenderer(
+		cg.getLastTenReversedPages(),
+		path.Join(site.TargetDir(), "/portfolio/"),
+		"/portfolio/",
+		site.RssFilename())
+
 	return cg
 }
 
@@ -25,21 +31,11 @@ func NewPortfolioContext(s staticIntf.Site) staticIntf.Context {
  */
 type portfolioContext struct {
 	abstractContext
+	rssRenderer staticIntf.Renderer
 }
 
 func (b *portfolioContext) RenderPages() []fs.FileContainer {
 	fileContainers := b.renderer.Render()
-
-	rr := NewRssRenderer(
-		b.getLastTenReversedPages(),
-		path.Join(b.site.TargetDir(), "/portfolio/"),
-		"/portfolio/",
-		b.site.RssFilename())
-	rssFc := rr.Render()
-
-	if rssFc != nil {
-		fileContainers = append(fileContainers, rssFc)
-	}
-
+	fileContainers = append(fileContainers, b.rssRenderer.Render()...)
 	return fileContainers
 }

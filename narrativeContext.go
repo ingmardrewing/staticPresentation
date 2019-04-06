@@ -6,7 +6,6 @@ import (
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticModel"
-	"github.com/ingmardrewing/staticPersistence"
 	"github.com/ingmardrewing/staticUtil"
 	log "github.com/sirupsen/logrus"
 )
@@ -48,26 +47,23 @@ func (a *narrativeContext) GetComponents() []staticIntf.Component {
 }
 
 func (a *narrativeContext) GenerateArchivePage() {
-	// TODO Reimplement archive generation
-	dto := staticPersistence.NewFilledDto(
-		"Archive",
-		"An archive overview of pages within "+a.site.Domain(),
-		"",
-		"narrative archive",
-		"",
-		"",
-		"archive.html",
-		[]string{},
-		[]staticIntf.Image{})
-	np := staticModel.NewPage(dto, a.site.Domain(), a.site)
-	np.NavigatedPages(a.renderer.Pages()...)
+	pm := staticModel.NewPageMaker()
+	pm.Title("Archive")
+	pm.Description("An archive overview of pages within " + a.site.Domain())
+	pm.Category("narrative archive")
+	pm.PathFromDocRoot("/")
+	pm.FileName("archive.html")
+	pm.Site(a.site)
+	pm.NavigatedPages(a.renderer.Pages()...)
 
-	a.narrativeArchiveRenderer.Pages(np)
-	a.site.AddMarginal(np)
+	archivePage := pm.Make()
+
+	a.narrativeArchiveRenderer.Pages(archivePage)
+	a.site.AddMarginal(archivePage)
 
 	tool := staticUtil.NewPagesContainerCollectionTool(a.site)
-	for _, n := range tool.GetPagesByVariant(
-		staticIntf.NARRATIVEMARGINALS) {
+	marginals := tool.GetPagesByVariant(staticIntf.NARRATIVEMARGINALS)
+	for _, n := range marginals {
 		a.site.AddMarginal(n)
 	}
 }
@@ -96,11 +92,7 @@ func (a *narrativeContext) RenderPages() []fs.FileContainer {
 		a.site.TargetDir(),
 		a.site.RssPath(),
 		a.site.RssFilename())
-	rssFc := rr.Render()
-
-	if rssFc != nil {
-		fcs = append(fcs, rssFc)
-	}
+	fcs = append(fcs, rr.Render()...)
 
 	nr := fmt.Sprintf("narrativeContext, files: %d", len(fcs))
 	log.Debug(nr)

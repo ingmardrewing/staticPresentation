@@ -21,7 +21,7 @@ func TestTemplatedRenderer(t *testing.T) {
 }
 
 func GetPage() staticIntf.Page {
-	dto := staticPersistence.NewFilledDto(
+	dto := staticPersistence.NewPageDto(
 		"Archive",
 		"An archive overview of pages",
 		"",

@@ -32,17 +32,30 @@ type rssRenderer struct {
 	pathFromDocRoot string
 
 	rssFilename string
+	components  []staticIntf.Component
 }
 
-func (r *rssRenderer) Render() fs.FileContainer {
-	if len(r.pages) > 0 {
-		fc := fs.NewFileContainer()
-		fc.SetPath(r.fsPath)
-		fc.SetFilename(r.rssFilename)
-		fc.SetDataAsString(r.renderRssContent())
-		return fc
+func (r *rssRenderer) AddComponents(comps ...staticIntf.Component) {
+	r.components = comps
+}
+
+func (r *rssRenderer) Components() []staticIntf.Component {
+	return []staticIntf.Component{}
+}
+
+func (r *rssRenderer) Pages(pages ...staticIntf.Page) []staticIntf.Page {
+	return []staticIntf.Page{}
+}
+
+func (r *rssRenderer) Render() []fs.FileContainer {
+	if len(r.pages) == 0 {
+		return nil
 	}
-	return nil
+	fc := fs.NewFileContainer()
+	fc.SetPath(r.fsPath)
+	fc.SetFilename(r.rssFilename)
+	fc.SetDataAsString(r.renderRssContent())
+	return []fs.FileContainer{fc}
 }
 
 func (r *rssRenderer) renderRssContent() string {
