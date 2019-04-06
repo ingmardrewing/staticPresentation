@@ -6,7 +6,7 @@ import (
 	"github.com/ingmardrewing/staticUtil"
 )
 
-func NewMarginalContextGroup(s staticIntf.Site) staticIntf.Context {
+func NewMarginalContext(s staticIntf.Site) staticIntf.Context {
 	tool := staticUtil.NewPagesContainerCollectionTool(s)
 
 	cg := new(marginalContext)

@@ -5,11 +5,13 @@ import (
 	"github.com/ingmardrewing/staticUtil"
 )
 
-func NewHomeContextGroup(s staticIntf.Site) staticIntf.Context {
-	cg := new(abstractContext)
-	cg.site = s
-	cg.renderer = NewHomePageRenderer(s)
-	tool := staticUtil.NewPagesContainerCollectionTool(s)
-	cg.renderer.Pages(tool.GetPagesByVariant(staticIntf.HOME)...)
-	return cg
+func NewHomeContext(site staticIntf.Site) staticIntf.Context {
+	tool := staticUtil.NewPagesContainerCollectionTool(site)
+	renderer := NewHomePageRenderer(site)
+	renderer.Pages(tool.GetPagesByVariant(staticIntf.HOME)...)
+
+	return &abstractContext{
+		site:     site,
+		renderer: renderer,
+	}
 }
