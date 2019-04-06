@@ -21,16 +21,6 @@ func TestTemplatedRenderer(t *testing.T) {
 }
 
 func GetPage() staticIntf.Page {
-	dto := staticPersistence.NewPageDto(
-		"Archive",
-		"An archive overview of pages",
-		"",
-		"narrative archive",
-		"",
-		"",
-		"archive.html",
-		[]string{},
-		[]staticIntf.Image{})
 	site := staticModel.NewSiteDto(
 		"twitterHandle",
 		"topic",
@@ -53,5 +43,12 @@ func GetPage() staticIntf.Page {
 		"homeText",
 		"homeHeadline",
 		"svgLogo")
-	return staticModel.NewPage(dto, "testdomain", site)
+	pm .= staticModel.NewPageMaker()
+	pm.Title("Archive")
+	pm.Description("An archive overview of pages")
+	pm.Category("narrative archive")
+	pm.FileName("archive.html")
+	pm.Site(site)
+
+	return pm.Make()
 }
