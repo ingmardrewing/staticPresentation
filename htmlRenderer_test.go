@@ -5,7 +5,6 @@ import (
 
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticModel"
-	"github.com/ingmardrewing/staticPersistence"
 )
 
 func TestTemplatedRenderer(t *testing.T) {
@@ -43,7 +42,7 @@ func GetPage() staticIntf.Page {
 		"homeText",
 		"homeHeadline",
 		"svgLogo")
-	pm .= staticModel.NewPageMaker()
+	pm := staticModel.NewPageMaker()
 	pm.Title("Archive")
 	pm.Description("An archive overview of pages")
 	pm.Category("narrative archive")

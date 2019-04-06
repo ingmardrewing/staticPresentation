@@ -10,7 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func NewNarrativeContextGroup(s staticIntf.Site) staticIntf.Context {
+func NewNarrativeContext(s staticIntf.Site) staticIntf.Context {
 
 	tool := staticUtil.NewPagesContainerCollectionTool(s)
 
