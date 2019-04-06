@@ -9,8 +9,6 @@ import (
 
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
-	"github.com/tdewolff/minify"
-	"github.com/tdewolff/minify/css"
 )
 
 func getHeaderComponents(r staticIntf.Renderer) []staticIntf.Component {
@@ -144,13 +142,7 @@ func (r *renderer) Css() string {
 	for _, r := range r.components {
 		cssString += r.GetCss()
 	}
-	m := minify.New()
-	m.AddFunc("text/css", css.Minify)
-	s, err := m.String("text/css", cssString)
-	if err != nil {
-		panic(err)
-	}
-	return s
+	return cssString
 }
 
 func NewRenderer(name string) staticIntf.Renderer {
