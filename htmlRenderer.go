@@ -9,8 +9,6 @@ import (
 
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
-	"github.com/tdewolff/minify"
-	"github.com/tdewolff/minify/css"
 )
 
 func getHeaderComponents(r staticIntf.Renderer) []staticIntf.Component {
@@ -144,13 +142,7 @@ func (r *renderer) Css() string {
 	for _, r := range r.components {
 		cssString += r.GetCss()
 	}
-	m := minify.New()
-	m.AddFunc("text/css", css.Minify)
-	s, err := m.String("text/css", cssString)
-	if err != nil {
-		panic(err)
-	}
-	return s
+	return cssString
 }
 
 func NewRenderer(name string) staticIntf.Renderer {
@@ -357,6 +349,23 @@ func NewHomePageRenderer(site staticIntf.Site) staticIntf.Renderer {
 		NewMainNaviComponent(r),
 		NewHomePageSplitComponent(r),
 		NewHomePagePortfolioComponent(r),
+		NewCopyRightComponent(r),
+		NewFooterNaviComponent(r))
+
+	return r
+}
+
+// Blog Archive Renderer
+func NewBlogArchiveRenderer(site staticIntf.Site) staticIntf.Renderer {
+
+	r := NewRenderer("Blog Archive Renderer")
+
+	r.AddComponents(getHeaderComponents(r)...)
+	r.AddComponents(
+		NewTitleComponent(r),
+		NewMainHeaderComponent(r),
+		NewMainNaviComponent(r),
+		NewBlogHistoryComponent(r),
 		NewCopyRightComponent(r),
 		NewFooterNaviComponent(r))
 
