@@ -23,7 +23,7 @@ func (b *BlogPrevNextNaviComponent) VisitPage(p staticIntf.Page) {
 		"span", "previous post",
 		"class", "label")
 	prevIcon := htmlDoc.NewNode(
-		"span", "◀",
+		"span", "&lt;",
 		"class", "icon")
 	prevNode := b.previousFromDocRoot(p, "",
 		"prevnextnavigation__previous prevnextnavigation__item prevnextnavigation__placeholder")
@@ -34,7 +34,7 @@ func (b *BlogPrevNextNaviComponent) VisitPage(p staticIntf.Page) {
 		"span", "next post",
 		"class", "label")
 	nextIcon := htmlDoc.NewNode(
-		"span", "▶",
+		"span", "&gt;",
 		"class", "icon")
 	nextNode := b.nextFromDocRoot(p, "",
 		"prevnextnavigation__next prevnextnavigation__item prevnextnavigation__placeholder")
