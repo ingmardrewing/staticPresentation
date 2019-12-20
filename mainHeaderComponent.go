@@ -21,7 +21,8 @@ func (mhc *MainHeaderComponent) VisitPage(p staticIntf.Page) {
 	logo := htmlDoc.NewNode(
 		"img", "",
 		"src", p.Site().SvgLogo(),
-		"class", "headerbar__logo")
+		"class", "headerbar__logo",
+		"alt", "drewing.de")
 	logocontainer := htmlDoc.NewNode(
 		"a", "",
 		"href", "https://"+p.Site().Domain(),

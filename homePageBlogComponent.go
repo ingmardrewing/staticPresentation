@@ -90,9 +90,9 @@ func (e *HomePageBlogComponent) getElementLinkingToPages(
 		"class", "homePageBlogComponent__tile")
 	a.AddChild(htmlDoc.NewNode(
 		"img", "",
+		"alt", page.Title(),
 		"src", e.findSrc(page.Images()),
 		"srcset", e.findSrcSet(page.Images()),
-		"alt", page.Title(),
 		"class", "homePageBlogComponent__tileImg"))
 	a.AddChild(htmlDoc.NewNode(
 		"span", page.PublishedTime()+" ",

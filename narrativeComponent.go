@@ -23,7 +23,9 @@ func (cc *NarrativeComponent) VisitPage(p staticIntf.Page) {
 
 	n := htmlDoc.NewNode("main", "", "class", "mainnarrativecontent")
 	img := htmlDoc.NewNode("img", "",
-		"src", p.ImageUrl(), "width", "800")
+		"src", p.ImageUrl(),
+		"width", "800",
+		"alt", p.Title())
 
 	if p.Container() == nil {
 		n.AddChild(img)

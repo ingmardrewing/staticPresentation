@@ -63,8 +63,8 @@ func (c *BlogNaviPageContentComponent) createImage(page staticIntf.Page) *htmlDo
 	if len(staticUtil.MakeSrcSet(page)) > 5 {
 		return htmlDoc.NewNode(
 			"img", "",
-			"src", page.ThumbnailUrl(),
 			"alt", page.Title(),
+			"src", page.ThumbnailUrl(),
 			"width", "390",
 			"height", "390",
 			"srcset", staticUtil.MakeSrcSet(page),
@@ -72,8 +72,8 @@ func (c *BlogNaviPageContentComponent) createImage(page staticIntf.Page) *htmlDo
 	}
 	return htmlDoc.NewNode(
 		"img", "",
-		"src", page.ThumbnailUrl(),
 		"alt", page.Title(),
+		"src", page.ThumbnailUrl(),
 		"width", "390",
 		"height", "390",
 		"class", "blogNaviPageComponent__image")
