@@ -27,11 +27,15 @@ func (g *GeneralMetaComponent) VisitPage(p staticIntf.Page) {
 		description = p.Site().Description()
 	}
 
-	viewport := "initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
 	m := []*htmlDoc.Node{
 		htmlDoc.NewNode("meta", "",
-			"name", "viewport",
-			"content", viewport),
+			"charset", "UTF-8"),
+		/*
+			htmlDoc.NewNode("meta", "",
+				"name", "viewport",
+				"content", "initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"),
+		*/
+
 		htmlDoc.NewNode("meta", "",
 			"name", "robots",
 			"content", "index,follow"),
@@ -52,8 +56,6 @@ func (g *GeneralMetaComponent) VisitPage(p staticIntf.Page) {
 			"content", subject),
 		htmlDoc.NewNode("meta", "",
 			"name", "page-topic",
-			"content", topic),
-		htmlDoc.NewNode("meta", "",
-			"charset", "UTF-8")}
+			"content", topic)}
 	p.AddHeaderNodes(m)
 }
