@@ -31,7 +31,7 @@ func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
 		"span", "previous posts",
 		"class", "label")
 	prevIcon := htmlDoc.NewNode(
-		"span", "◀",
+		"span", "&lt;",
 		"class", "icon")
 	prev := b.previous(p, "", "blognavicomponent__previous blognavicomponent__item")
 	prev.AddChild(prevIcon)
@@ -41,7 +41,7 @@ func (b *BlogNaviComponent) addBodyNodes(p staticIntf.Page) {
 		"span", "next posts",
 		"class", "label")
 	nextIcon := htmlDoc.NewNode(
-		"span", "▶",
+		"span", "&gt;",
 		"class", "icon")
 	next := b.next(p, " ", "blognavicomponent__next blognavicomponent__item")
 	next.AddChild(nextLabel)

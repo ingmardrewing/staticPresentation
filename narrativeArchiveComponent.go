@@ -48,7 +48,7 @@ func (na *NarrativeArchiveComponent) VisitPage(p staticIntf.Page) {
 		ul := htmlDoc.NewNode("ul", "", "class", "narrativearchive__wrapper")
 		for _, page := range pages {
 			span := htmlDoc.NewNode("span", page.Title(), "class", "narrativearchive__title")
-			img := htmlDoc.NewNode("img", "", "src", "data:image/png;base64,"+page.ThumbBase64())
+			img := htmlDoc.NewNode("img", "", "src", "data:image/png;base64,"+page.ThumbBase64(), "alt", page.Title())
 			a := htmlDoc.NewNode("a", "", "href", page.Link(), "class", "narrativearchive__link")
 			a.AddChild(span)
 			a.AddChild(img)

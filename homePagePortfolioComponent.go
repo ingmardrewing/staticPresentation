@@ -87,9 +87,9 @@ func (e *HomePagePortfolioComponent) getElementLinkingToPages(page staticIntf.Pa
 		"img", " ",
 		"width", "185",
 		"height", "185",
+		"alt", page.Title(),
 		"src", page.MicroThumbnailUrl(),
 		"srcset", staticUtil.MakeMicroSrcSet(page),
-		"alt", page.Title(),
 		"class", "homePagePortfolioComponent__tileImg"))
 	titleContainer := htmlDoc.NewNode(
 		"div", " ",

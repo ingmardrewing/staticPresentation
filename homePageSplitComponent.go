@@ -105,11 +105,11 @@ func (e *HomePageSplitComponent) getElementLinkingToPage(
 		"class", "homePageSplitComponent__tile")
 	a.AddChild(htmlDoc.NewNode(
 		"img", "",
+		"alt", page.Title(),
 		"src", e.findSrc(page.Images()),
 		"srcset", e.findSrcSet(page.Images()),
 		"width", "80",
 		"height", "80",
-		"alt", page.Title(),
 		"class", "homePageSplitComponent__tileImg"))
 	a.AddChild(htmlDoc.NewNode(
 		"span", page.PublishedTime()+" ",
