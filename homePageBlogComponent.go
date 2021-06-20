@@ -83,6 +83,10 @@ func (e *HomePageBlogComponent) createGridWithLinksFrom(
 func (e *HomePageBlogComponent) getElementLinkingToPages(
 	page staticIntf.Page) *htmlDoc.Node {
 
+	// TODO: If no image is given: create text-only tile
+	// TODO: If no Text is given: create image-only tile
+	// TODO If text an Image is given: Move text over image coming from the right
+
 	a := htmlDoc.NewNode(
 		"a", " ",
 		"href", page.Link(),
@@ -155,6 +159,7 @@ func (b *HomePageBlogComponent) GetCss() string {
 	overflow: hidden;
 	max-height: 80px;
 }
+
 .homePageBlogComponent__tileImg {
 	max-height: 80px;
 	max-width: 80px;

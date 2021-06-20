@@ -44,7 +44,7 @@ func (nv *NarrativeNaviComponent) first(p staticIntf.Page) *htmlDoc.Node {
 		tool := staticUtil.NewPagesContainerTool(p.Container())
 		return nv.absRel(p, tool.GetFirstPage(p),
 			"&lt;&lt; first page",
-			"narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder", "fist")
+			"narrativenavigation__last narrativenavigation__item narrativenavigation__placeholder", "first")
 	}
 	return nil
 }

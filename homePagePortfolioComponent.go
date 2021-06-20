@@ -85,8 +85,8 @@ func (e *HomePagePortfolioComponent) getElementLinkingToPages(page staticIntf.Pa
 	// to avoid loading huge piles of images on mobile phones
 	a.AddChild(htmlDoc.NewNode(
 		"img", " ",
-		"width", "185",
-		"height", "185",
+		"width", "203",
+		"height", "203",
 		"alt", page.Title(),
 		"src", page.MicroThumbnailUrl(),
 		"srcset", staticUtil.MakeMicroSrcSet(page),
@@ -139,18 +139,19 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 }
 .homePagePortfolioComponent__grid {
 	display: grid;
-	grid-template-columns: 185px 185px 185px 185px;
-	grid-gap: 20px;
+	grid-template-columns: repeat(4, 200px);
 }
 .homePagePortfolioComponent__tile {
 	position: relative;
 	display: block;
 	overflow: hidden;
-	max-height: 185px;
+	max-height: 200px;
 }
 .homePagePortfolioComponent__tileImg {
-	max-height: 185px;
-	max-width: 185px;
+	height: 203px;
+	width: 203px;
+	max-height: 203px;
+	max-width: 203px;
 }
 .homePagePortfolioComponent__headline {
 	font-size: 18px;
@@ -175,7 +176,7 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 }
 @media only screen and (min-width: 630px) and (max-width: 819px) {
 	.homePagePortfolioComponent__grid {
-		grid-template-columns: 185px 185px 185px;
+		grid-template-columns: repeat(3, 203px);
 		width: 610px;
 		margin: 0 auto;
 	}
@@ -189,7 +190,7 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 }
 @media only screen and (min-width: 420px) and (max-width: 629px) {
 	.homePagePortfolioComponent__grid {
-		grid-template-columns: 185px 185px;
+		grid-template-columns: repeat(2, 200px);
 		width: 400px;
 		margin: 0 auto;
 	}
@@ -216,8 +217,8 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 		margin-right: 10px;
 	}
 	.homePagePortfolioComponent__tileImg {
-		width: calc(100% - 20px);
-		max-width: calc(100% - 20px);
+		width: 100%
+		max-width: 100%;
 		height: auto;
 		max-height: none;
 	}
