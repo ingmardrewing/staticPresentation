@@ -154,6 +154,7 @@ func (b *HomePagePortfolioComponent) GetCss() string {
 	max-width: 203px;
 }
 .homePagePortfolioComponent__headline {
+	margin-bottom: 0;
 	font-size: 18px;
 	text-align: left;
 	font-weight: 700;

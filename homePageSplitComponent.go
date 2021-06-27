@@ -71,12 +71,29 @@ func (e *HomePageSplitComponent) createGridWithLinksFrom(
 	grid := htmlDoc.NewNode(
 		"div", " ",
 		"class", "homePageSplitComponent__grid")
-	grid.AddChild(e.getIntroElement(pages[0].Site()))
 	// since go can't reverse a slice in a convenient way ...
-	for i := len(pages) - 1; i >= 0; i-- {
-		grid.AddChild(e.getElementLinkingToPage(pages[i]))
-	}
+	//for i := len(pages) - 1; i >= 2; i-- {
+	//}
+	grid.AddChild(e.getElementLinkingToPage(pages[2]))
+	//grid.AddChild(e.getIntroElement(pages[0].Site()))
+	grid.AddChild(e.getIntroFromPage(pages[2]))
 	return grid
+}
+
+func (e *HomePageSplitComponent) getIntroFromPage(p staticIntf.Page) *htmlDoc.Node {
+	h2 := htmlDoc.NewNode(
+		"h2",
+		p.Title(),
+		"class", "homePageSplitComponent__headline")
+	txt := htmlDoc.NewNode(
+		"div",
+		p.BodyText())
+	div := htmlDoc.NewNode(
+		"div", "",
+		"class", "homePageSplitComponent__intro")
+	div.AddChild(h2)
+	div.AddChild(txt)
+	return div
 }
 
 func (e *HomePageSplitComponent) getIntroElement(site staticIntf.Site) *htmlDoc.Node {
@@ -104,42 +121,41 @@ func (e *HomePageSplitComponent) getElementLinkingToPage(
 		"title", page.Title(),
 		"class", "homePageSplitComponent__tile")
 
-	blogExcerpt := e.getBlogExcerpt(page)
-	if blogExcerpt == "Just an image ..." {
-		a.AddChild(htmlDoc.NewNode(
-			"img", "",
-			"alt", page.Title(),
-			"src", e.findSrc(page.Images(), true),
-			"srcset", e.findSrcSet(page.Images()),
-			"width", "400",
-			"height", "400",
-			"class", "homePageSplitComponent__tileImgOnly"))
-		return a
-	}
-
+	//blogExcerpt := e.getBlogExcerpt(page)
+	//if blogExcerpt == "Just an image ..." {
 	a.AddChild(htmlDoc.NewNode(
 		"img", "",
 		"alt", page.Title(),
-		"src", e.findSrc(page.Images(), false),
+		"src", e.findSrc(page.Images(), true),
 		"srcset", e.findSrcSet(page.Images()),
-		"width", "80",
-		"height", "80",
-		"class", "homePageSplitComponent__tileImg"))
-	a.AddChild(htmlDoc.NewNode(
-		"span", page.PublishedTime()+" ",
-		"class", "homePageSplitComponent__tileDate"))
-	a.AddChild(htmlDoc.NewNode(
-		"span", e.getBlogExcerpt(page),
-		"class", "homePageSplitComponent__tileText"))
+		"width", "400",
+		"height", "400",
+		"class", "homePageSplitComponent__tileImgOnly"))
 	return a
+	//}
+
+	/*
+		a.AddChild(htmlDoc.NewNode(
+			"img", "",
+			"alt", page.Title(),
+			"src", e.findSrc(page.Images(), false),
+			"srcset", e.findSrcSet(page.Images()),
+			"width", "80",
+			"height", "80",
+			"class", "homePageSplitComponent__tileImg"))
+		a.AddChild(htmlDoc.NewNode(
+			"span", page.PublishedTime()+" ",
+			"class", "homePageSplitComponent__tileDate"))
+		a.AddChild(htmlDoc.NewNode(
+			"span", e.getBlogExcerpt(page),
+			"class", "homePageSplitComponent__tileText"))
+		return a
+	*/
 }
 
 func (e *HomePageSplitComponent) findSrc(images []staticIntf.Image, only bool) string {
 	if len(images) > 0 {
-		if !only && len(images[0].W80Square()) > 0 {
-			return images[0].W80Square()
-		}
-		else if !only && len(images[0].W400Square()) {
+		if len(images[0].W400Square()) > 0 {
 			return images[0].W400Square()
 		}
 		return images[0].W185Square()
@@ -149,8 +165,8 @@ func (e *HomePageSplitComponent) findSrc(images []staticIntf.Image, only bool) s
 
 func (e *HomePageSplitComponent) findSrcSet(images []staticIntf.Image) string {
 	if len(images) > 0 {
-		if len(images[0].W185Square()) > 0 {
-			return fmt.Sprintf("%s 2x", images[0].W185Square())
+		if len(images[0].W800Square()) > 0 {
+			return fmt.Sprintf("%s 2x", images[0].W800Square())
 		}
 	}
 	return ""
@@ -175,6 +191,9 @@ func (e *HomePageSplitComponent) getBlogExcerpt(page staticIntf.Page) string {
 func (b *HomePageSplitComponent) GetCss() string {
 	return `
 /* HomePageSplitComponent start */
+.homePageSplitComponent__wrapperouter{
+  margin-top: 0;
+}
 .homePageSplitComponent {
 	text-align: center;
 }
@@ -184,10 +203,11 @@ func (b *HomePageSplitComponent) GetCss() string {
 }
 .homePageSplitComponent__intro {
 	grid-row: 1 / span 3;
+	grid-column: 2;
 	text-align: left;
 	line-height: 2em;
 	font-weight: 400;
-	margin-top: 20px;
+	margin-top: 16px;
 	margin-left: 20px;
 	margin-bottom: 20px;
 }
@@ -206,10 +226,12 @@ func (b *HomePageSplitComponent) GetCss() string {
     transition: opacity 0.5s;
 }
 .homePageSplitComponent__tile {
+	grid-row: 1 / span 3;
+	grid-column: 1;
 	text-align: left;
 	display: block;
 	overflow: hidden;
-	max-height: 80px;
+	max-height: 400px;
 }
 .homePageSplitComponent__tile:hover,
 .homePageSplitComponent__tile:hover .homePageSplitComponent__tileText {
@@ -228,7 +250,6 @@ func (b *HomePageSplitComponent) GetCss() string {
 .homePageSplitComponent__tileImgOnly {
 	height: 400px;
 	width: 400px;
-	transform: translate(0, -35%);
 }
 
 .homePageSplitComponent__intro,
@@ -280,7 +301,11 @@ func (b *HomePageSplitComponent) GetCss() string {
 		line-height: 1.3em;
 	}
 	.homePageSplitComponent__tile {
-		max-height: 100px;
+		max-height: 300px;
+	}
+	.homePageSplitComponent__tileImgOnly {
+		height: 300px;
+		width: 300px;
 	}
 }
 @media only screen and (min-width: 420px) and (max-width: 629px) {
@@ -295,6 +320,11 @@ func (b *HomePageSplitComponent) GetCss() string {
 		max-width: 400px;
 		margin-left: auto;
 		margin-right: auto;
+	}
+	.homePageSplitComponent__intro {
+		grid-row: 4;
+		grid-column: 1;
+		margin-left: 0;
 	}
 }
 @media only screen and (max-width: 419px) {

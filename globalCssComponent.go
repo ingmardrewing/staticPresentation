@@ -65,7 +65,7 @@ a:hover {
 }
 .wrapperOuter {
 	text-align: center;
-	margin-top: 25px;
+	margin-top: 50px;
 }
 
 .wrapperInner {
@@ -73,7 +73,7 @@ a:hover {
 	max-width: 800px;
 }
 p + p {
-	margin-top: 10px;
+	text-indent: 20px;
 }
 `
 }

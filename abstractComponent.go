@@ -24,6 +24,28 @@ func (a *abstractComponent) GetJs() string { return "" }
 
 func (a *abstractComponent) VisitPage(p staticIntf.Page) {}
 
+func (a *abstractComponent) previousPage(
+	p staticIntf.Page) staticIntf.Page {
+
+	if p.Container() != nil {
+		tool := staticUtil.NewPagesContainerTool(p.Container())
+		page := tool.GetPageBefore(p)
+		return page
+	}
+	return nil
+}
+
+func (a *abstractComponent) nextPage(
+	p staticIntf.Page) staticIntf.Page {
+
+	if p.Container() != nil {
+		tool := staticUtil.NewPagesContainerTool(p.Container())
+		page := tool.GetPageAfter(p)
+		return page
+	}
+	return nil
+}
+
 func (a *abstractComponent) previousFromDocRoot(
 	p staticIntf.Page,
 	label, class string) *htmlDoc.Node {
