@@ -112,15 +112,15 @@ func (e *HomePageBlogComponent) findSrc(images []staticIntf.Image) string {
 		if len(images[0].W80Square()) > 0 {
 			return images[0].W80Square()
 		}
-		return images[0].W185Square()
+		return images[0].W190Square()
 	}
 	return ""
 }
 
 func (e *HomePageBlogComponent) findSrcSet(images []staticIntf.Image) string {
 	if len(images) > 0 {
-		if len(images[0].W185Square()) > 0 {
-			return fmt.Sprintf("%s 2x", images[0].W185Square())
+		if len(images[0].W190Square()) > 0 {
+			return fmt.Sprintf("%s 2x", images[0].W190Square())
 		}
 	}
 	return ""

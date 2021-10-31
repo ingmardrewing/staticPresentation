@@ -15,6 +15,23 @@ type GlobalCssComponent struct {
 
 func (gcc *GlobalCssComponent) GetCss() string {
 	return `
+/* EB Garamond */
+@font-face {
+font-family: 'EB Garmond';
+font-weight: 400;
+	src: local('EB Garamond'), local('EBGaramond-Regular'),
+		url('/fonts/EBGaramond-Regular.ttf') format('truetype');
+}
+
+/* EB Garamond italic
+@font-face {
+font-family: 'EB Garmond';
+font-style: italic;
+font-weight: 400;
+	src: local('EB Garamond'), local('EBGaramond-Italic'),
+		url('/fonts/EBGaramond-Italic.ttf') format('truetype');
+}*/
+
 /* open-sans-300 - latin-ext_latin */
 @font-face {
 font-family: 'Open Sans';
@@ -42,11 +59,28 @@ font-weight: 700;
 		url('/fonts/open-sans-v15-latin-ext_latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
 		url('/fonts/open-sans-v15-latin-ext_latin-700.svg#OpenSans') format('svg'); /* Legacy iOS */
 }
-
-body, p, span {
+body, span {
 	margin: 0;
 	padding: 0;
+}
+p, main {
+	margin: 0;
+	padding: 0;
+	font-family: 'EB Garamond', serif;
+	/* font-style: italic; */
+}
+
+h2 + div > p:first-child {
+	margin-top: 5px;
+}
+.maincontent__h2 + a {
+	display: block;
+	margin-bottom: 8px;
+}
+
+body, span, h1, h2 {
 	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+	font-style: normal;
 }
 body {
 	padding-top: 122px;

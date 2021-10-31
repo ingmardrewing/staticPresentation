@@ -158,7 +158,7 @@ func (e *HomePageSplitComponent) findSrc(images []staticIntf.Image, only bool) s
 		if len(images[0].W400Square()) > 0 {
 			return images[0].W400Square()
 		}
-		return images[0].W185Square()
+		return images[0].W190Square()
 	}
 	return ""
 }
